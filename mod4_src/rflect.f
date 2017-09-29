@@ -1,0 +1,3580 @@
+      LOGICAL FUNCTION RFLECT(SURREF,DATDIR,LENDAT,LAND_FLAG,ICE_FLAG,  & 
+     &                        SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+
+!     RFLECT IS THE DRIVER FOR DEFINING THE SURFACE REFLECTANCE
+!     PROPERTIES AND RETURNS A VALUE OF .TRUE. IF SUCCESSFUL.
+
+!     INPUT ARGUMENTS:
+!       SURREF  SURFACE REFLECTANCE CHARACTER STRING.
+!               IF FIRST NON-BLANK CHARACTER IS "B",
+!                 BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!                 FUNCTION (BRDF) DATA IS READ IN.
+!               IF FIRST NON-BLANK CHARACTER IS "L" OR "-"
+!                 SURFACE IS MODELED AS A LAMBERTIAN REFLECTOR AND
+!                 SPECTRAL ALBEDO IS READ FROM FILE "DATA/SPEC_ALB.DAT".
+!               OTHERWISE, THE CHARACTER STRING IS ASSUMED TO CONTAIN
+!                 A SPECTRALLY INDEPENDENT VALUE FOR SURFACE ALBEDO.
+!       DATDIR  NAME OF MODTRAN DATA DIRECTORY.
+!       LENDAT  LENGTH OF DATDIR.
+
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'ERROR.h'
+      CHARACTER SURREF*7,DATDIR*(NAMLEN-12)
+      INTEGER LENDAT
+      LOGICAL LAND_FLAG,ICE_FLAG,SNOW_FLAG !DRF
+      INTEGER BRDF_LEN !DRF
+      REAL BRDF_WVL(BRDF_LEN) !DRF
+      REAL BRDF_PARAM(BRDF_LEN,3) !DRF
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     /SURFWV/
+!       LAMBER  LOGICAL FLAG, .TRUE. FOR LAMBERTIAN SURFACE.
+!       TPTEMP  TARGET-PIXEL SURFACE TEMPERATURES [K].
+!       TPHDIR  TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCE AT
+!               VIEWING ANGLE.
+!       TPBRDF  TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING AND SUN ANGLE.
+!       AATEMP  AREA-AVERAGED GROUND SURFACE TEMPERATURES [K].
+!       AASALB  AREA-AVERAGED GROUND SURFACE ALBEDO.
+!       AADREF  AREA-AVERAGED GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT THE SOLAR ZENITH ANGLE.
+!       EMU     GROUND DIRECTIONAL EMISSIVITY AT VIEWING ANGLE.
+!       BEM     GROUND DIRECTIONAL EMISSIVITY AT QUADRATURE ANGLE.
+!       RMU     GROUND BRDF AZIMUTH COMPONENTS AT VIEWING ANGLE
+!               AND AT SUN (=0) OR QUADRATURE (>0) ANGLE.
+!       BDR     GROUND BRDF AZIMUTH COMPONENTS AT QUADRATURE ANGLE
+!               AND AT SUN (=0) OR QUADRATURE (>0) ANGLE.
+      LOGICAL LAMBER
+      REAL TPTEMP,TPHDIR,TPBRDF,AATEMP,AASALB,AADREF,EMU,BEM,RMU,BDR
+      COMMON/SURFWV/LAMBER,TPTEMP,TPHDIR,TPBRDF,AATEMP,AASALB,AADREF,   &
+     &  EMU(MXUMU),BEM(MI),RMU(1:MXUMU,0:MI,0:MAZ),BDR(1:MI,0:MI,0:MAZ)
+
+!     /DISRT/
+!       DIS      LOGICAL FLAG, TRUE FOR DISORT MULTIPLE SCATTERING.
+!       DISAZM   LOGICAL FLAG, TRUE FOR DISORT WITH AZIMUTH DEPENDENCE.
+!       DISALB   LOGICAL FLAG, TRUE FOR DISORT SPHERICAL ALBEDO OPTION.
+!       LDISCL   LOGICAL FLAG, TRUE FOR ISAACS SCALED TO DISORT.
+!       NSTR     NUMBER OF DISCRETE ORDINATE STREAMS.
+!       NAZ      NUMBER OF DISORT AZIMUTH COMPONENTS.
+!       N2GAUS   ORDER OF DOUBLE-GAUSS QUADRATURES.
+      LOGICAL DIS,DISAZM,DISALB,LDISCL
+      INTEGER NSTR,NAZ,N2GAUS
+      COMMON/DISRT/DIS,DISAZM,DISALB,LDISCL,NSTR,NAZ,N2GAUS
+
+!     /ANGSRF/
+!       CVWSRF  COSINE OF THE VIEW ZENITH ANGLE FROM THE SURFACE [RAD].
+!       CSNSRF  COSINE OF THE SOLAR (LUNAR) ZENITH AT SURFACE [RAD].
+!       AZMSRF  RELATIVE AZIMUTH ANGLE (SUN - SENSOR AT SURFACE) [RAD].
+!       UMU1    COSINE OF THE PATH NADIR ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       UMU0    COSINE OF THE SOLAR ZENITH ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       PHI1    RELATIVE AZIMUTH ANGLE (SUN - LOS PATH AT SENSOR) [DEG].
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       CMU     COSINE OF THE NADIR ANGLES USED IN DISORT.
+      REAL CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU
+      COMMON/ANGSRF/CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU(MI)
+
+!     /JM4A/
+!       NSURF   NUMBER OF SURFACES (1 IF TARGET PIXEL AND AREA-AVERAGED
+      INTEGER NSURF
+      COMMON/JM4A/NSURF
+
+!     /JM4L1/
+!       SALBFL  SPECTRAL ALBEDO FILE NAME FOR LAMBERTIAN SURFACE.
+      CHARACTER SALBFL*(NAMLEN)
+      COMMON/JM4L1/SALBFL
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     FUNCTIONS:
+!       LENSTR  RETURNS STRING LENGTH AFTER TRIMMING LEADING BLANKS.
+!       RDBRDF  READS IN SURFACE BRDF.
+!       RDLAMB  READS IN THE LAMBERTIAN SURFACE IDENTIFIER.
+!       RDSALB  READS IN THE LAMBERTIAN SURFACE SPECTRAL ALBEDO DATA.
+      INTEGER LENSTR
+      LOGICAL RDBRDF,RDLAMB,RDSALB
+
+!     LOCAL VARIABLES:
+!       IOTEST  RESULT OF IOSTAT TEST IN READ.
+!       LSALB   INTEGER LABEL FOR LAMBERTIAN SURFACE SPECTRAL ALBEDO.
+!               GROUND SURFACE REFLECTANCES ARE THE SAME, OTHERWISE 2).
+!       IWVSRF  CURRENT SPECTRAL WAVELENGTH INDEX.
+!       I2GAUS  LOOP INDEX FOR VIEW AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       J2GAUS  LOOP INDEX FOR SUN AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       IAZ     DISORT AZIMUTH COMPONENT LOOP INDEX.
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+!       RSALB   INTEGER LABEL FOR LAMBERTIAN SURFACE SPECTRAL ALBEDO.
+!       CWT     POLAR ANGLE WEIGHTS USED BY DISORT.
+      INTEGER IOTEST,LSALB,IWVSRF,I2GAUS,J2GAUS,IAZ
+      LOGICAL GSURF
+      REAL RSALB,CWT(MI)
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+!     DATA:
+!       CFRMT   CHARACTER STRING INPUT FORMAT.
+      CHARACTER CFRMT*9
+      SAVE CFRMT
+      DATA CFRMT/'((A    ))'/
+
+!     INITIALIZE DRF_FLAG
+      DRF_FLAG = .TRUE.
+      DEBUG_FLAG = .TRUE.
+      !WRITE(*,*) 'BRDF_WVL = ',SURREF
+!     INITIALIZE RFLECT FOR SUCCESS:
+      RFLECT=.TRUE.
+
+!     TRIM LEADING BLANKS FROM STRING SURREF
+      IF(LENSTR(SURREF).EQ.0)THEN
+
+!         STRING SURREF IS BLANK.  SET SALB TO ZERO AND RETURN.
+          NWVSRF(1)=1
+          NWVSRF(2)=1
+          SALB(1)=0.
+          HDIR(1)=0.
+          BRDF(1)=0.
+          IF(DIS)THEN
+              LAMBER=.TRUE.
+              DO J2GAUS=0,N2GAUS
+                  GDIREM(J2GAUS,1)=1.
+                  DO IAZ=0,NAZ
+                      DO I2GAUS=0,N2GAUS
+                          GNDMOM(I2GAUS,J2GAUS,IAZ,1)=0.
+                      ENDDO
+                  ENDDO
+              ENDDO
+              IF(LDISCL)GDIRRF(1)=0.
+          ELSE
+              GDIRRF(1)=0.
+          ENDIF
+          RETURN
+      ENDIF
+
+!     INTERPRET SURREF:
+      IF(SURREF(1:1).EQ.'B' .OR. SURREF(1:1).EQ.'b')THEN
+
+!         BIDIRECTIONAL REFLECTANCE DISTRIBUTION FUNCTION (BRDF):
+          LAMBER=.FALSE.
+          IF(LJMASS)THEN
+              CALL INITCARD('CARD4A')
+          ELSE
+             IF(.NOT.DRF_FLAG) THEN
+              READ(IRD,'(I1,F9.0)',IOSTAT=IOTEST)NSURF,AATEMP
+             ELSE
+              NSURF = 1
+              AATEMP = -1.0
+             ENDIF
+          ENDIF
+          IOTEST = 0
+          !WRITE(*,*) 'in here rflect2'
+
+!         CHECK FOR READ ERROR:
+          IF(IOTEST.NE.0)THEN
+          !   IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/18X,A)')' Error in RFLECT: ',            &
+     &          ' Unable to read CARD 4A (Number_of_surfaces',          &
+     &          ' and Area-averaged_surface_temperature).'
+           !  ENDIF
+              RFLECT=.FALSE.
+              RETURN
+          ELSEIF(NSURF.LT.1 .OR. NSURF.GT.2)THEN
+            ! IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,I3,A,/18X,A)')' Error in RFLECT: ',       &
+     &          ' The input number of surfaces is',NSURF,'.',           &
+     &          ' This value must be 1 or 2.'
+            ! ENDIF
+              RFLECT=.FALSE.
+              RETURN
+          ELSEIF(.NOT.LJMASS)THEN
+              IF(NSURF.EQ.1)THEN
+
+              ELSE
+              !   IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(2(/A),F8.2,A)')' The area-averaged'//     &
+     &              ' ground surface is distinct from the imaged',      &
+     &              ' pixel with temperature (AATEMP) equal',AATEMP,'K.'
+               !  ENDIF
+              ENDIF
+          ENDIF
+
+!         DEFINE GAUSSIAN QUADRATURE ANGLES:
+          IF(DIS)CALL QGAUSN(N2GAUS,CMU,CWT)
+
+!         DEFINE THE TARGET-PIXEL SURFACE:
+          IF(NSURF.EQ.1)THEN
+
+!             THIS SURFACE IS ALSO USED FOR THE AREA-AVERAGED GROUND.
+              GSURF=.TRUE.
+              IF(.NOT.LJMASS .AND. DEBUG_FLAG)   WRITE(IPR,'(/A)')      &
+     &          ' Uniform ground surface (NSURF=1)'
+          ELSE
+
+!             A SEPARATE AREA-AVERAGED GROUND SURFACE WILL BE DEFINED.
+              GSURF=.FALSE.
+              IF(DEBUG_FLAG) THEN
+              IF(.NOT.LJMASS)WRITE(IPR,'(2(/A),F8.2,A)')' The area-'//  &
+     &          'averaged ground surface is distinct from the imaged',  &
+     &          ' pixel with temperature (AATEMP) equal',AATEMP,'K.'
+              ENDIF
+          ENDIF
+          !WRITE(*,*) 'LAND_FLAG in rflect3 = ',LAND_FLAG
+          !WRITE(*,*) 'ICE_FLAG in rflect3 = ',ICE_FLAG
+          RFLECT=RDBRDF(1,GSURF,LAND_FLAG,ICE_FLAG,SNOW_FLAG,BRDF_LEN,  &
+     &                  BRDF_WVL,BRDF_PARAM)
+          IF(RFLECT)THEN
+
+!             DEFINE THE AREA-AVERAGED GROUND SURFACE:
+              IF(NSURF.EQ.2)THEN
+                  RFLECT=RDBRDF(2,.TRUE.,LAND_FLAG,ICE_FLAG,SNOW_FLAG,  &
+     &                          BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+              ELSE
+                  NWVSRF(2)=NWVSRF(1)
+                  DO IWVSRF=1,NWVSRF(1)
+                      WVSURF(2,IWVSRF)=WVSURF(1,IWVSRF)
+                  ENDDO
+              ENDIF
+          ENDIF
+          RETURN
+      ELSEIF(SURREF(1:1).EQ.'L' .OR. SURREF(1:1).EQ.'l')THEN
+
+!         SPECTRALLY DEPENDENT LAMBERTIAN REFLECTOR (NEW FORMAT):
+          LAMBER=.TRUE.
+
+!         READ NUMBER OF SURFACES AND AREA-AVERAGED SURFACE TEMPERATURE:
+          IF(LJMASS)THEN
+              CALL INITCARD('CARD4A')
+          ELSE
+             IF(.NOT.DRF_FLAG) THEN
+              READ(IRD,'(I1,F9.0)',IOSTAT=IOTEST)NSURF,AATEMP
+             ELSE
+              NSURF = 1.0
+              AATEMP = -1.0
+             ENDIF
+          ENDIF
+          IOTEST = 0
+          IF(IOTEST.NE.0)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/18X,A)')' Error in RFLECT: ',            &
+     &          ' Unable to read CARD 4A (Number_of_surfaces',          &
+     &          ' and Area-averaged_surface_temperature).'
+             ENDIF
+              RFLECT=.FALSE.
+              RETURN
+          ELSEIF(NSURF.LT.1 .OR. NSURF.GT.2)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,I3,A,/18X,A)')' Error in RFLECT: ',       &
+     &          ' The input number of surfaces is',NSURF,'.',           &
+     &          ' This value must be 1 or 2.'
+             ENDIF
+             RFLECT=.FALSE.
+             RETURN
+          ENDIF
+
+!         READ SURFACE SPECTRAL ALBEDO FILE NAME:
+          IF(LJMASS)THEN
+              CALL INITCARD('CARD4L1')
+          ELSE
+              WRITE(CFRMT(4:7),'(I4.4)')NAMLEN
+              IF(.NOT.DRF_FLAG) THEN
+                 READ(IRD,CFRMT,IOSTAT=IOTEST)SALBFL
+              ENDIF
+          ENDIF
+          IF(IOTEST.NE.0)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A)')' Error in RFLECT:  Unable',            &
+     &          ' to read surface spectral albedo file name.'
+              ENDIF
+              RFLECT=.FALSE.
+              RETURN
+          ENDIF
+
+!         DEFINE THE TARGET-PIXEL SURFACE REFLECTANCE
+          IF(NSURF.EQ.1)THEN
+
+!             THIS SURFACE IS ALSO USED FOR THE AREA-AVERAGED GROUND.
+              GSURF=.TRUE.
+              IF(.NOT.LJMASS .AND. DEBUG_FLAG)   WRITE(IPR,'(/A)')      &
+     &          ' Uniform ground surface (NSURF=1)'
+          ELSE
+
+!             A SEPARATE AREA-AVERAGED GROUND SURFACE WILL BE DEFINED.
+              GSURF=.FALSE.
+              IF(DEBUG_FLAG) THEN
+              IF(.NOT.LJMASS)WRITE(IPR,'(2(/A),F8.2,A)')' The area-'//  &
+     &          'averaged ground surface is distinct from the imaged',  &
+     &          ' pixel with temperature (AATEMP) equal',AATEMP,'K.'
+              ENDIF
+          ENDIF
+          SALBFL='./DATA/spec_alb.dat'
+          RFLECT=RDLAMB(1,GSURF,SALBFL,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+          IF(RFLECT)THEN
+
+!             DEFINE THE AREA-AVERAGED SURFACE REFLECTANCE:
+              IF(NSURF.EQ.2)THEN
+                  RFLECT=RDLAMB(2,.TRUE.,SALBFL,BRDF_LEN,BRDF_WVL,      &
+     &                          BRDF_PARAM)
+              ELSE
+                  NWVSRF(2)=NWVSRF(1)
+                  DO IWVSRF=1,NWVSRF(1)
+                      WVSURF(2,IWVSRF)=WVSURF(1,IWVSRF)
+                  ENDDO
+              ENDIF
+          ENDIF
+      ELSEIF(SURREF(1:1).EQ.'-')THEN
+
+!         SPECTRALLY DEPENDENT LAMBERTIAN REFLECTOR (OLD FORMAT):
+          LAMBER=.TRUE.
+
+!         READ SURFACE SPECTRAL ALBEDO INTEGER LABEL:
+          READ(SURREF(2:7),'(F6.0)',IOSTAT=IOTEST)RSALB
+          IF(IOTEST.NE.0)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/4A)')' Error in RFLECT:  Input surface',     &
+     &          ' albedo (=',SURREF,') could not be interpreted.'
+             ENDIF
+              RFLECT=.FALSE.
+              RETURN
+          ENDIF
+          LSALB=INT(RSALB+.5)
+          SALBFL=DATDIR(1:LENDAT)//'spec_alb.dat'
+          RFLECT=RDSALB(1,.TRUE.,LSALB,' ',SALBFL,BRDF_LEN,BRDF_WVL,    &
+     &                  BRDF_PARAM)
+          IF(RFLECT)THEN
+
+!             DEFINE THE AREA-AVERAGED SURFACE REFLECTANCE:
+              NWVSRF(2)=NWVSRF(1)
+              DO IWVSRF=1,NWVSRF(1)
+                  WVSURF(2,IWVSRF)=WVSURF(1,IWVSRF)
+              ENDDO
+          ENDIF
+      ELSE
+
+!         CONSTANT SURFACE ALBEDO:
+          NWVSRF(1)=1
+          NWVSRF(2)=1
+
+!         READ CONSTANT SURFACE ALBEDO
+          READ(SURREF,'(F7.0)',IOSTAT=IOTEST)SALB(1)
+          IF(IOTEST.NE.0)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/3A,/22X,A)')                                 &
+     &          ' Warning from RFLECT:  Input surface albedo (=',       &
+     &          SURREF,') could not be interpreted.',                   &
+     &          ' A constant surface albedo of 0. will be used.'
+              ENDIF
+              SALB(1)=0.
+          ELSEIF(SALB(1).GT.1.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/4A,/22X,A)')' Warning from RFLECT: ',        &
+     &          ' Input surface albedo exceeds 1 (=',SURREF,').',       &
+     &          ' A constant surface albedo of 1 will be used.'
+              ENDIF
+              SALB(1)=1.
+          ENDIF
+          HDIR(1)=SALB(1)
+          BRDF(1)=SALB(1)
+          IF(DIS)THEN
+              LAMBER=.TRUE.
+              DO J2GAUS=0,N2GAUS
+                  GDIREM(J2GAUS,1)=1.-SALB(1)
+                  DO I2GAUS=0,N2GAUS
+                      GNDMOM(I2GAUS,J2GAUS,0,1)=SALB(1)
+                  ENDDO
+              ENDDO
+              IF(LDISCL)GDIRRF(1)=SALB(1)
+          ELSE
+              GDIRRF(1)=SALB(1)
+          ENDIF
+          RFLECT=.TRUE.
+      ENDIF
+      IF(RFLECT .AND. DIS)THEN
+
+!         FOR LAMBERTIAN SURFACES, ALL BRDF IAZ>0 MOMENTS ARE ZERO.
+          DO IWVSRF=1,NWVSRF(2)
+              DO IAZ=1,NAZ
+                  DO J2GAUS=0,N2GAUS
+                      DO I2GAUS=0,N2GAUS
+                          GNDMOM(I2GAUS,J2GAUS,IAZ,IWVSRF)=0.
+                      ENDDO
+                  ENDDO
+              ENDDO
+          ENDDO
+      ENDIF
+      END
+      LOGICAL FUNCTION RDLAMB(ISURF,GSURF,SALBFL,BRDF_LEN,BRDF_WVL,     &
+     &                        BRDF_PARAM)
+
+!     RDLAMB READS IN THE LAMBERTIAN SURFACE INTEGER LABEL OR
+!     SURFACE NAME AND CALLS RDSALB TO READ IN THE SPECTRAL DATA.
+!     IF A PROBLEM OCCURS, A VALUE OF FALSE IS RETURNED.
+
+!     PARAMETERS:
+      INCLUDE 'ERROR.h'
+
+!     INPUT ARGUMENTS:
+!       ISURF   SURFACE TYPE INDEX (1=TARGET, 2=AREA-AVERAGED GROUND).
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+!       SALBFL  SPECTRAL ALBEDO FILE NAME FOR LAMBERTIAN SURFACE.
+      INTEGER ISURF
+      LOGICAL GSURF
+      CHARACTER SALBFL*(*)
+      INTEGER BRDF_LEN
+      REAL BRDF_WVL(BRDF_LEN)
+      REAL BRDF_PARAM(BRDF_LEN,3)
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /JM4L2/
+!       CSALB   LAMBERTIAN SURFACE IDENTIFIER, INTEGER LABEL OR NAME.
+      CHARACTER CSALB*80
+      COMMON/JM4L2/CSALB
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     FUNCTIONS:
+!       LENSTR  RETURNS STRING LENGTH AFTER TRIMMING LEADING BLANKS.
+!       UPCASE  RETURNS UPPER CASE STRING.
+!       RDSALB  READS IN THE LAMBERTIAN SURFACE SPECTRAL ALBEDO DATA.
+      INTEGER LENSTR
+      CHARACTER*80 UPCASE
+      LOGICAL RDSALB
+
+!     LOCAL VARIABLES:
+!       LNSALB  LENGTH OF LAMBERTIAN SURFACE IDENTIFIER STRING.
+!       LSALB   INTEGER LABEL FOR LAMBERTIAN SURFACE SPECTRAL ALBEDO.
+!       IOTEST  RESULT OF IOSTAT TEST IN READ.
+      INTEGER LNSALB,LSALB,IOTEST
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+!     DATA:
+!       IFRMT   FORMAT USED TO READ CSALB AS AN INTEGER
+      CHARACTER IFRMT*5
+      SAVE IFRMT
+      DATA IFRMT/'(I  )'/
+
+!     READ IN LAMBERTIAN SURFACE IDENTIFIER:
+      DRF_FLAG = .TRUE. 
+      DEBUG_FLAG = .TRUE.
+      IF(LJMASS)THEN
+          CALL INITCARD('CARD4L2')
+      ELSE
+         IF(.NOT.DRF_FLAG) THEN
+          READ(IRD,'(A80)')CSALB
+          ELSE
+           CSALB = '5'
+          ENDIF
+          IF (DEBUG_FLAG) THEN
+          IF(ISURF.EQ.1)THEN
+              WRITE(IPR,'(/(1X,A))')' The     IMAGED PIXEL     is'//
+     &          ' modeled as Lambertian with the surface name',CSALB
+          ELSE
+              WRITE(IPR,'(/(1X,A))')' The AREA-AVERAGED GROUND is'//
+     &          ' modeled as Lambertian with the surface name',CSALB
+          ENDIF
+         ELSE
+          CSALB = '21' !constant 5%
+         ENDIF
+      ENDIF
+      
+!     TRIM TRAILING COMMENTS AND LEADING/TRAILING BLANKS:
+      LNSALB=INDEX(CSALB,'!')-1
+      IF(LNSALB.LT.0)THEN
+          LNSALB=LENSTR(CSALB)
+      ELSEIF(LNSALB.GT.0)THEN
+          LNSALB=LENSTR(CSALB(1:LNSALB))
+      ENDIF
+      IF(LNSALB.LE.0)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDLAMB: ',               &
+     &      ' Lambertian surface identifier is blank.',                 &
+     &      ' CSALB="',CSALB,'"'
+         ENDIF
+          RDLAMB=.FALSE.
+          RETURN
+      ENDIF
+
+!     CHECK IF IDENTIFIER IS AN INTEGER:
+      WRITE(IFRMT(3:4),'(I2.2)')LNSALB
+      READ(CSALB(1:LNSALB),IFRMT,IOSTAT=IOTEST)LSALB
+      IF(IOTEST.EQ.0)THEN
+          RDLAMB=RDSALB(ISURF,GSURF,LSALB,' ',SALBFL,BRDF_LEN,BRDF_WVL,  &
+     &                  BRDF_PARAM)
+      ELSE
+
+!         IDENTIFIER IS A NAME (CHARACTER STRING):
+          CSALB=UPCASE(CSALB)
+          RDLAMB=RDSALB(ISURF,GSURF,0,CSALB(1:LNSALB),SALBFL,BRDF_LEN,   & 
+     &                  BRDF_WVL,BRDF_PARAM)
+      ENDIF
+      RETURN
+      END
+      LOGICAL FUNCTION RDSALB(ISURF,GSURF,LSALB,CSALB,SALBFL,BRDF_LEN,   &
+     &                        BRDF_WVL,BRDF_PARAM)
+
+!     RDSALB READS IN THE LAMBERTIAN SURFACE SPECTRAL ALBEDO DATA.
+
+!     INPUT ARGUMENTS:
+!       ISURF   SURFACE TYPE INDEX (1=TARGET, 2=AREA-AVERAGED GROUND).
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+!       LSALB   INTEGER LABEL FOR LAMBERTIAN SURFACE SPECTRAL ALBEDO.
+!               (SET TO ZERO IF NOT TO BE USED).
+!       CSALB   NAME FOR LAMBERTIAN SURFACE SPECTRAL ALBEDO.
+!       SALBFL  SPECTRAL ALBEDO FILE NAME FOR LAMBERTIAN SURFACE.
+      INTEGER ISURF,LSALB
+      LOGICAL GSURF
+      CHARACTER CSALB*(*),SALBFL*(*)
+      INTEGER BRDF_LEN
+      REAL BRDF_WVL(BRDF_LEN)
+      REAL BRDF_PARAM(BRDF_LEN,3)
+
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'ERROR.h'
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     /DISRT/
+!       DIS      LOGICAL FLAG, TRUE FOR DISORT MULTIPLE SCATTERING.
+!       DISAZM   LOGICAL FLAG, TRUE FOR DISORT WITH AZIMUTH DEPENDENCE.
+!       DISALB   LOGICAL FLAG, TRUE FOR DISORT SPHERICAL ALBEDO OPTION.
+!       LDISCL   LOGICAL FLAG, TRUE FOR ISAACS SCALED TO DISORT.
+!       NSTR     NUMBER OF DISCRETE ORDINATE STREAMS.
+!       NAZ      NUMBER OF DISORT AZIMUTH COMPONENTS.
+!       N2GAUS   ORDER OF DOUBLE-GAUSS QUADRATURES.
+      LOGICAL DIS,DISAZM,DISALB,LDISCL
+      INTEGER NSTR,NAZ,N2GAUS
+      COMMON/DISRT/DIS,DISAZM,DISALB,LDISCL,NSTR,NAZ,N2GAUS
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     FUNCTIONS:
+!       NUNIT   RETURNS AN UNUSED FILE UNIT NUMBER.
+!       LENSTR  RETURNS STRING LENGTH AFTER TRIMMING LEADING BLANKS.
+!       UPCASE  RETURNS UPPER CASE STRING.
+      INTEGER NUNIT,LENSTR
+      CHARACTER*80 UPCASE
+
+!     LOCAL VARIABLES:
+!       LEXIST  FILE EXIST FLAG.
+!       INPSTR  INPUT STRING FROM SURFACE SPECTRAL ALBEDO FILE.
+!       IOTEST  RESULT OF IOSTAT TEST IN INTERNAL READ.
+!       LENFIL  LENGTH OF FILE NAME.
+!       LENINP  LENGTH OF INPUT STRING.
+!       NUSALB  UNIT NUMBER OF LAMBERTIAN SURFACE SPECTRAL ALBEDO FILE.
+!       LBANG   LOCATION OF "!" (BANG) IN CHARACTER STRING.
+!       LBLANK  LOCATION OF BLANK FOLLOWING INTEGER LABEL.
+!       LENINT  LENGTH OF INTEGER LABEL STRING.
+!       IHEAD   INTEGER LABEL ON HEADER STRING.
+!       LENNAM  LENGTH OF SURFACE NAME STRING.
+!       LENFLT  LENGTH OF FLOATING POINT STRING.
+!       NEXTWV  WAVELENGTH GRID COUNTER.
+!       I2GAUS  LOOP INDEX FOR VIEW AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       J2GAUS  LOOP INDEX FOR SUN AND DOUBLE-GAUSS QUADRATURE ANGLES.
+      LOGICAL LEXIST
+      CHARACTER INPSTR*80
+      INTEGER IOTEST,LENFIL,LENINP,NUSALB,LBANG,LBLANK,LENINT,          &
+     &  IHEAD,LENNAM,LENFLT,NEXTWV,I2GAUS,J2GAUS
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+!     DATA:
+!       IFRMT   FORMAT USED TO READ A SINGLE INTEGER
+!       FFRMT   FORMAT USED TO READ A SINGLE FLOATING POINT NUMBER.
+      CHARACTER IFRMT*5,FFRMT*7
+      SAVE IFRMT,FFRMT
+      DATA IFRMT,FFRMT/'(I  )','(F  .0)'/
+
+      DRF_FLAG = .TRUE. 
+      DEBUG_FLAG = .TRUE.
+!     OPEN LAMBERTIAN SURFACE SPECTRAL ALBEDO FILE:
+      LENFIL=LENSTR(SALBFL)
+      INQUIRE(FILE=SALBFL(1:LENFIL),EXIST=LEXIST)
+      IF(.NOT.LEXIST)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/(19X,A))')' Error in RDSALB:  ',             &
+     &      'Lambertian surface spectral albedo file',                  &
+     &      SALBFL(1:LENFIL),'not found.'
+         ENDIF
+          RDSALB=.FALSE.
+          RETURN
+      ENDIF
+      NUSALB=NUNIT()
+      OPEN(UNIT=NUSALB,FILE=SALBFL(1:LENFIL),STATUS='OLD')
+
+!     READ LAMBERTIAN SURFACE SPECTRAL ALBEDO FILE TO FIND HEADER MATCH:
+   10 CONTINUE
+          READ(NUSALB,'(A80)',IOSTAT=IOTEST)INPSTR
+
+!         END-OF-FILE:
+          IF(IOTEST.NE.0)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/18X,A)')' Error in RDSALB: ',            &
+     &          ' Reached end of Lambertian surface spectral albedo',   &
+     &          ' file without matching surface integer label or name.'
+              ENDIF
+              CLOSE(NUSALB)
+              RDSALB=.FALSE.
+              RETURN
+          ENDIF
+
+!         IF LINE IS BLANK, READ NEXT LINE:
+          LENINP=LENSTR(INPSTR)
+          IF(LENINP.EQ.0)GOTO 10
+
+!         IF FIRST NON-BLANK CHARACTER IS "!", READ NEXT LINE:
+          LBANG=INDEX(INPSTR(1:LENINP),'!')
+          IF(LBANG.EQ.1)GOTO 10
+
+!         IF LINE CONTAINS A COMMENT, TRIM IT OFF.
+          IF(LBANG.GT.1)LENINP=LENSTR(INPSTR(1:LBANG-1))
+
+!         IF LINE CONTAINS DATA (INSTEAD OF HEADER), READ NEXT LINE:
+          IF(INDEX(INPSTR(1:LENINP),'.').GT.0)GOTO 10
+
+!         PARSE HEADER:
+          LBLANK=INDEX(INPSTR(1:LENINP),' ')
+          IF(LBLANK.LE.1)GOTO 40
+
+!         READ LAMBERTIAN SURFACE INTEGER LABEL:
+          LENINT=LBLANK-1
+          WRITE(IFRMT(3:4),'(I2.2)')LENINT
+          READ(INPSTR(1:LENINT),IFRMT,ERR=40)IHEAD
+          IF(IHEAD.LE.0)GOTO 40
+
+!         IF INTEGER LABEL DOES NOT MATCH, CHECK NAME:
+          IF(IHEAD.NE.LSALB)THEN
+
+!             DETERMINE LAMBERTIAN SURFACE NAME:
+              LENNAM=LENSTR(INPSTR(LBLANK:LENINP))
+              IF(LENNAM.LE.0)GOTO 40
+
+!             IF NO MATCH, READ NEXT LINE:
+              INPSTR=UPCASE(INPSTR)
+              IF(INPSTR(LBLANK:LENINT+LENNAM).NE.CSALB)GOTO 10
+          ENDIF
+
+!         WRITE OUT SELECTION:
+          IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/(2A))')' Using surface:  ',       &
+     &      INPSTR(1:LENINP),' From file:      ',SALBFL(1:LENFIL)
+          ENDIF
+
+!     MATCH FOUND:  INITIALIZE WAVELENGTH INDEX AND READ DATA.
+      NEXTWV=1
+   20 CONTINUE
+          READ(NUSALB,'(A80)',END=30)INPSTR
+
+!         IF LINE IS BLANK, READ NEXT LINE:
+          LENINP=LENSTR(INPSTR)
+          IF(LENINP.EQ.0)GOTO 20
+
+!         IF FIRST NON-BLANK CHARACTER IS "!", READ NEXT LINE:
+          LBANG=INDEX(INPSTR(1:LENINP),'!')
+          IF(LBANG.EQ.1)GOTO 20
+
+!         IF LINE CONTAINS A COMMENT, TRIM IT OFF.
+          IF(LBANG.GT.1)LENINP=LENSTR(INPSTR(1:LBANG-1))
+
+!         CHECK IF LINE CONTAINS DATA (INSTEAD OF HEADER):
+!DRF          IF(INDEX(INPSTR(1:LENINP),'.').GT.0)THEN
+          IF(NEXTWV.LE.BRDF_LEN)THEN
+
+!             PARSE DATA:
+              LBLANK=INDEX(INPSTR(1:LENINP),' ')
+              IF(LBLANK.LE.1)GOTO 50
+
+!             READ WAVELENGTH:
+              LENFLT=LBLANK-1
+              WRITE(FFRMT(3:4),'(I2.2)')LENFLT
+!DRF              READ(INPSTR(1:LENFLT),FFRMT,ERR=50)WVSURF(ISURF,NEXTWV)
+	      !IF(NEXTWV.EQ.1) WVSURF(ISURF,NEXTWV)=0.47
+	      !IF(NEXTWV.EQ.2) WVSURF(ISURF,NEXTWV)=0.56
+	      !IF(NEXTWV.EQ.3) WVSURF(ISURF,NEXTWV)=0.64
+	      !IF(NEXTWV.EQ.4) WVSURF(ISURF,NEXTWV)=0.86
+	      !IF(NEXTWV.EQ.5) WVSURF(ISURF,NEXTWV)=1.24
+	      !IF(NEXTWV.EQ.6) WVSURF(ISURF,NEXTWV)=1.64
+	      !IF(NEXTWV.EQ.7) WVSURF(ISURF,NEXTWV)=2.13
+              WVSURF(ISURF,NEXTWV) = BRDF_WVL(NEXTWV)
+		!WRITE(*,*) 'WVSURF = ',WVSURF
+
+!             CHECK WAVELENGTHS FOR MONOTONICITY:
+              IF(NEXTWV.EQ.1)THEN
+                  IF(WVSURF(ISURF,NEXTWV).LT.0.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A)')' Error in RDSALB: ',           &
+     &                  ' Lambertian surface wavelength less than 0.'
+                     ENDIF
+                      CLOSE(NUSALB)
+                      RDSALB=.FALSE.
+                      RETURN
+                  ENDIF
+              ELSE
+                  IF(WVSURF(ISURF,NEXTWV).LE.                           &
+     &              WVSURF(ISURF,NWVSRF(ISURF)))THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A)')' Error in RDSALB: ',           &
+     &                  ' Lambertian surface wavelengths out of order.'
+                      ENDIF
+                      CLOSE(NUSALB)
+                      RDSALB=.FALSE.
+                      RETURN
+                  ENDIF
+              ENDIF
+
+!             READ SPECTRAL ALBEDO:
+              LENFLT=LENINP-LENFLT
+              WRITE(FFRMT(3:4),'(I2.2)')LENFLT
+!DRF              READ(INPSTR(LBLANK:LENINP),FFRMT,ERR=50)SALB(NEXTWV)
+              SALB(NEXTWV) = BRDF_PARAM(NEXTWV,2) !for ocean 
+              !WRITE(*,*) 'SALB = ',SALB(NEXTWV)
+              IF(ISURF.EQ.1)THEN
+
+!                 TARGET-PIXEL VALUES:
+                  HDIR(NEXTWV)=SALB(NEXTWV)
+                  BRDF(NEXTWV)=SALB(NEXTWV)
+              ENDIF
+              IF(GSURF)THEN
+
+!                 AREA-AVERAGED GROUND VALUES:
+                  IF(DIS)THEN
+                      DO J2GAUS=0,N2GAUS
+                          GDIREM(J2GAUS,NEXTWV)=1.-SALB(NEXTWV)
+                          DO I2GAUS=0,N2GAUS
+                              GNDMOM(I2GAUS,J2GAUS,0,NEXTWV)            &
+     &                          =SALB(NEXTWV)
+                          ENDDO
+                      ENDDO
+                      IF(LDISCL)GDIRRF(NEXTWV)=SALB(NEXTWV)
+                  ELSE
+                      GDIRRF(NEXTWV)=SALB(NEXTWV)
+                  ENDIF
+              ENDIF
+
+!             READ NEXT LINE:
+              NWVSRF(ISURF)=NEXTWV
+              NEXTWV=NEXTWV+1
+              IF(NEXTWV.LE.MWVSRF)GOTO 20
+
+!             MAXIMUM NUMBER OF DATA LINES HAVE BEEN READ:
+              IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/(22X,A))')' Warning from RDSALB: ',      &
+     &          ' The maximum number of spectral points have been',     &
+     &          ' used in specifying the surface spectral albedo.',     &
+     &          ' To use more, increase parameter MWVSRF.'
+              WRITE(*,'(/2A,/(22X,A))')' Warning from RDSALB: ',        &
+     &          ' The maximum number of spectral points have been',     &
+     &          ' used in specifying the surface spectral albedo.',     &
+     &          ' To use more, increase parameter MWVSRF.'
+              ENDIF
+          ENDIF
+
+!     DATA HAS BEEN READ:
+   30 CONTINUE
+      IF(NEXTWV.EQ.1)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A)')' Error in RDSALB: ',                       &
+     &      ' No Lambertian surface spectral albedo data was read in.'
+          ENDIF
+          CLOSE(NUSALB)
+          RDSALB=.FALSE.
+          RETURN
+      ENDIF
+
+!     SUCCESSFUL READ:
+      CLOSE(NUSALB)
+      RDSALB=.TRUE.
+      RETURN
+
+!     UNABLE TO INTERPRET HEADER:
+   40 CONTINUE
+      IF(DEBUG_FLAG) THEN
+      WRITE(IPR,'(/2A,/(19X,A))')' Error in RDSALB:  ',                 &
+     &  'Unable to interpret header line',INPSTR(1:LENINP),             &
+     &  'in Lambertian surface spectral albedo file.'
+      ENDIF
+      CLOSE(NUSALB)
+      RDSALB=.FALSE.
+      RETURN
+
+!     UNABLE TO INTERPRET DATA LINE:
+   50 CONTINUE
+      IF(DEBUG_FLAG) THEN
+      WRITE(IPR,'(/2A,/(19X,A))')' Error in RDSALB:  ',                 &
+     &  'Unable to interpret data line',INPSTR(1:LENINP),               &
+     &  'in Lambertian surface spectral albedo file.'
+      ENDIF
+      CLOSE(NUSALB)
+      RDSALB=.FALSE.
+      RETURN
+      END
+      SUBROUTINE GTSURF(WMICRN,LSURF)
+
+!     GTSURF RETURNS SURFACE REFLECTANCE/EMITTANCE
+!     VALUES AT SPECIFIED WAVELENGTH.
+
+!     INPUT ARGUMENTS:
+!       WMICRN  WAVELENGTH [MICRONS].
+!       LSURF   SPECTRAL FLAG [TRUE IF REFLECTANCES ARE CHANGING].
+      REAL WMICRN
+      LOGICAL LSURF
+
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+
+!     COMMONS:
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     /SURFWV/
+!       LAMBER  LOGICAL FLAG, .TRUE. FOR LAMBERTIAN SURFACE.
+!       TPTEMP  TARGET-PIXEL SURFACE TEMPERATURES [K].
+!       TPHDIR  TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCE AT
+!               VIEWING ANGLE.
+!       TPBRDF  TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING AND SUN ANGLE.
+!       AATEMP  AREA-AVERAGED GROUND SURFACE TEMPERATURES [K].
+!       AASALB  AREA-AVERAGED GROUND SURFACE ALBEDO.
+!       AADREF  AREA-AVERAGED GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT THE SOLAR ZENITH ANGLE.
+!       EMU     GROUND DIRECTIONAL EMISSIVITY AT VIEWING ANGLE.
+!       BEM     GROUND DIRECTIONAL EMISSIVITY AT QUADRATURE ANGLE.
+!       RMU     GROUND BRDF AZIMUTH COMPONENTS AT VIEWING ANGLE
+!               AND AT SUN (=0) OR QUADRATURE (>0) ANGLE.
+!       BDR     GROUND BRDF AZIMUTH COMPONENTS AT QUADRATURE ANGLE
+!               AND AT SUN (=0) OR QUADRATURE (>0) ANGLE.
+      LOGICAL LAMBER
+      REAL TPTEMP,TPHDIR,TPBRDF,AATEMP,AASALB,AADREF,EMU,BEM,RMU,BDR
+      COMMON/SURFWV/LAMBER,TPTEMP,TPHDIR,TPBRDF,AATEMP,AASALB,AADREF,   &
+     &  EMU(MXUMU),BEM(MI),RMU(1:MXUMU,0:MI,0:MAZ),BDR(1:MI,0:MI,0:MAZ)
+
+!     /DISRT/
+!       DIS      LOGICAL FLAG, TRUE FOR DISORT MULTIPLE SCATTERING.
+!       DISAZM   LOGICAL FLAG, TRUE FOR DISORT WITH AZIMUTH DEPENDENCE.
+!       DISALB   LOGICAL FLAG, TRUE FOR DISORT SPHERICAL ALBEDO OPTION.
+!       LDISCL   LOGICAL FLAG, TRUE FOR ISAACS SCALED TO DISORT.
+!       NSTR     NUMBER OF DISCRETE ORDINATE STREAMS.
+!       NAZ      NUMBER OF DISORT AZIMUTH COMPONENTS.
+!       N2GAUS   ORDER OF DOUBLE-GAUSS QUADRATURES.
+      LOGICAL DIS,DISAZM,DISALB,LDISCL
+      INTEGER NSTR,NAZ,N2GAUS
+      COMMON/DISRT/DIS,DISAZM,DISALB,LDISCL,NSTR,NAZ,N2GAUS
+
+!     LOCAL VARIABLES:
+!       IWAVLO  LOWER WAVELENGTH INDEX.
+!       IWAVHI  HIGHER WAVELENGTH INDEX.
+!       WAVFAC  WAVELENGTH INTERPOLATION FACTOR.
+!       I2GAUS  LOOP INDEX FOR DOUBLE-GAUSS QUADRATURE ANGLES.
+!       J2GAUS  LOOP INDEX FOR SUN AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       IAZ     DISORT AZIMUTH COMPONENT LOOP INDEX.
+      INTEGER IWAVLO,IWAVHI,I2GAUS,J2GAUS,IAZ
+      REAL WAVFAC
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+      DRF_FLAG = .TRUE.
+      DEBUG_FLAG = .TRUE.
+!     INITIALIZE LSURF [FALSE IF BOTH NWVSRF(1) AND NWVSRF(2) ARE 1].
+      LSURF=NWVSRF(1)+NWVSRF(2).GT.2
+
+!     TARGET SURFACE:
+      IF(WMICRN.LE.WVSURF(1,1))THEN
+
+!         MINIMUM WAVELENGTH:
+          TPHDIR=HDIR(1)
+          TPBRDF=BRDF(1)
+          LSURF=NWVSRF(2).GT.1 .AND. WMICRN.GT.WVSURF(2,1)
+      ELSEIF(WMICRN.GE.WVSURF(1,NWVSRF(1)))THEN
+
+!         MAXIMUM WAVELENGTH:
+          TPHDIR=HDIR(NWVSRF(1))
+          TPBRDF=BRDF(NWVSRF(1))
+      ELSE
+
+!         INTERPOLATE IN WAVELENGTH:
+          IWAVLO=1
+          DO IWAVHI=2,NWVSRF(1)-1
+              IF(WMICRN.LE.WVSURF(1,IWAVHI))GOTO 10
+              IWAVLO=IWAVHI
+          ENDDO
+          IWAVHI=NWVSRF(1)
+   10     CONTINUE
+          WAVFAC=(WMICRN-WVSURF(1,IWAVLO))                              &
+     &      /(WVSURF(1,IWAVHI)-WVSURF(1,IWAVLO))
+          TPHDIR=HDIR(IWAVLO)+WAVFAC*(HDIR(IWAVHI)-HDIR(IWAVLO))
+          TPBRDF=BRDF(IWAVLO)+WAVFAC*(BRDF(IWAVHI)-BRDF(IWAVLO))
+      ENDIF
+
+!     AREA-AVERAGED GROUND SURFACE:
+      IF(WMICRN.LE.WVSURF(2,1))THEN
+
+!         MINIMUM WAVELENGTH:
+          AASALB=SALB(1)
+          IF(DIS)THEN
+
+!             DISORT GROUND DIRECTIONAL EMISSIVITIES:
+              EMU(1)=GDIREM(0,1)
+              DO I2GAUS=1,N2GAUS
+                  BEM(I2GAUS)=GDIREM(I2GAUS,1)
+              ENDDO
+
+!             DISORT GROUND BRDF AZIMUTH MOMEMTS:
+              DO IAZ=0,NAZ
+
+!                 LOOP OVER SUN (=0) AND QUADRATURE (>0) ANGLES:
+                  DO J2GAUS=0,N2GAUS
+                      RMU(1,J2GAUS,IAZ)=GNDMOM(0,J2GAUS,IAZ,1)
+
+!                     LOOP OVER QUADRATURE ANGLES:
+                      DO I2GAUS=1,N2GAUS
+                          BDR(I2GAUS,J2GAUS,IAZ)                        &
+     &                      =GNDMOM(I2GAUS,J2GAUS,IAZ,1)
+                      ENDDO
+                  ENDDO
+              ENDDO
+              IF(LDISCL)AADREF=GDIRRF(1)
+          ELSE
+              AADREF=GDIRRF(1)
+          ENDIF
+      ELSEIF(WMICRN.GE.WVSURF(2,NWVSRF(2)))THEN
+
+!         MAXIMUM WAVELENGTH:
+          AASALB=SALB(NWVSRF(2))
+          IF(DIS)THEN
+
+!             DISORT GROUND DIRECTIONAL EMISSIVITIES:
+              EMU(1)=GDIREM(0,NWVSRF(2))
+              DO I2GAUS=1,N2GAUS
+                  BEM(I2GAUS)=GDIREM(I2GAUS,NWVSRF(2))
+              ENDDO
+
+!             DISORT GROUND BRDF AZIMUTH MOMEMTS:
+              DO IAZ=0,NAZ
+
+!                 LOOP OVER SUN (=0) AND QUADRATURE (>0) ANGLES:
+                  DO J2GAUS=0,N2GAUS
+                      RMU(1,J2GAUS,IAZ)=GNDMOM(0,J2GAUS,IAZ,NWVSRF(2))
+
+!                     LOOP OVER QUADRATURE ANGLES:
+                      DO I2GAUS=1,N2GAUS
+                          BDR(I2GAUS,J2GAUS,IAZ)                        &
+     &                      =GNDMOM(I2GAUS,J2GAUS,IAZ,NWVSRF(2))
+                      ENDDO
+                  ENDDO
+              ENDDO
+              IF(LDISCL)AADREF=GDIRRF(NWVSRF(2))
+          ELSE
+              AADREF=GDIRRF(NWVSRF(2))
+          ENDIF
+      ELSE
+
+!         INTERPOLATE IN WAVELENGTH:
+          IWAVLO=1
+          DO IWAVHI=2,NWVSRF(2)-1
+              IF(WMICRN.LE.WVSURF(2,IWAVHI))GOTO 20
+              IWAVLO=IWAVHI
+          ENDDO
+          IWAVHI=NWVSRF(2)
+   20     CONTINUE
+          WAVFAC=(WMICRN-WVSURF(2,IWAVLO))                              &
+     &      /(WVSURF(2,IWAVHI)-WVSURF(2,IWAVLO))
+          AASALB=SALB(IWAVLO)+WAVFAC*(SALB(IWAVHI)-SALB(IWAVLO))
+          IF(DIS)THEN
+
+!             DISORT GROUND DIRECTIONAL EMISSIVITIES:
+              EMU(1)=GDIREM(0,IWAVLO)                                   &
+     &          +WAVFAC*(GDIREM(0,IWAVHI)-GDIREM(0,IWAVLO))
+              DO I2GAUS=1,N2GAUS
+                  BEM(I2GAUS)=GDIREM(I2GAUS,IWAVLO)+WAVFAC              &
+     &              *(GDIREM(I2GAUS,IWAVHI)-GDIREM(I2GAUS,IWAVLO))
+              ENDDO
+
+!             DISORT GROUND BRDF AZIMUTH MOMEMTS:
+              DO IAZ=0,NAZ
+
+!                 LOOP OVER SUN (=0) AND QUADRATURE (>0) ANGLES:
+                  DO J2GAUS=0,N2GAUS
+                      RMU(1,J2GAUS,IAZ)=GNDMOM(0,J2GAUS,IAZ,IWAVLO)     &
+     &                  +WAVFAC*(GNDMOM(0,J2GAUS,IAZ,IWAVHI)            &
+     &                          -GNDMOM(0,J2GAUS,IAZ,IWAVLO))
+
+!                     LOOP OVER QUADRATURE ANGLES:
+                      DO I2GAUS=1,N2GAUS
+                          BDR(I2GAUS,J2GAUS,IAZ)                        &
+     &                      =GNDMOM(I2GAUS,J2GAUS,IAZ,IWAVLO)           &
+     &                      +WAVFAC*(GNDMOM(I2GAUS,J2GAUS,IAZ,IWAVHI)   &
+     &                              -GNDMOM(I2GAUS,J2GAUS,IAZ,IWAVLO))
+                      ENDDO
+                  ENDDO
+              ENDDO
+              IF(LDISCL)AADREF=GDIRRF(IWAVLO)                           &
+     &          +WAVFAC*(GDIRRF(IWAVHI)-GDIRRF(IWAVLO))
+          ELSE
+              AADREF=GDIRRF(IWAVLO)                                     &
+     &          +WAVFAC*(GDIRRF(IWAVHI)-GDIRRF(IWAVLO))
+          ENDIF
+      ENDIF
+      RETURN
+      END
+      LOGICAL FUNCTION RDBRDF(ISURF,GSURF,LAND_FLAG,ICE_FLAG,SNOW_FLAG, &
+     &                        BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+
+!     RDBRDF READS IN THE SURFACE BRDF (BIDIRECTIONAL REFLECTANCE
+!     DISTRIBUTION FUNCTION) TYPE.  IF A PROBLEM OCCURS, A VALUE OF
+!     FALSE IS RETURNED.
+
+!     PARAMETERS:
+      INCLUDE 'ERROR.h'
+
+!     INPUT ARGUMENTS:
+!       ISURF   SURFACE TYPE INDEX (0=TARGET, 1=AREA-AVERAGED GROUND).
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+!       LAND_FLAG LOGICAL FLAG, .TRUE. IF LAND SURFACE, ELSE OCEAN
+      INTEGER ISURF
+      LOGICAL GSURF
+      LOGICAL LAND_FLAG,ICE_FLAG,SNOW_FLAG !DRF
+      INTEGER BRDF_LEN
+      REAL BRDF_WVL(BRDF_LEN)
+      REAL BRDF_PARAM(BRDF_LEN,3) !DRF
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /JM4B1/
+!       CBRDF   BRDF IDENTIFIER, INTEGER LABEL OR NAME.
+      CHARACTER CBRDF*80
+      COMMON/JM4B1/CBRDF
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     FUNCTIONS:
+!       LENSTR  RETURNS STRING LENGTH AFTER TRIMMING LEADING BLANKS.
+!       UPCASE  RETURNS UPPER CASE STRING.
+!       GTWAL   RETURNS TRUE IF WALTHALL BRDF IS SUCCESSFULLY ANALYZED.
+!       GTBRDF  RETURNS TRUE IF BRDF IS SUCCESSFULLY INPUT AND ANALYZED.
+!CXMK   GTCXMK  RETURNS TRUE IF COX-MUNK BRDF IS SUCCESSFULLY ANALYZED.
+!       REFAMB  RETURNS BRDF FROM AMBRALS RUN.
+!       REFWAL  RETURNS WALTHALL EMPIRICAL BRDF.
+!       REFSW   RETURNS SHIBAYAMA-WIEGAND EMPIRICAL BRDF.
+!       REFHAP  RETURNS HAPKE EMPIRICAL BRDF.
+!       REFRAH  RETURNS RAHMAN SEMI-EMPIRICAL BRDF.
+!       REFROU  RETURNS ROUJEAN SEMI-EMPIRICAL BRDF.
+!       REFROS  RETURNS ROSS SEMI-EMPIRICAL BRDF.
+!       REFLS   RETURNS LI-STRAHLER SEMI-EMPIRICAL BRDF.
+!       REFDQ   RETURNS DYMOND-QI PHYSICAL BRDF.
+!       REFPV   RETURNS PINTY-VERSTRAETE PHYSICAL BRDF.
+!       REFRL   RETURNS ROSS-LI (RECIPROCAL ROSS THICK LI SPARSE)
+!                       SEMI-EMPIRICAL BRDF.
+!       REFWLS  RETURNS SINUSOIDAL WALTHALL EMPIRICAL BRDF.
+!       REFCXMK RETURNS COX-MUNK BRDF (DRF)
+!       REFLZ   RETURNS LI-ZHOU BRDF (DRF)
+      INTEGER LENSTR
+      CHARACTER*80 UPCASE
+      LOGICAL GTWAL,GTBRDF
+!CXMK LOGICAL GTWAL,GTBRDF,GTCXMK
+      REAL REFWAL,REFHAP,REFRAH,REFROU,REFPV,REFWLS,REFRL,REFCXMK,REFLZ
+      REAL SBRDF
+!TODO REAL REFAMB,REFSW,REFROS,REFLS,REFDQ
+      EXTERNAL REFWAL,REFHAP,REFRAH,REFROU,REFPV,REFWLS,REFRL,REFCXMK
+      EXTERNAL REFLZ
+      EXTERNAL SBRDF
+!TODO EXTERNAL REFAMB,REFSW,REFROS,REFLS,REFDQ
+
+!     LOCAL VARIABLES:
+!       LNBRDF  LENGTH OF BRDF IDENTIFIER STRING.
+!       IOTEST  RESULT OF IOSTAT TEST IN INTERNAL READ.
+      INTEGER LNBRDF,IOTEST
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+!     DATA:
+!       LBRDF   BRDF INTEGER LABEL.
+!       IFRMT   FORMAT USED TO READ CSALB AS AN INTEGER.
+      CHARACTER IFRMT*5
+      INTEGER LBRDF
+      SAVE LBRDF,IFRMT
+      DATA LBRDF/0/,IFRMT/'(I  )'/
+
+      DRF_FLAG = .TRUE.  
+      DEBUG_FLAG = .TRUE.
+
+!     READ IN BRDF IDENTIFIER:
+      IF(LJMASS)THEN
+          CALL INITCARD('CARD4B1')
+      ELSE
+         IF(.NOT.DRF_FLAG) THEN
+          READ(IRD,'(A80)')CBRDF
+         ELSE
+            WRITE(*,*) 'LAND_FLAG = ',LAND_FLAG
+            WRITE(*,*) 'SNOW_FLAG = ',SNOW_FLAG
+            WRITE(*,*) 'ICE_FLAG = ',ICE_FLAG
+            !LAND_FLAG = .TRUE.
+          IF(LAND_FLAG) THEN
+            LBRDF = 12
+            CBRDF = 'ROSS-LI  '
+          ELSEIF(ICE_FLAG.AND..NOT.LAND_FLAG) THEN
+            LBRDF = 12
+            CBRDF = 'ROSS-LI  '
+            !LBRDF = 13
+            !CBRDF = 'LI-ZHOU'
+            !LBRDF = 22
+            !CBRDF = 'HUDSON'
+            ! LBRDF = 4
+            ! CBRDF = 'HAPKE'
+          !ELSEIF(SNOW_FLAG) THEN
+          !   LBRDF = 4
+          !   CBRDF = 'HAPKE'
+          ELSEIF(SNOW_FLAG.AND.LAND_FLAG) THEN
+             LBRDF = 12
+             CBRDF = 'ROSS-LI  '
+
+             !LBRDF = 4
+             !CBRDF = 'HAPKE'
+          ELSE
+            !OCEAN_FLAG 
+            LBRDF = 21
+            CBRDF = 'COX-MUNK  '
+            !LBRDF = 20
+            !CBRDF = 'ROSS-SEA'
+          ENDIF
+          !WRITE(*,*) 'ICE_FLAG = ',ICE_FLAG
+
+         ENDIF
+      ENDIF
+
+!     TRIM TRAILING COMMENTS AND LEADING/TRAILING BLANKS:
+      LNBRDF=INDEX(CBRDF,'!')-1
+      
+      IF(LNBRDF.LT.0)THEN
+          LNBRDF=LENSTR(CBRDF)
+      ELSEIF(LNBRDF.GT.0)THEN
+          LNBRDF=LENSTR(CBRDF(1:LNBRDF))
+      ENDIF
+      IF(LNBRDF.LE.0)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDBRDF: ',               &
+     &      ' BRDF identifier is blank.',' CBRDF="',CBRDF,'"'
+         ENDIF
+          RDBRDF=.FALSE.
+          RETURN
+      ENDIF
+
+!     CHECK IF IDENTIFIER IS AN INTEGER:
+      WRITE(IFRMT(3:4),'(I2.2)')LNBRDF
+      READ(CBRDF(1:LNBRDF),IFRMT,IOSTAT=IOTEST)LBRDF
+      IF(IOTEST.NE.0)LBRDF=0
+
+!     BRANCH TO APPROPRIATE BRDF ROUTINE:
+      CBRDF=UPCASE(CBRDF)
+      IF(LBRDF.EQ.1 .OR. CBRDF(1:LNBRDF).EQ.'AMBRALS')THEN
+
+!         AMBRALS:
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDBRDF: ',               &
+     &      'AMBRALS option not currently available.'
+          ENDIF
+          RDBRDF=.FALSE.
+      ELSEIF(LBRDF.EQ.2 .OR. CBRDF(1:LNBRDF).EQ.'WALTHALL')THEN
+
+!         WALTHALL:
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' WALTHALL MODEL BRDF'
+         ENDIF
+          RDBRDF=GTBRDF(4,REFWAL,ISURF,GSURF,LAND_FLAG,ICE_FLAG,        &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.3 .OR. CBRDF(1:LNBRDF).EQ.'SHIBAYAMA-WIEGAND')THEN
+
+!         SHIBAYAMA-WIEGAND:
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDBRDF: ',               &
+     &      'SHIBAYAMA WIEGAND option not currently available.'
+          ENDIF
+          RDBRDF=.FALSE.
+      ELSEIF(LBRDF.EQ.4 .OR. CBRDF(1:LNBRDF).EQ.'HAPKE')THEN
+
+!         HAPKE
+         !IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' HAPKE MODEL BRDF'
+         ! ENDIF
+          RDBRDF=GTBRDF(4,REFHAP,ISURF,GSURF,LAND_FLAG,ICE_FLAG,        &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.5 .OR. CBRDF(1:LNBRDF).EQ.'RAHMAN')THEN
+
+!         RAHMAN:
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' RAHMAN MODEL BRDF'
+          ENDIF
+          RDBRDF=GTBRDF(3,REFRAH,ISURF,GSURF,LAND_FLAG,ICE_FLAG,        &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.6 .OR. CBRDF(1:LNBRDF).EQ.'ROUJEAN')THEN
+
+!         ROUJEAN:
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' ROUJEAN MODEL BRDF'
+          ENDIF
+          RDBRDF=GTBRDF(3,REFROU,ISURF,GSURF,LAND_FLAG,ICE_FLAG,        &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.7 .OR. CBRDF(1:LNBRDF).EQ.'ROSS')THEN
+
+!         ROSS:
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDBRDF: ',               &
+     &      'ROSS option not currently available.'
+         ENDIF
+          RDBRDF=.FALSE.
+      ELSEIF(LBRDF.EQ.8 .OR. CBRDF(1:LNBRDF).EQ.'LI-STRAHLER')THEN
+
+!         LI STRAHLER:
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDBRDF: ',               &
+     &      'LI STRAHLER option not currently available.'
+         ENDIF
+          RDBRDF=.FALSE.
+      ELSEIF(LBRDF.EQ.9 .OR. CBRDF(1:LNBRDF).EQ.'DYMOND-QI')THEN
+
+!         DYMOND QI:
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDBRDF: ',               &
+     &      'DYMOND QI option not currently available.'
+         ENDIF
+          RDBRDF=.FALSE.
+      ELSEIF(LBRDF.EQ.10 .OR. CBRDF(1:LNBRDF).EQ.'PINTY-VERSTRAETE')THEN
+
+!         PINTY VERSTRAETE:
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' PINTY-VERSTRAETE MODEL BRDF'
+          ENDIF
+          RDBRDF=GTBRDF(4,REFPV,ISURF,GSURF,LAND_FLAG,ICE_FLAG,         &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.11 .OR. CBRDF(1:LNBRDF).EQ.'SINE-WALTHALL')THEN
+
+!         SINUSOIDAL WALTHALL:
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')                              &
+     &      ' SINUSOIDAL-WALTHALL MODEL BRDF'
+         ENDIF
+         RDBRDF=GTBRDF(4,REFWLS,ISURF,GSURF,LAND_FLAG,ICE_FLAG,         &
+     &                 SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.12 .OR. CBRDF(1:LNBRDF).EQ.'ROSS-LI')THEN
+
+!         ROSS-LI (RECIPROCAL ROSS THICK - LI SPARSE):
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' ROSS-LI MODEL BRDF'
+         ENDIF
+!         WRITE(*,*) 'BRDF_PARAM in RFLECT = ',BRDF_PARAM(:,1)
+          RDBRDF=GTBRDF(5,REFRL,ISURF,GSURF,LAND_FLAG,ICE_FLAG,         & 
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.13 .OR. CBRDF(1:LNBRDF).EQ.'LI-ZHOU') THEN
+
+!         LI-ZHOU SEA-ICE BRDF
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' LI-ZHOU MODEL BRDF'
+          RDBRDF=GTBRDF(5,REFLZ,ISURF,GSURF,LAND_FLAG,ICE_FLAG,         &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.20 .OR. CBRDF(1:LNBRDF).EQ.'ROSS-SEA') THEN
+
+!         ROSS OCEAN BRDF
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' ROSS-SEA MODEL BRDF'
+          RDBRDF=GTBRDF(5,SBRDF,ISURF,GSURF,LAND_FLAG,ICE_FLAG,         &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.21 .OR. CBRDF(1:LNBRDF).EQ.'COX-MUNK') THEN
+
+!         COX-MUNK NUMERICALLY INTEGRATED:
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' COX-MUNK MODEL BRDF'
+          RDBRDF=GTBRDF(3,REFCXMK,ISURF,GSURF,LAND_FLAG,ICE_FLAG,       &
+     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.22 .OR. CBRDF(1:LNBRDF).EQ.'HUDSON') THEN
+
+!         HUDSON ICE BRDF:
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')' HUDSON ICE MODEL BRDF'
+!          RDBRDF=GTBRDF(1,REFHUD,ISURF,GSURF,LAND_FLAG,ICE_FLAG,        &
+!     &                  SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+      ELSEIF(LBRDF.EQ.51 .OR. CBRDF(1:LNBRDF).EQ.'WALTHALL(A)')THEN
+
+!         WALTHALL (ANALYTICALLY INTEGRATED - NO NEGATIVE BRDF CHECK):
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')                              &
+     &      ' WALTHALL MODEL BRDF (Analytically integrated)'
+         ENDIF
+          RDBRDF=GTWAL(4,ISURF,GSURF,.FALSE.)
+      ELSEIF(LBRDF.EQ.52 .OR. CBRDF(1:LNBRDF).EQ.'SINE-WALTHALL(A)')THEN
+
+!         SINUSOIDAL WALTHALL
+!         (ANALYTICALLY INTEGRATED - NO NEGATIVE BRDF CHECK):
+         IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(/A)')                              &
+     &      ' SINUSOIDAL-WALTHALL MODEL BRDF (Analytically integrated)'
+          ENDIF
+          RDBRDF=GTWAL(4,ISURF,GSURF,.TRUE.)
+      ELSE
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/18X,3A)')' Error in RDBRDF: ',               &
+     &      ' Unable to interpret BRDF identifier.',' CBRDF="',CBRDF,'"'
+         ENDIF
+          RDBRDF=.FALSE.
+      ENDIF
+      RETURN
+      END
+      LOGICAL FUNCTION GTWAL(NPARAM,ISURF,GSURF,SINE,BRDF_LEN,BRDF_WVL, &
+     &                       BRDF_PARAM)
+
+!     GTWAL READS IN WALTHALL BRDF PARAMETERS AND CALLS FUNCTION
+!     WALTHL TO PERFORM ANALYTIC INTEGRATIONS OF THE WALTHALL BRDF.
+!     IF SUCCESSFUL, GTWAL RETURNS A VALUE OF TRUE.
+
+!     INPUT ARGUMENTS:
+!       NPARAM  NUMBER OF PARAMETERS IN BRDF REPRESENTATION.
+!       ISURF   SURFACE TYPE INDEX (0=TARGET, 1=AREA-AVERAGED GROUND).
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+!       SINE    LOGICAL FLAG, .TRUE. IF ZENITH ANGLES IN
+!               WALTHALL BRDF ARE REPLACED WITH THE SINE.
+      INTEGER NPARAM,ISURF
+      LOGICAL GSURF,SINE
+      INTEGER BRDF_LEN
+      REAL BRDF_WVL(BRDF_LEN)
+      REAL BRDF_PARAM(BRDF_LEN,3)
+
+!     PARAMETERS:
+!       MPARAM  MAXIMUM NUMBER OF PARAMETERS IN BRDF REPRESENTATION.
+      INTEGER MPARAM
+      PARAMETER(MPARAM=5)
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'ERROR.h'
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     /JM4B2/
+!       SURFZN  ZENITH ANGLE OF SURFACE NORMAL [DEG].
+!       SURFAZ  SURFACE NORMAL TO VIEW DIRECTION RELATIVE
+!               AZIMUTH ANGLE DEFINED AT THE SURFACE [DEG].
+      REAL SURFZN,SURFAZ
+      COMMON/JM4B2/SURFZN,SURFAZ
+
+!     /JM4B3/
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION.
+      REAL PARAMS
+      COMMON/JM4B3/PARAMS(MPARAM)
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     FUNCTIONS:
+!       WALTHL  RETURNS TRUE IF WALTHALL BRDF INTEGRATION IS A SUCCESS.
+!       WLTHLS  RETURNS TRUE IF BRDF INTEGRATION OF THE SINE VERSION
+!               OF THE WALTHALL REPRESENTATION IS A SUCCESS.
+      LOGICAL WALTHL,WLTHLS
+
+!     LOCAL VARIABLES:
+!       IOTEST  RESULT OF IOSTAT TEST IN READ.
+!       IWVSRF  CURRENT SPECTRAL WAVELENGTH INDEX.
+!       IPARAM  LOOP INDEX FOR PARAMETERS IN BRDF REPRESENTATION.
+      INTEGER IOTEST,IWVSRF,IPARAM
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+      DRF_FLAG = .TRUE. 
+      DEBUG_FLAG = .TRUE.
+
+!     CHECK NUMBER OF BRDF PARAMETERS:
+      IF(NPARAM.GT.MPARAM)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/17X,A,I3)')' Error in GTWAL:  Number',       &
+     &      ' of parameters in BRDF representation is too large.',      &
+     &      ' Please increase parameter MPARAM to',NPARAM
+         ENDIF
+          GTWAL=.FALSE.
+          RETURN
+      ENDIF
+
+!     READ IN NUMBER OF WAVELENGTH GRID POINTS AND SURFACE NORMAL:
+      IF(LJMASS)THEN
+          CALL INITCARD('CARD4B2')
+      ELSE
+         IF(.NOT.DRF_FLAG) THEN
+          READ(IRD,*,IOSTAT=IOTEST)NWVSRF(ISURF),SURFZN,SURFAZ
+         ELSE
+          NWVSRF(ISURF) = BRDF_LEN
+          SURFZN = 0
+          SURFAZ = 0
+         ENDIF
+      ENDIF
+      IF(IOTEST.NE.0)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,I2)')' Error in GTWAL:  Unable to',           &
+     &      ' read number of wavelengths for surface',ISURF
+         ENDIF
+          GTWAL=.FALSE.
+          RETURN
+      ELSEIF(NWVSRF(ISURF).LE.0)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,I8)')' Error in GTWAL:  Input number of',     &
+     &      ' wavelength points for surface BRDF is',NWVSRF(ISURF)
+         ENDIF
+          GTWAL=.FALSE.
+          RETURN
+      ELSEIF(NWVSRF(ISURF).GT.MWVSRF)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/17X,A,I3)')' Error in GTWAL:  Input',        &
+     &      ' number of wavelength points for surface BRDF is too',     &
+     &      ' large.  Increase parameter MWVSRF to',NWVSRF(ISURF)
+         ENDIF
+          GTWAL=.FALSE.
+          RETURN
+      ELSEIF(SURFZN.NE.0.)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/17X,A)')' Error in GTWAL: ',                 &
+     &      ' Currently, only surface normal zenith',                   &
+     &      ' angles of 0. degrees are allowed.'
+         ENDIF
+      ENDIF
+
+!     BRDF TABLE HEADER:
+      IF(DEBUG_FLAG) THEN
+      IF(.NOT.LJMASS)WRITE(IPR,'(/A,//A12,8(A12,I2))')                  &
+     &  ' BRDF DATA TABLE:',                                            &
+     &  ' WAVLEN (um)',('   PARAMETER',IPARAM,IPARAM=1,NPARAM)
+      IF(.NOT.LJMASS)WRITE(IPR,'(A12,8A14)')                            &
+     &  ' -----------',('   -----------',IPARAM=1,NPARAM)
+      ENDIF
+!     LOOP OVER WAVELENGTHS:
+      DO IWVSRF=1,NWVSRF(ISURF)
+
+!         READ IN SPECTRAL PARAMETERS:
+          IF(LJMASS)THEN
+              CALL INITCARD('CARD4B3')
+          ELSE
+             IF(.NOT.DRF_FLAG) THEN
+              READ(IRD,*,IOSTAT=IOTEST)                                 &
+     &          WVSURF(ISURF,IWVSRF),(PARAMS(IPARAM),IPARAM=1,NPARAM)
+             ELSE
+                !WVSURF(1,1) = 0.47
+                !WVSURF(1,2) = 0.56
+                !WVSURF(1,3) = 0.64
+                !WVSURF(1,4) = 0.86
+                !WVSURF(1,5) = 1.24
+                !WVSURF(1,6) = 1.64
+                !WVSURF(1,7) = 2.13
+                !PARAMS(1) = BRDF_PARAM(IWVSRF,1)
+                !PARAMS(2) = BRDF_PARAM(IWVSRF,2)
+                !PARAMS(3) = BRDF_PARAM(IWVSRF,3)
+             ENDIF
+          ENDIF
+          IF(IOTEST.NE.0)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,I2,A,/17X,A,I3)')' Error in GTWAL: ',     &
+     &          ' Unable to read surface',ISURF,' BRDF',                &
+     &          ' parameters for spectral point',IWVSRF
+             ENDIF
+              GTWAL=.FALSE.
+              RETURN
+          ENDIF
+          IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(F12.5,8F14.6)')                    &
+     &      WVSURF(ISURF,IWVSRF),(PARAMS(IPARAM),IPARAM=1,NPARAM)
+          ENDIF
+          IF(IWVSRF.GT.1)THEN
+              IF(WVSURF(ISURF,IWVSRF).LE.WVSURF(ISURF,IWVSRF-1))THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A)')' Error in GTWAL: ',                &
+     &              ' BRDF surface wavelengths out of order.'
+                 ENDIF
+                  GTWAL=.FALSE.
+                  RETURN
+              ENDIF
+          ELSEIF(WVSURF(ISURF,1).LT.0.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A)')' Error in GTWAL: ',                    &
+     &          ' BRDF surface wavelength less than 0.'
+             ENDIF
+              GTWAL=.FALSE.
+              RETURN
+          ENDIF
+          IF(SINE)THEN
+              IF(.NOT.WLTHLS(PARAMS,IWVSRF,ISURF,GSURF))THEN
+                  GTWAL=.FALSE.
+                  RETURN
+              ENDIF
+          ELSEIF(.NOT.WALTHL(PARAMS,IWVSRF,ISURF,GSURF))THEN
+              GTWAL=.FALSE.
+              RETURN
+          ENDIF
+      ENDDO
+      GTWAL=.TRUE.
+      RETURN
+      END
+      LOGICAL FUNCTION WALTHL(PARAMS,IWVSRF,ISURF,GSURF)
+
+!     WALTHL CALCULATES SURFACE REFLECTANCE VALUES USING A WALTHALL
+!     BRDF MODEL.  IF SUCCESSFUL, A VALUE OF .TRUE. IS RETURNED.
+!     THE WALTHALL BRDF MODEL HAS THE FOLLOWING FORM:
+
+!     BRDF(VIEW,SOURC,AZIM) = PARAMS(1)
+
+!                           + PARAMS(2) * VIEW * SOURC * COS(AZIM)
+
+!                                             2        2
+!                           + PARAMS(3) * VIEW  * SOURC
+
+!                                               2        2
+!                           + PARAMS(4) * ( VIEW  + SOURC  )
+
+!     WHERE VIEW IS THE SURFACE-TO-OBSERVER ZENITH ANGLE,
+!           SOURC IS THE SURFACE-TO-SOURCE ZENITH ANGLE, AND
+!           AZIM IS THE RELATIVE AZIMUTH ANGLE.
+
+!     THE AZIM IS ZERO IF THE SOURCE AND SENSOR ARE ON THE SAME SIDE
+!     OF THE SURFACE PIXEL (I.E. AZIM = 0 FOR THE HOT SPOT).
+
+!     INPUT ARGUMENTS:
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION.
+!       IWVSRF  CURRENT SPECTRAL WAVELENGTH INDEX.
+!       ISURF   SURFACE TYPE INDEX (1=TARGET, 2=AREA-AVERAGED GROUND).
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+      REAL PARAMS(*)
+      INTEGER IWVSRF,ISURF
+      LOGICAL GSURF
+
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /ANGSRF/
+!       CVWSRF  COSINE OF THE VIEW ZENITH ANGLE FROM THE SURFACE [RAD].
+!       CSNSRF  COSINE OF THE SOLAR (LUNAR) ZENITH AT SURFACE [RAD].
+!       AZMSRF  RELATIVE AZIMUTH ANGLE (SUN - SENSOR AT SURFACE) [RAD].
+!       UMU1    COSINE OF THE PATH NADIR ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       UMU0    COSINE OF THE SOLAR ZENITH ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       PHI1    RELATIVE AZIMUTH ANGLE (SUN - LOS PATH AT SENSOR) [DEG].
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       CMU     COSINE OF THE NADIR ANGLES USED IN DISORT.
+      REAL CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU
+      COMMON/ANGSRF/CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU(MI)
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     /DISRT/
+!       DIS      LOGICAL FLAG, TRUE FOR DISORT MULTIPLE SCATTERING.
+!       DISAZM   LOGICAL FLAG, TRUE FOR DISORT WITH AZIMUTH DEPENDENCE.
+!       DISALB   LOGICAL FLAG, TRUE FOR DISORT SPHERICAL ALBEDO OPTION.
+!       LDISCL   LOGICAL FLAG, TRUE FOR ISAACS SCALED TO DISORT.
+!       NSTR     NUMBER OF DISCRETE ORDINATE STREAMS.
+!       NAZ      NUMBER OF DISORT AZIMUTH COMPONENTS.
+!       N2GAUS   ORDER OF DOUBLE-GAUSS QUADRATURES.
+      LOGICAL DIS,DISAZM,DISALB,LDISCL
+      INTEGER NSTR,NAZ,N2GAUS
+      COMMON/DISRT/DIS,DISAZM,DISALB,LDISCL,NSTR,NAZ,N2GAUS
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     LOCAL VARIABLES:
+!       I2GAUS  LOOP INDEX FOR VIEW AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       J2GAUS  LOOP INDEX FOR SUN AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       IAZ     DISORT AZIMUTH COMPONENT LOOP INDEX.
+!       VIEWSQ  VIEW NADIR ANGLE AT SURFACE SQUARED [RADIANS**2].
+!       SUNSQ   SOLAR ZENITH AT SURFACE SQUARED [RADIANS**2].
+      INTEGER I2GAUS,J2GAUS,IAZ
+      REAL VIEWSQ,SUNSQ
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+!     DATA:
+!       WALCON  CONSTANT ARISING FROM HEMISPHERIC INTEGRATION OF
+!               WALTHALL BRDF [= 0.125*PI**2 - 0.5 ].
+      REAL WALCON
+      DATA WALCON/.73370055/
+
+      DRF_FLAG = .TRUE. 
+      DEBUG_FLAG = .TRUE.
+
+!     SURFACE ALBEDO:
+      SALB(IWVSRF)=PARAMS(1)+WALCON*(2*PARAMS(4)+WALCON*PARAMS(3))
+
+!     TARGET-PIXEL SURFACE:
+      IF(ISURF.EQ.1)THEN
+
+!         CHECK SURFACE ALBEDO:
+         IF(DEBUG_FLAG) THEN
+          IF(SALB(IWVSRF).LT.0.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WALTHL:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(1,IWVSRF),' Microns is negative.'
+          ELSEIF(SALB(IWVSRF).GT.1.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WALTHL:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(1,IWVSRF),' Microns exceeds 1.'
+          ENDIF
+         ENDIF
+
+!         BRDF:
+          VIEWSQ=ACOS(CVWSRF)**2
+          SUNSQ=ACOS(CSNSRF)**2
+          BRDF(IWVSRF)=PARAMS(1)                                        &
+     &      +PARAMS(2)*ACOS(CVWSRF)*ACOS(CSNSRF)*COS(AZMSRF)            &
+     &      +PARAMS(3)*VIEWSQ*SUNSQ                                     &
+     &      +PARAMS(4)*(VIEWSQ+SUNSQ)
+          IF(BRDF(IWVSRF).LT.0.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/A,F12.5,A,2(/23X,A),F12.5,A)')               &
+     &          ' Warning from WALTHL:  The target-pixel BRDF value at',&
+     &          WVSURF(1,IWVSRF),' Microns',                            &
+     &          '(for the current sun and view angles) is negative',    &
+     &          '(=',BRDF(IWVSRF),').  The value has been reset to 0.'
+             ENDIF
+              BRDF(IWVSRF)=0.
+          ENDIF
+
+!         HEMISPHERE DIRECTIONAL REFLECTIVITY:
+          HDIR(IWVSRF)=PARAMS(1)+PARAMS(4)*VIEWSQ                       &
+     &      +WALCON*(PARAMS(4)+PARAMS(3)*VIEWSQ)
+          IF(HDIR(IWVSRF).LT.0.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/(22X,2(A,F12.5),A))')                    &
+     &          ' Warning from WALTHL:  The target-pixel',              &
+     &          ' hemisphere directional reflectance',                  &
+     &          ' at',WVSURF(1,IWVSRF),' Microns and',                  &
+     &          ACOS(CVWSRF),' Radians is negative',                    &
+     &          ' (=',HDIR(IWVSRF),').  The value has been reset to 0.'
+              ENDIF
+              HDIR(IWVSRF)=0.
+          ELSEIF(HDIR(IWVSRF).GT.1.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/(22X,2(A,F12.5),A))')                    &
+     &          ' Warning from WALTHL:  The target-pixel',              &
+     &          ' hemisphere directional reflectance',                  &
+     &          ' at',WVSURF(1,IWVSRF),' Microns and',                  &
+     &          ACOS(CVWSRF),' Radians exceeds 1.',                     &
+     &          ' (=',HDIR(IWVSRF),').  The value has been reset to 1.'
+             ENDIF
+              HDIR(IWVSRF)=1.
+          ENDIF
+      ENDIF
+
+!     AREA-AVERAGED GROUND SURFACE:
+      IF(GSURF)THEN
+
+!         CHECK SURFACE ALBEDO:
+         IF(DEBUG_FLAG) THEN
+          IF(SALB(IWVSRF).LT.0.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WALTHL:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(ISURF,IWVSRF),' Microns is negative.'
+          ELSEIF(SALB(IWVSRF).GT.1.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WALTHL:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(ISURF,IWVSRF),' Microns exceeds 1.'
+          ENDIF
+          ENDIF
+          IF(DIS)THEN
+              VIEWSQ=ACOS(UMU1)**2
+              SUNSQ=ACOS(UMU0)**2
+
+!             DIRECTIONAL EMISSIVITY:
+              GDIREM(0,IWVSRF)=1.-SALB(IWVSRF)
+              IF(GDIREM(0,IWVSRF).LT.0.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')        &
+     &              ' Warning from WALTHL:  The ground directional',    &
+     &              ' emissivity at',WVSURF(ISURF,IWVSRF),' Microns',   &
+     &              ' and',ACOS(UMU1),' Radians is negative (=',        &
+     &              GDIREM(0,IWVSRF),').',                              &
+     &              ' The value has been reset to 0.'
+                  ENDIF
+                  GDIREM(0,IWVSRF)=0.
+              ELSEIF(GDIREM(0,IWVSRF).GT.1.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')        &
+     &             ' Warning from WALTHL:  The ground directional',     &
+     &             ' emissivity at',WVSURF(ISURF,IWVSRF),' Microns',    &
+     &             ' and',ACOS(UMU1),' Radians exceeds 1 (=',           &
+     &             GDIREM(0,IWVSRF),').',                               &
+     &             ' The value has been reset to 1.'
+                  ENDIF
+                  GDIREM(0,IWVSRF)=1.
+              ENDIF
+
+!             LOOP OVER DISORT COMPUTATIONAL ANGLES:
+              DO I2GAUS=1,N2GAUS
+                  VIEWSQ=ACOS(CMU(I2GAUS))**2
+                  GDIREM(I2GAUS,IWVSRF)=1.-SALB(IWVSRF)
+                  IF(GDIREM(I2GAUS,IWVSRF).LT.0.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WALTHL:  The ground directional',&
+     &                  ' emissivity at',WVSURF(ISURF,IWVSRF),          &
+     &                  ' Microns',' and',ACOS(CMU(I2GAUS)),            &
+     &                  ' Radians is negative (=',GDIREM(I2GAUS,IWVSRF),&
+     &                  ').',' The value has been reset to 0.'
+                      ENDIF
+                      GDIREM(I2GAUS,IWVSRF)=0.
+                  ELSEIF(GDIREM(I2GAUS,IWVSRF).GT.1.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WALTHL:  The ground directional',&
+     &                  ' emissivity at',WVSURF(ISURF,IWVSRF),          &
+     &                  ' Microns',' and',ACOS(CMU(I2GAUS)),            &
+     &                  ' Radians exceeds 1 (=',GDIREM(I2GAUS,IWVSRF),  &
+     &                  ').',' The value has been reset to 1.'
+                      ENDIF
+                      GDIREM(I2GAUS,IWVSRF)=1.
+                  ENDIF
+              ENDDO
+
+!             VIEW - SUN BRDF AZIMUTH FOURIER MOMENTS:
+              IF(UMU0.GT.0. .AND. UMU1.GT.0.)THEN
+                  GNDMOM(0,0,0,IWVSRF)=SALB(IWVSRF)
+                  GNDMOM(0,0,1,IWVSRF)=0.
+              ELSE
+                  GNDMOM(0,0,0,IWVSRF)=0.
+                  GNDMOM(0,0,1,IWVSRF)=0.
+              ENDIF
+
+!             VIEW - QUADRATURES BRDF AZIMUTH FOURIER MOMENTS:
+              IF(UMU1.GT.0.)THEN
+                  DO J2GAUS=1,N2GAUS
+                      GNDMOM(0,J2GAUS,0,IWVSRF)=SALB(IWVSRF)
+                      GNDMOM(0,J2GAUS,1,IWVSRF)=0.
+                  ENDDO
+              ELSE
+                  DO J2GAUS=1,N2GAUS
+                      GNDMOM(0,J2GAUS,0,IWVSRF)=0.
+                      GNDMOM(0,J2GAUS,1,IWVSRF)=0.
+                  ENDDO
+              ENDIF
+
+!             QUADRATURES - SUN BRDF AZIMUTH FOURIER MOMENTS:
+              IF(UMU0.GT.0.)THEN
+                  DO I2GAUS=1,N2GAUS
+                      GNDMOM(I2GAUS,0,0,IWVSRF)=SALB(IWVSRF)
+                      GNDMOM(I2GAUS,0,1,IWVSRF)=0.
+                  ENDDO
+              ELSE
+                  DO I2GAUS=1,N2GAUS
+                      GNDMOM(I2GAUS,0,0,IWVSRF)=0.
+                      GNDMOM(I2GAUS,0,1,IWVSRF)=0.
+                  ENDDO
+              ENDIF
+
+!             QUADRATURES - QUADRATURES BRDF AZIMUTH FOURIER MOMENTS:
+              DO J2GAUS=1,N2GAUS
+                  DO I2GAUS=1,N2GAUS
+                      GNDMOM(I2GAUS,J2GAUS,0,IWVSRF)=SALB(IWVSRF)
+                      GNDMOM(I2GAUS,J2GAUS,1,IWVSRF)=0.
+                  ENDDO
+              ENDDO
+
+!             ONLY THE ZERO AND FIRST MOMENTS ARE NON-ZERO.
+              DO IAZ=2,NAZ
+                  DO J2GAUS=0,N2GAUS
+                      DO I2GAUS=0,N2GAUS
+                          GNDMOM(I2GAUS,J2GAUS,IAZ,IWVSRF)=0.
+                      ENDDO
+                  ENDDO
+              ENDDO
+          ENDIF
+          IF(.NOT.DIS .OR. LDISCL)THEN
+
+!             SOLAR ANGLE DIRECTIONAL REFLECTIVITY:
+              IF(UMU0.GT.0.)THEN
+                  SUNSQ=ACOS(UMU0)**2
+                  GDIRRF(IWVSRF)=PARAMS(1)+PARAMS(4)*SUNSQ              &
+     &              +WALCON*(PARAMS(4)+PARAMS(3)*SUNSQ)
+                  IF(GDIRRF(IWVSRF).LT.0.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WALTHL:  The ground directional',&
+     &                  ' reflectivity at',WVSURF(ISURF,IWVSRF),        &
+     &                  ' Microns',' and',ACOS(UMU0),                   &
+     &                  ' Radian solar angle is negative (=',           &
+     &                  GDIRRF(IWVSRF),').',                            &
+     &                  ' The value has been reset to 0.'
+                     ENDIF
+                      GDIRRF(IWVSRF)=0.
+                  ELSEIF(GDIRRF(IWVSRF).GT.1.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WALTHL:  The ground directional',&
+     &                  ' reflectivity at',WVSURF(ISURF,IWVSRF),        &
+     &                  ' Microns',' and',ACOS(UMU0),                   &
+     &                  ' Radian solar angle exceeds 1 (=',             &
+     &                  GDIRRF(IWVSRF),').',                            &
+     &                  ' The value has been reset to 1.'
+                     ENDIF
+                      GDIRRF(IWVSRF)=1.
+                  ENDIF
+              ELSE
+                  GDIRRF(IWVSRF)=0.
+              ENDIF
+          ENDIF
+      ENDIF
+      WALTHL=.TRUE.
+      RETURN
+      END
+      LOGICAL FUNCTION WLTHLS(PARAMS,IWVSRF,ISURF,GSURF)
+
+!     WLTHLS CALCULATES SURFACE REFLECTANCE VALUES USING A MODIFIED
+!     WALTHALL BRDF MODEL - THE ZENITH ANGLES ARE REPLACE BY THEIR
+!     SINE FUNCTION.  IF SUCCESSFUL, A VALUE OF .TRUE. IS RETURNED.
+!     THE MODIFIED WALTHALL BRDF MODEL HAS THE FOLLOWING FORM:
+
+!     BRDF(VIEW,SOURC,AZIM) = PARAMS(1)
+
+!         + PARAMS(2) * SIN(VIEW) * SIN(SOURC) * COS(AZIM)
+
+!                                2             2
+!         + PARAMS(3) * SIN(VIEW)  * SIN(SOURC)
+
+!                                  2             2
+!         + PARAMS(4) * ( SIN(VIEW)  + SIN(SOURC)  )
+
+!     WHERE VIEW IS THE SURFACE-TO-OBSERVER ZENITH ANGLE,
+!           SOURC IS THE SURFACE-TO-SOURCE ZENITH ANGLE, AND
+!           AZIM IS THE RELATIVE AZIMUTH ANGLE.
+
+!     THE AZIM IS ZERO IF THE SOURCE AND SENSOR ARE ON THE SAME SIDE
+!     OF THE SURFACE PIXEL (I.E. AZIM = 0 FOR THE HOT SPOT).
+
+!     INPUT ARGUMENTS:
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION.
+!       IWVSRF  CURRENT SPECTRAL WAVELENGTH INDEX.
+!       ISURF   SURFACE TYPE INDEX (1=TARGET, 2=AREA-AVERAGED GROUND).
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+      REAL PARAMS(*)
+      INTEGER IWVSRF,ISURF
+      LOGICAL GSURF
+
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /ANGSRF/
+!       CVWSRF  COSINE OF THE VIEW ZENITH ANGLE FROM THE SURFACE [RAD].
+!       CSNSRF  COSINE OF THE SOLAR (LUNAR) ZENITH AT SURFACE [RAD].
+!       AZMSRF  RELATIVE AZIMUTH ANGLE (SUN - SENSOR AT SURFACE) [RAD].
+!       UMU1    COSINE OF THE PATH NADIR ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       UMU0    COSINE OF THE SOLAR ZENITH ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       PHI1    RELATIVE AZIMUTH ANGLE (SUN - LOS PATH AT SENSOR) [DEG].
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       CMU     COSINE OF THE NADIR ANGLES USED IN DISORT.
+      REAL CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU
+      COMMON/ANGSRF/CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU(MI)
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     /DISRT/
+!       DIS      LOGICAL FLAG, TRUE FOR DISORT MULTIPLE SCATTERING.
+!       DISAZM   LOGICAL FLAG, TRUE FOR DISORT WITH AZIMUTH DEPENDENCE.
+!       DISALB   LOGICAL FLAG, TRUE FOR DISORT SPHERICAL ALBEDO OPTION.
+!       LDISCL   LOGICAL FLAG, TRUE FOR ISAACS SCALED TO DISORT.
+!       NSTR     NUMBER OF DISCRETE ORDINATE STREAMS.
+!       NAZ      NUMBER OF DISORT AZIMUTH COMPONENTS.
+!       N2GAUS   ORDER OF DOUBLE-GAUSS QUADRATURES.
+      LOGICAL DIS,DISAZM,DISALB,LDISCL
+      INTEGER NSTR,NAZ,N2GAUS
+      COMMON/DISRT/DIS,DISAZM,DISALB,LDISCL,NSTR,NAZ,N2GAUS
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     LOCAL VARIABLES:
+!       I2GAUS  LOOP INDEX FOR VIEW AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       J2GAUS  LOOP INDEX FOR SUN AND DOUBLE-GAUSS QUADRATURE ANGLES.
+!       IAZ     DISORT AZIMUTH COMPONENT LOOP INDEX.
+!       VIEWSQ  SQUARE OF THE SINE OF THE VIEW NADIR ANGLE.
+!       SUNSQ   SQUARE OF THE SINE OF THE SOLAR ZENITH ANGLE.
+      INTEGER I2GAUS,J2GAUS,IAZ
+      REAL VIEWSQ,SUNSQ
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+      DRF_FLAG = .TRUE. 
+      DEBUG_FLAG = .TRUE.
+!     SURFACE ALBEDO:
+      SALB(IWVSRF)=PARAMS(1)+PARAMS(4)+PARAMS(3)/4
+
+!     TARGET-PIXEL SURFACE:
+      IF(ISURF.EQ.1)THEN
+
+!         CHECK SURFACE ALBEDO:
+         IF(DEBUG_FLAG) THEN
+          IF(SALB(IWVSRF).LT.0.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WLTHLS:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(1,IWVSRF),' Microns is negative.'
+          ELSEIF(SALB(IWVSRF).GT.1.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WLTHLS:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(1,IWVSRF),' Microns exceeds 1.'
+          ENDIF
+         ENDIF
+
+!         BRDF:
+          VIEWSQ=1.-CVWSRF**2
+          SUNSQ=1.-CSNSRF**2
+          BRDF(IWVSRF)=PARAMS(1)                                        &
+     &      +PARAMS(2)*SQRT(VIEWSQ*SUNSQ)*COS(AZMSRF)                   &
+     &      +PARAMS(3)*VIEWSQ*SUNSQ                                     &
+     &      +PARAMS(4)*(VIEWSQ+SUNSQ)
+          IF(BRDF(IWVSRF).LT.0.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/A,F12.5,A,2(/23X,A),F12.5,A)')               &
+     &          ' Warning from WLTHLS:  The target-pixel BRDF value at',&
+     &          WVSURF(1,IWVSRF),' Microns',                            &
+     &          '(for the current sun and view angles) is negative',    &
+     &          '(=',BRDF(IWVSRF),').  The value has been reset to 0.'
+             ENDIF
+              BRDF(IWVSRF)=0.
+          ENDIF
+
+!         HEMISPHERE DIRECTIONAL REFLECTIVITY:
+          HDIR(IWVSRF)=PARAMS(1)+PARAMS(4)*VIEWSQ                       &
+     &      +(PARAMS(4)+PARAMS(3)*VIEWSQ)/2
+          IF(HDIR(IWVSRF).LT.0.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/(22X,2(A,F12.5),A))')                    &
+     &          ' Warning from WLTHLS:  The target-pixel',              &
+     &          ' hemisphere directional reflectance',                  &
+     &          ' at',WVSURF(1,IWVSRF),' Microns and',                  &
+     &          ACOS(CVWSRF),' Radians is negative',                    &
+     &          ' (=',HDIR(IWVSRF),').  The value has been reset to 0.'
+             ENDIF
+              HDIR(IWVSRF)=0.
+          ELSEIF(HDIR(IWVSRF).GT.1.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,/(22X,2(A,F12.5),A))')                    &
+     &          ' Warning from WLTHLS:  The target-pixel',              &
+     &          ' hemisphere directional reflectance',                  &
+     &          ' at',WVSURF(1,IWVSRF),' Microns and',                  &
+     &          ACOS(CVWSRF),' Radians exceeds 1.',                     &
+     &          ' (=',HDIR(IWVSRF),').  The value has been reset to 1.'
+             ENDIF
+              HDIR(IWVSRF)=1.
+          ENDIF
+      ENDIF
+
+!     AREA-AVERAGED GROUND SURFACE:
+      IF(GSURF)THEN
+
+!         CHECK SURFACE ALBEDO:
+         IF(DEBUG_FLAG) THEN
+          IF(SALB(IWVSRF).LT.0.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WLTHLS:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(ISURF,IWVSRF),' Microns is negative.'
+          ELSEIF(SALB(IWVSRF).GT.1.)THEN
+              WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Warning from',       &
+     &          ' WLTHLS:  The target-pixel surface albedo',            &
+     &          ' at',WVSURF(ISURF,IWVSRF),' Microns exceeds 1.'
+          ENDIF
+         ENDIF
+          IF(DIS)THEN
+              VIEWSQ=1.-UMU1**2
+              SUNSQ=1.-UMU0**2
+
+!             DIRECTIONAL EMISSIVITY:
+              GDIREM(0,IWVSRF)=1.-SALB(IWVSRF)
+              IF(GDIREM(0,IWVSRF).LT.0.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')        &
+     &              ' Warning from WLTHLS:  The ground directional',    &
+     &              ' emissivity at',WVSURF(ISURF,IWVSRF),' Microns',   &
+     &              ' and',ACOS(UMU1),' Radians is negative (=',        &
+     &              GDIREM(0,IWVSRF),').',                              &
+     &              ' The value has been reset to 0.'
+                 ENDIF
+                  GDIREM(0,IWVSRF)=0.
+              ELSEIF(GDIREM(0,IWVSRF).GT.1.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')        &
+     &             ' Warning from WLTHLS:  The ground directional',     &
+     &             ' emissivity at',WVSURF(ISURF,IWVSRF),' Microns',    &
+     &             ' and',ACOS(UMU1),' Radians exceeds 1 (=',           &
+     &             GDIREM(0,IWVSRF),').',                               &
+     &             ' The value has been reset to 1.'
+                 ENDIF
+                  GDIREM(0,IWVSRF)=1.
+              ENDIF
+
+!             LOOP OVER DISORT COMPUTATIONAL ANGLES:
+              DO I2GAUS=1,N2GAUS
+                  VIEWSQ=1.-CMU(I2GAUS)**2
+                  GDIREM(I2GAUS,IWVSRF)=1.-SALB(IWVSRF)
+                  IF(GDIREM(I2GAUS,IWVSRF).LT.0.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WLTHLS:  The ground directional',&
+     &                  ' emissivity at',WVSURF(ISURF,IWVSRF),          &
+     &                  ' Microns',' and',ACOS(CMU(I2GAUS)),            &
+     &                  ' Radians is negative (=',GDIREM(I2GAUS,IWVSRF),&
+     &                  ').',' The value has been reset to 0.'
+                     ENDIF
+                      GDIREM(I2GAUS,IWVSRF)=0.
+                  ELSEIF(GDIREM(I2GAUS,IWVSRF).GT.1.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WLTHLS:  The ground directional',&
+     &                  ' emissivity at',WVSURF(ISURF,IWVSRF),          &
+     &                  ' Microns',' and',ACOS(CMU(I2GAUS)),            &
+     &                  ' Radians exceeds 1 (=',GDIREM(I2GAUS,IWVSRF),  &
+     &                  ').',' The value has been reset to 1.'
+                     ENDIF
+                      GDIREM(I2GAUS,IWVSRF)=1.
+                  ENDIF
+              ENDDO
+
+!             VIEW - SUN BRDF AZIMUTH FOURIER MOMENTS:
+              IF(UMU0.GT.0. .AND. UMU1.GT.0.)THEN
+                  GNDMOM(0,0,0,IWVSRF)=SALB(IWVSRF)
+                  GNDMOM(0,0,1,IWVSRF)=0.
+              ELSE
+                  GNDMOM(0,0,0,IWVSRF)=0.
+                  GNDMOM(0,0,1,IWVSRF)=0.
+              ENDIF
+
+!             VIEW - QUADRATURES BRDF AZIMUTH FOURIER MOMENTS:
+              IF(UMU1.GT.0.)THEN
+                  DO J2GAUS=1,N2GAUS
+                      GNDMOM(0,J2GAUS,0,IWVSRF)=SALB(IWVSRF)
+                      GNDMOM(0,J2GAUS,1,IWVSRF)=0.
+                  ENDDO
+              ELSE
+                  DO J2GAUS=1,N2GAUS
+                      GNDMOM(0,J2GAUS,0,IWVSRF)=0.
+                      GNDMOM(0,J2GAUS,1,IWVSRF)=0.
+                  ENDDO
+              ENDIF
+
+!             QUADRATURES - SUN BRDF AZIMUTH FOURIER MOMENTS:
+              IF(UMU0.GT.0.)THEN
+                  DO I2GAUS=1,N2GAUS
+                      GNDMOM(I2GAUS,0,0,IWVSRF)=SALB(IWVSRF)
+                      GNDMOM(I2GAUS,0,1,IWVSRF)=0.
+                  ENDDO
+              ELSE
+                  DO I2GAUS=1,N2GAUS
+                      GNDMOM(I2GAUS,0,0,IWVSRF)=0.
+                      GNDMOM(I2GAUS,0,1,IWVSRF)=0.
+                  ENDDO
+              ENDIF
+
+!             QUADRATURES - QUADRATURES BRDF AZIMUTH FOURIER MOMENTS:
+              DO J2GAUS=1,N2GAUS
+                  DO I2GAUS=1,N2GAUS
+                      GNDMOM(I2GAUS,J2GAUS,0,IWVSRF)=SALB(IWVSRF)
+                      GNDMOM(I2GAUS,J2GAUS,1,IWVSRF)=0.
+                  ENDDO
+              ENDDO
+
+!             ONLY THE ZERO AND FIRST MOMENTS ARE NON-ZERO.
+              DO IAZ=2,NAZ
+                  DO J2GAUS=0,N2GAUS
+                      DO I2GAUS=0,N2GAUS
+                          GNDMOM(I2GAUS,J2GAUS,IAZ,IWVSRF)=0.
+                      ENDDO
+                  ENDDO
+              ENDDO
+          ENDIF
+          IF(.NOT.DIS .OR. LDISCL)THEN
+
+!             SOLAR ANGLE DIRECTIONAL REFLECTIVITY:
+              IF(UMU0.GT.0.)THEN
+                  SUNSQ=1.-UMU0**2
+                  GDIRRF(IWVSRF)=PARAMS(1)+PARAMS(4)*SUNSQ              &
+     &              +(PARAMS(4)+PARAMS(3)*SUNSQ)/2
+                  IF(GDIRRF(IWVSRF).LT.0.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WLTHLS:  The ground directional',&
+     &                  ' reflectivity at',WVSURF(ISURF,IWVSRF),        &
+     &                  ' Microns',' and',ACOS(UMU0),                   &
+     &                  ' Radian solar angle is negative (=',           &
+     &                  GDIRRF(IWVSRF),').',                            &
+     &                  ' The value has been reset to 0.'
+                     ENDIF
+                      GDIRRF(IWVSRF)=0.
+                  ELSEIF(GDIRRF(IWVSRF).GT.1.)THEN
+                     IF(DEBUG_FLAG) THEN
+                      WRITE(IPR,'(/2A,F12.5,A,/(22X,2(A,F12.5),A))')    &
+     &                  ' Warning from WLTHLS:  The ground directional',&
+     &                  ' reflectivity at',WVSURF(ISURF,IWVSRF),        &
+     &                  ' Microns',' and',ACOS(UMU0),                   &
+     &                  ' Radian solar angle exceeds 1 (=',             &
+     &                  GDIRRF(IWVSRF),').',                            &
+     &                  ' The value has been reset to 1.'
+                     ENDIF
+                      GDIRRF(IWVSRF)=1.
+                  ENDIF
+              ELSE
+                  GDIRRF(IWVSRF)=0.
+              ENDIF
+          ENDIF
+      ENDIF
+      WLTHLS=.TRUE.
+      RETURN
+      END
+      LOGICAL FUNCTION GTBRDF(NPARAM,BRDFUN,ISURF,GSURF,LAND_FLAG,      &
+     &                 ICE_FLAG,SNOW_FLAG,BRDF_LEN,BRDF_WVL,BRDF_PARAM)
+
+!     GTBRDF READS IN BRDF PARAMETERS AND CALCULATES REQUIRED
+!     REFLECTANCE INTEGRALS USING THE BRDF FUNCTION, BRDFUN.
+!     IF SUCCESSFUL, GTBRDF RETURNS A VALUE OF TRUE.
+
+!     INPUT ARGUMENTS:
+!       NPARAM  NUMBER OF PARAMETERS IN BRDF REPRESENTATION.
+!       BRDFUN  BIDIRECTIONAL REFLECTIVITY DISTRIBUTION FUNCTION.
+!       ISURF   SURFACE TYPE INDEX (0=TARGET, 1=AREA-AVERAGED GROUND).
+!       GSURF   LOGICAL FLAG, .TRUE. IF CURRENT SURFACE IS GROUND.
+      INTEGER NPARAM,ISURF
+      REAL BRDFUN
+      LOGICAL GSURF
+      LOGICAL LAND_FLAG,ICE_FLAG,SNOW_FLAG
+      INTEGER BRDF_LEN
+      REAL BRDF_WVL(BRDF_LEN)
+      REAL BRDF_PARAM(BRDF_LEN,3)
+      EXTERNAL BRDFUN
+
+!     PARAMETERS:
+!       MPARAM  MAXIMUM NUMBER OF PARAMETERS IN BRDF REPRESENTATION.
+!       NGAUS   NUMBER OF QUADRATURE POINTS FOR INTEGRATING THE BRDF.
+      INTEGER MPARAM,NGAUS
+      PARAMETER(MPARAM=5,NGAUS=50)
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'ERROR.h'
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     COMMON/RCNSTN/
+!       PI       THE CONSTANT PI.
+!       DEG      NUMBER OF DEGREES IN ONE RADIAN.
+!       BIGNUM   MAXIMUM SINGLE PRECISION NUMBER.
+!       BIGEXP   MAXIMUM EXPONENTIAL ARGUMENT WITHOUT OVERFLOW.
+!       RRIGHT   SMALLEST SINGLE PRECISION REAL ADDED TO 1 EXCEEDS 1.
+      REAL PI,DEG,BIGNUM,BIGEXP,RRIGHT
+      COMMON/RCNSTN/PI,DEG,BIGNUM,BIGEXP,RRIGHT
+
+!     /ANGSRF/
+!       CVWSRF  COSINE OF THE VIEW ZENITH ANGLE FROM THE SURFACE [RAD].
+!       CSNSRF  COSINE OF THE SOLAR (LUNAR) ZENITH AT SURFACE [RAD].
+!       AZMSRF  RELATIVE AZIMUTH ANGLE (SUN - SENSOR AT SURFACE) [RAD].
+!       UMU1    COSINE OF THE PATH NADIR ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       UMU0    COSINE OF THE SOLAR ZENITH ANGLE.
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       PHI1    RELATIVE AZIMUTH ANGLE (SUN - LOS PATH AT SENSOR) [DEG].
+!               (AT H1 IF IMULT=1; AT OR "NEAR" H2 IF IMULT=-1)
+!       CMU     COSINE OF THE NADIR ANGLES USED IN DISORT.
+      REAL CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU
+      COMMON/ANGSRF/CVWSRF,CSNSRF,AZMSRF,UMU1,UMU0,PHI1,CMU(MI)
+
+!     /DISRT/
+!       DIS      LOGICAL FLAG, TRUE FOR DISORT MULTIPLE SCATTERING.
+!       DISAZM   LOGICAL FLAG, TRUE FOR DISORT WITH AZIMUTH DEPENDENCE.
+!       DISALB   LOGICAL FLAG, TRUE FOR DISORT SPHERICAL ALBEDO OPTION.
+!       LDISCL   LOGICAL FLAG, TRUE FOR ISAACS SCALED TO DISORT.
+!       NSTR     NUMBER OF DISCRETE ORDINATE STREAMS.
+!       NAZ      NUMBER OF DISORT AZIMUTH COMPONENTS.
+!       N2GAUS   ORDER OF DOUBLE-GAUSS QUADRATURES.
+      LOGICAL DIS,DISAZM,DISALB,LDISCL
+      INTEGER NSTR,NAZ,N2GAUS
+      COMMON/DISRT/DIS,DISAZM,DISALB,LDISCL,NSTR,NAZ,N2GAUS
+
+!     /JM4B2/
+!       SURFZN  ZENITH ANGLE OF SURFACE NORMAL [DEG].
+!       SURFAZ  SURFACE NORMAL TO VIEW DIRECTION RELATIVE
+!               AZIMUTH ANGLE DEFINED AT THE SURFACE [DEG].
+      REAL SURFZN,SURFAZ
+      COMMON/JM4B2/SURFZN,SURFAZ
+
+!     /JM4B3/
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION.
+      REAL PARAMS
+      COMMON/JM4B3/PARAMS(MPARAM)
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     FUNCTIONS:
+
+!     LOCAL VARIABLES:
+!       IOTEST  RESULT OF IOSTAT TEST IN READ.
+!       IWVSRF  CURRENT SPECTRAL WAVELENGTH INDEX.
+!       IPARAM  LOOP INDEX FOR PARAMETERS IN BRDF REPRESENTATION.
+!       IGAUS   LOOP INDEX FOR ANGLE COSINE QUADRATURE POINTS ON (0,1).
+!       JGAUS   LOOP INDEX FOR ANGLE COSINE QUADRATURE POINTS ON (0,1).
+!       KGAUS   LOOP INDEX FOR ANGLE COSINE QUADRATURE POINTS ON (0,PI).
+!       I2GAUS  LOOP INDEX FOR DISORT QUADRATURE POINTS.
+!       J2GAUS  LOOP INDEX FOR DISORT QUADRATURE POINTS.
+!       IAZ     DISORT AZIMUTH COMPONENT LOOP INDEX.
+!       J2GMAX  I2GAUS MINUS 1 (USED TO EXPLOIT BRDF RECIPROCITY).
+!       DREF    DIRECTIONAL REFLECTIVITY.
+!       PHISUM  BRDF INTEGRATED OVER RELATIVE AZIMUTH ANGLE.
+!       GMUI    IGAUS VALUE OF GMU ARRAY.
+!       GMUJ    JGAUS VALUE OF GMU ARRAY.
+!       CMUI    I2GAUS VALUE OF CMU ARRAY.
+!       GWT2    QUADRATURE WEIGHTS ON (0,1) DOUBLED.
+      INTEGER IOTEST,IWVSRF,IPARAM,IGAUS,JGAUS,KGAUS,                   &
+     &  I2GAUS,J2GAUS,IAZ,J2GMAX
+      REAL DREF,PHISUM,GMUI,GMUJ,CMUI,GWT2
+      LOGICAL DRF_FLAG
+      LOGICAL DEBUG_FLAG
+
+!     LOCAL ARRAYS:
+!       GMU     QUADRATURE POINTS ON (0,1).
+!       GWT     QUADRATURE WEIGHTS ON (0,1).
+!       GMUWT   PRODUCT OF QUADRATURE POINTS AND WEIGHTS ON (0,1).
+!       GPHI    QUADRATURE POINTS ON (0,PI).
+!       GPHIWT  QUADRATURE-WEIGHTED FOURIER COMPONENT COSINE TERMS.
+      REAL GMU(NGAUS),GWT(NGAUS),GMUWT(NGAUS),                          &
+     &  GPHI(NGAUS),GPHIWT(0:MAZ,1:NGAUS)
+      SAVE GMU,GWT,GMUWT,GPHI,GPHIWT
+
+!     DATA:
+!       PASS1   LOGICAL FLAG, .TRUE. FOR FIRST PASS THROUGH.
+!       RECIP   LOGICAL FLAG, .TRUE. IF BRDF OBEYS RECIPROCITY LAW.
+      LOGICAL PASS1,RECIP
+      SAVE PASS1,RECIP
+      DATA PASS1,RECIP/.TRUE.,.TRUE./
+
+      DRF_FLAG = .TRUE.  
+      DEBUG_FLAG = .TRUE.
+      !WRITE(*,*) 'BRDF_LEN = ',BRDF_LEN
+
+!     CHECK NUMBER OF BRDF PARAMETERS:
+      IF(NPARAM.GT.MPARAM)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/17X,A,I3)')' Error in GTBRDF:  Number',      &
+     &      ' of parameters in BRDF representation is too large.',      &
+     &      ' Please increase parameter MPARAM to',NPARAM
+         ENDIF
+          GTBRDF=.FALSE.
+          RETURN
+      ENDIF
+
+!     READ IN NUMBER OF WAVELENGTH GRID POINTS AND SURFACE NORMAL:
+      IF(LJMASS)THEN
+          CALL INITCARD('CARD4B2')
+      ELSE
+         IF(.NOT.DRF_FLAG) THEN
+          READ(IRD,*,IOSTAT=IOTEST)NWVSRF(ISURF),SURFZN,SURFAZ
+         ELSE
+            NWVSRF = BRDF_LEN
+            SURFZN = 0.0
+            SURVAZ = 0.0
+         ENDIF
+      ENDIF
+      IOTEST = 0
+      IF(IOTEST.NE.0)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,I2)')' Error in GTBRDF:  Unable to',          &
+     &      ' read number of wavelengths for surface',ISURF
+         ENDIF
+          GTBRDF=.FALSE.
+          RETURN
+      ELSEIF(NWVSRF(ISURF).LE.0)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,I8)')' Error in GTBRDF:  Input number of',    &
+     &      ' wavelength points for surface BRDF is',NWVSRF(ISURF)
+         ENDIF
+          GTBRDF=.FALSE.
+          RETURN
+      ELSEIF(NWVSRF(ISURF).GT.MWVSRF)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/17X,A,I3)')' Error in GTBRDF:  Input',       &
+     &      ' number of wavelength points for surface BRDF is too',     &
+     &      ' large.  Increase parameter MWVSRF to',NWVSRF(ISURF)
+         ENDIF
+          GTBRDF=.FALSE.
+          RETURN
+      ELSEIF(SURFZN.NE.0.)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/2A,/17X,A)')' Error in GTBRDF: ',                &
+     &      ' Currently, only surface normal zenith',                   &
+     &      ' angles of 0. degrees are allowed.'
+         ENDIF
+      ENDIF
+
+!     DEFINE QUADRATURE POINTS
+      IF(PASS1)THEN
+          PASS1=.FALSE.
+          CALL QGAUSN(NGAUS,GMU,GWT)
+          DO IGAUS=1,NGAUS
+
+!             COMBINE GMU AND GWT FOR THE COSINE ZENITH
+!             INTEGRALS.  FOR THE AZIMUTH INTEGRALS,
+!             SCALE GMU BY PI (ASSUME AZIMUTH SYMMETRY).
+              GWT2=2*GWT(IGAUS)
+              GMUWT(IGAUS)=GWT2*GMU(IGAUS)
+              GPHI(IGAUS)=PI*GMU(IGAUS)
+              IF(DIS)THEN
+
+!                 FOR DISORT, PHI=0 CORRESPONDS TO THE TARGET PIXEL AND
+!                 THE SUN BOTH BEING IN THE FORWARD HALF-PLANE.  THE
+!                 BRDF IS DEFINED WITH PHI=0 CORRESPONDING TO BOTH THE
+!                 SENSOR AND SUN BEING IN THE SAME HALF-PLANE.  TO
+!                 ACCOUNT FOR THIS DIFFERENCE, A FACTOR OF (-1)**IAZ IS
+!                 INCORPORATED INTO THE BRDF AZIMUTH FOURIER COMPONENTS:
+                  GPHIWT(0,IGAUS)=GWT(IGAUS)
+                  GPHIWT(1,IGAUS)=-GWT2*COS(GPHI(IGAUS))
+                  DO IAZ=2,NAZ
+                      GPHIWT(IAZ,IGAUS)=GWT2*COS(IAZ*GPHI(IGAUS))
+                      GWT2=-GWT2
+                  ENDDO
+              ENDIF
+          ENDDO
+      ENDIF
+
+!     BRDF TABLE HEADER:
+      IF(.NOT.LJMASS)THEN
+         IF(DEBUG_FLAG) THEN
+          WRITE(IPR,'(/A,//A12,8(A12,I2))')' BRDF DATA TABLE:',         &
+     &      ' WAVLEN (um)',('   PARAMETER',IPARAM,IPARAM=1,NPARAM)
+          WRITE(IPR,'(A12,8A14)')                                       &
+     &      ' -----------',('   -----------',IPARAM=1,NPARAM)
+         ENDIF
+      ENDIF
+
+!     LOOP OVER WAVELENGTHS:
+      DO IWVSRF=1,NWVSRF(ISURF)
+
+!         READ IN SPECTRAL PARAMETERS:
+          IF(LJMASS)THEN
+              CALL INITCARD('CARD4B3')
+          ELSE
+             IF(.NOT.DRF_FLAG) THEN
+              READ(IRD,*,IOSTAT=IOTEST)                                 &
+     &          WVSURF(ISURF,IWVSRF),(PARAMS(IPARAM),IPARAM=1,NPARAM)
+             ELSE
+                !! Include information for land_flag, ice_flag
+                WVSURF(ISURF,IWVSRF) = BRDF_WVL(IWVSRF)
+                !IF(IWVSRF.EQ.1) WVSURF(ISURF,IWVSRF) = 0.47
+                !IF(IWVSRF.EQ.2) WVSURF(ISURF,IWVSRF) = 0.56
+                !IF(IWVSRF.EQ.3) WVSURF(ISURF,IWVSRF) = 0.64
+                !IF(IWVSRF.EQ.4) WVSURF(ISURF,IWVSRF) = 0.86
+                !IF(IWVSRF.EQ.5) WVSURF(ISURF,IWVSRF) = 1.24
+                !IF(IWVSRF.EQ.6) WVSURF(ISURF,IWVSRF) = 1.64
+                !IF(IWVSRF.EQ.7) WVSURF(ISURF,IWVSRF) = 2.13
+                !WRITE(*,*) 'BRDF_PARAM1 = ',BRDF_PARAM(:,1)
+                !WRITE(*,*) 'BRDF_PARAM2 = ',BRDF_PARAM(:,2)
+                !WRITE(*,*) 'BRDF_PARAM3 = ',BRDF_PARAM(:,3)
+                !STOP 'ERROR IN RFLECT.F LINE 2504'
+                
+                IF (LAND_FLAG.AND..NOT.ICE_FLAG.AND..NOT.SNOW_FLAG) THEN
+                   !MODIS ROSS-LI BRDF DATA
+                   PARAMS(1) = BRDF_PARAM(IWVSRF,1)
+                   PARAMS(2) = BRDF_PARAM(IWVSRF,2)
+                   PARAMS(3) = BRDF_PARAM(IWVSRF,3)
+                   PARAMS(4) = 2.0
+                   PARAMS(5) = 1.0
+                ELSEIF (SNOW_FLAG) THEN !Sea-ice and snow
+                   !USE THE ROSS-LI MODEL
+                   PARAMS(1) = BRDF_PARAM(IWVSRF,1) 
+                   PARAMS(2) = BRDF_PARAM(IWVSRF,2)
+                   PARAMS(3) = BRDF_PARAM(IWVSRF,3)
+                   PARAMS(4) = 2.0
+                   PARAMS(5) = 1.0
+
+                   !PARAMS(2) = 0.6
+                   !PARAMS(3) = 0.995
+                   !PARAMS(4) = 0.0
+
+                   !PARAMS(2) = 0.1
+                   !PARAMS(3) = 0.02
+                   !PARAMS(4) = 2.0
+                   !PARAMS(5) = 1.0
+
+                   !PARAMS(2) = 0.6
+                   !PARAMS(3) = 0.995
+                   !PARAMS(4) = 1.0
+                   !PARAMS(5) = 0.0
+                ELSEIF (ICE_FLAG.AND..NOT.LAND_FLAG) THEN
+                   PARAMS(1) = BRDF_PARAM(IWVSRF,1)
+                   PARAMS(2) = BRDF_PARAM(IWVSRF,2)
+                   PARAMS(3) = BRDF_PARAM(IWVSRF,3)
+                   PARAMS(4) = 2.0
+                   PARAMS(5) = 1.0
+
+                   !PARAMS(2) = 0.6
+                   !PARAMS(3) = 0.995
+                   !PARAMS(4) = 0.0
+
+
+                   !PARAMS(2) = 0.1
+                   !PARAMS(3) = 0.02
+                   !PARAMS(4) = 2.0
+                   !PARAMS(5) = 1.0
+                ELSEIF (.NOT.LAND_FLAG .AND. .NOT.ICE_FLAG) THEN
+                   !OCEAN BRDF COX-MUNK
+		   !WRITE(*,*) 'refl = ',BRDF_PARAM(IWVSRF,1)
+                   PARAMS(1) = BRDF_PARAM(IWVSRF,1)
+                   PARAMS(2) = BRDF_PARAM(IWVSRF,2)
+                   PARAMS(3) = 0.125700
+                   PARAMS(4) = 0.112250
+                   PARAMS(5) = 1.134460
+                ENDIF
+             ENDIF
+          ENDIF
+          IF(IOTEST.NE.0)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A,I2,A,/17X,A,I3)')' Error in GTBRDF: ',    &
+     &          ' Unable to read surface',ISURF,' BRDF',                &
+     &          ' parameters for spectral point',IWVSRF
+             ENDIF
+              GTBRDF=.FALSE.
+              RETURN
+          ENDIF
+          IF(DEBUG_FLAG) THEN
+          IF(.NOT.LJMASS)WRITE(IPR,'(F12.5,8F14.6)')                    &
+     &      WVSURF(ISURF,IWVSRF),(PARAMS(IPARAM),IPARAM=1,NPARAM)
+          ENDIF
+          IF(IWVSRF.GT.1)THEN
+              IF(WVSURF(ISURF,IWVSRF).LE.WVSURF(ISURF,IWVSRF-1))THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A)')' Error in GTBRDF: ',               &
+     &              ' BRDF surface wavelengths out of order.'
+                 ENDIF
+                  GTBRDF=.FALSE.
+                  RETURN
+              ENDIF
+          ELSEIF(WVSURF(ISURF,1).LT.0.)THEN
+             IF(DEBUG_FLAG) THEN
+              WRITE(IPR,'(/2A)')' Error in GTBRDF: ',                   &
+     &          ' BRDF surface wavelength less than 0.'
+             ENDIF
+              GTBRDF=.FALSE.
+              RETURN
+          ENDIF
+
+!         SURFACE ALBEDO:
+          SALB(IWVSRF)=0.
+          DO IGAUS=1,NGAUS
+              GMUI=GMU(IGAUS)
+              DREF=0.
+              DO JGAUS=1,NGAUS
+                  GMUJ=GMU(JGAUS)
+                  PHISUM=0.
+                  DO KGAUS=1,NGAUS
+                      PHISUM=PHISUM+GWT(KGAUS)                          &
+     &                  *MAX(BRDFUN(GMUI,GMUJ,GPHI(KGAUS),PARAMS),0.)
+                  ENDDO
+                  DREF=DREF+GMUWT(JGAUS)*PHISUM
+              ENDDO
+              !WRITE(*,*) 'DREF = ',DREF
+              SALB(IWVSRF)=SALB(IWVSRF)+GMUWT(IGAUS)*DREF
+          ENDDO
+
+!         TARGET-PIXEL SURFACE:
+          IF(ISURF.EQ.1)THEN
+
+!             CHECK SURFACE ALBEDO:
+              IF(SALB(IWVSRF).GT.1.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Error in',       &
+     &              ' GTBRDF:  The target-pixel surface albedo',        &
+     &              ' at',WVSURF(1,IWVSRF),' Microns exceeds 1.'
+                 ENDIF
+                  GTBRDF=.FALSE.
+                  RETURN
+              ENDIF
+
+!             BRDF:
+              BRDF(IWVSRF)=BRDFUN(CVWSRF,CSNSRF,AZMSRF,PARAMS)
+              !WRITE(*,*) 'BRDF src = ',CSNSRF
+              !WRITE(*,*) 'BRDF view = ',CVWSRF
+              !WRITE(*,*) 'BRDF az = ',AZMSRF
+              !WRITE(*,*) 'BRDF params = ',PARAMS
+              !WRITE(*,*) 'BRDF WITH VIEW GEOMETRY  = ',BRDF(IWVSRF)
+              IF(BRDF(IWVSRF).LT.0.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,F12.5,A,2(/23X,A),F12.5,A)')          &
+     &              ' Warning from GTBRDF:  The target-pixel',          &
+     &              ' BRDF value at',WVSURF(1,IWVSRF),' Microns',       &
+     &              '(for the current sun and view angles) is negative',&
+     &              '(=',BRDF(IWVSRF),                                  &
+     &              ').  The value has been reset to 0.'
+                 ENDIF
+                  BRDF(IWVSRF)=0.
+              ENDIF
+
+!             HEMISPHERE DIRECTIONAL REFLECTIVITY:
+              HDIR(IWVSRF)=0.
+              DO JGAUS=1,NGAUS
+                  GMUJ=GMU(JGAUS)
+                  PHISUM=0.
+                  DO KGAUS=1,NGAUS
+                      PHISUM=PHISUM+GWT(KGAUS)                          &
+     &                  *MAX(0.,BRDFUN(CVWSRF,GMUJ,GPHI(KGAUS),PARAMS))
+                      !WRITE(*,*) 'GPHI = ',GPHI(KGAUS)
+                  ENDDO
+                  HDIR(IWVSRF)=HDIR(IWVSRF)+GMUWT(JGAUS)*PHISUM
+              ENDDO
+              IF(HDIR(IWVSRF).GT.1.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,/22X,2(A,F12.5),A,/(A,F12.5))')       &
+     &              ' Warning from GTBRDF:  The target-pixel',          &
+     &              ' hemisphere directional reflectance',              &
+     &              ' exceeds 1 (=',HDIR(IWVSRF),') at',                &
+     &              WVSURF(1,IWVSRF),' Microns when',                   &
+     &              ' the cosine of the view angle equals',CVWSRF,      &
+     &              ' The value has been reset to 1.'
+                 ENDIF
+                  HDIR(IWVSRF)=1.
+              ENDIF
+
+              !!WRITE(*,*) 'HDIR = ',HDIR(IWVSRF)
+              !WRITE(*,*) 'SALB = ',SALB(IWVSRF)
+              !WRITE(*,*) 'GMUWT = ',GMUWT
+          ENDIF
+
+!         AREA-AVERAGED GROUND SURFACE:
+          IF(GSURF)THEN
+              
+!             CHECK SURFACE ALBEDO:
+              IF(SALB(IWVSRF).GT.1.)THEN
+                 IF(DEBUG_FLAG) THEN
+                  WRITE(IPR,'(/2A,/(22X,A,F12.5,A))')' Error in',       &
+     &              ' GTBRDF:  The area-averaged ground surface albedo',&
+     &              ' at',WVSURF(ISURF,IWVSRF),' Microns exceeds 1.'
+                 ENDIF
+                  GTBRDF=.FALSE.
+                  RETURN
+              ENDIF
+              IF(DIS)THEN
+
+!                 DIRECTIONAL EMISSIVITY:
+                  GDIREM(0,IWVSRF)=1.-SALB(IWVSRF)
+
+!                 LOOP OVER DISORT COMPUTATIONAL ANGLES:
+                  DO I2GAUS=1,N2GAUS
+                      GDIREM(I2GAUS,IWVSRF)=1.-SALB(IWVSRF)
+                  ENDDO
+!                 VIEW - SUN BRDF AZIMUTH FOURIER MOMENTS:
+                  IF(UMU0.GT.0. .AND. UMU1.GT.0.)THEN
+                      CALL DEFMOM(UMU1,UMU0,0,0,                        &
+     &                  IWVSRF,BRDFUN,PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+                  ELSE
+                      DO IAZ=0,NAZ
+                          GNDMOM(0,0,IAZ,IWVSRF)=0.
+                      ENDDO
+                  ENDIF
+
+
+!                 VIEW - QUADRATURES BRDF AZIMUTH FOURIER MOMENTS:
+                  IF(UMU1.GT.0.)THEN
+                      DO J2GAUS=1,N2GAUS
+                          CALL DEFMOM(UMU1,CMU(J2GAUS),0,J2GAUS,        &
+     &                      IWVSRF,BRDFUN,PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+                      ENDDO
+                  ELSE
+                      DO J2GAUS=1,N2GAUS
+                          DO IAZ=0,NAZ
+                              GNDMOM(0,J2GAUS,IAZ,IWVSRF)=0.
+                          ENDDO
+                      ENDDO
+                  ENDIF
+
+!                 QUADRATURES - SUN BRDF AZIMUTH FOURIER MOMENTS:
+                  IF(UMU0.GT.0.)THEN
+                      DO I2GAUS=1,N2GAUS
+                          CALL DEFMOM(CMU(I2GAUS),UMU0,I2GAUS,0,        &
+     &                      IWVSRF,BRDFUN,PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+                      ENDDO
+                  ELSE
+                      DO I2GAUS=1,N2GAUS
+                          DO IAZ=0,NAZ
+                              GNDMOM(I2GAUS,0,IAZ,IWVSRF)=0.
+                          ENDDO
+                      ENDDO
+                  ENDIF
+
+!                 QUADRATURES - QUADRATURES BRDF AZM FOURIER MOMENTS:
+                  IF(RECIP)THEN
+
+!                     EXPLOIT BRDF RECIPROCITY:
+                      CALL DEFMOM(CMU(1),CMU(1),1,1,                    &
+     &                  IWVSRF,BRDFUN,PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+                      J2GMAX=1
+                      DO I2GAUS=2,N2GAUS
+                          CMUI=CMU(I2GAUS)
+                          DO J2GAUS=1,J2GMAX
+                              CALL DEFMOM(CMUI,CMU(J2GAUS),             &
+     &                          I2GAUS,J2GAUS,IWVSRF,BRDFUN,            &
+     &                          PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+                              DO IAZ=0,NAZ
+                                  GNDMOM(J2GAUS,I2GAUS,IAZ,IWVSRF)      &
+     &                              =GNDMOM(I2GAUS,J2GAUS,IAZ,IWVSRF)
+                              ENDDO
+                          ENDDO
+                          CALL DEFMOM(CMUI,CMUI,I2GAUS,I2GAUS,          &
+     &                      IWVSRF,BRDFUN,PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+                          J2GMAX=I2GAUS
+                      ENDDO
+                  ELSE
+
+!                     IGNORE BRDF RECIPROCITY:
+                      DO I2GAUS=1,N2GAUS
+                          CMUI=CMU(I2GAUS)
+                          DO J2GAUS=1,N2GAUS
+                              CALL DEFMOM(CMUI,CMU(J2GAUS),             &
+     &                          I2GAUS,J2GAUS,IWVSRF,BRDFUN,            &
+     &                          PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+                          ENDDO
+                      ENDDO
+                  ENDIF
+                  !WRITE(*,*) 'GNDMOM = ',GNDMOM(:,:,:,IWVSRF)
+                  !WRITE(*,*) 'UMU0 = ',UMU0
+                  !WRITE(*,*) 'UMU1 = ',UMU1
+              ENDIF
+              IF(.NOT.DIS .OR. LDISCL)THEN
+
+!                 SOLAR ANGLE DIRECTIONAL REFLECTIVITY:
+                  GDIRRF(IWVSRF)=0.
+                  IF(UMU0.GT.0.)THEN
+                      DO JGAUS=1,NGAUS
+                          GMUJ=GMU(JGAUS)
+                          PHISUM=0.
+                          DO KGAUS=1,NGAUS
+                              PHISUM=PHISUM+GWT(KGAUS)*MAX(0.,          &
+     &                          BRDFUN(UMU1,GMUJ,GPHI(KGAUS),PARAMS))
+                          ENDDO
+                          GDIRRF(IWVSRF)                                &
+     &                      =GDIRRF(IWVSRF)+GMUWT(JGAUS)*PHISUM
+                      ENDDO
+                      IF(GDIRRF(IWVSRF).LT.0.)THEN
+                         IF(DEBUG_FLAG) THEN
+                          WRITE(IPR,                                    &
+     &                      '(/2A,/22X,2(A,F12.5),A,/(22X,A,F12.5))')   &
+     &                      ' Warning from GTBRDF:  The area-averaged', &
+     &                      ' ground directional reflectivity is',      &
+     &                      ' negative (=',GDIRRF(IWVSRF),              &
+     &                      ') at',WVSURF(ISURF,IWVSRF),' Microns',     &
+     &                      ' when the cosine of the sun angle equals', &
+     &                      UMU0,' The value has been reset to 0.'
+                          ENDIF
+                          GDIRRF(IWVSRF)=0.
+                      ELSEIF(GDIRRF(IWVSRF).GT.1.)THEN
+                         IF(DEBUG_FLAG) THEN
+                          WRITE(IPR,                                    &
+     &                      '(/2A,/22X,2(A,F12.5),A,/(22X,A,F12.5))')   &
+     &                      ' Warning from GTBRDF:  The area-averaged', &
+     &                      ' ground directional reflectivity exceeds', &
+     &                      ' one (=',GDIRRF(IWVSRF),                   &
+     &                      ') at',WVSURF(ISURF,IWVSRF),' Microns',     &
+     &                      ' when the cosine of the sun angle equals', &
+     &                      UMU0,' The value has been reset to 1.'
+                          ENDIF
+                          GDIRRF(IWVSRF)=1.
+                      ENDIF
+                  ENDIF
+              ENDIF
+          ENDIF
+      ENDDO
+      GTBRDF=.TRUE.
+      RETURN
+      END
+      SUBROUTINE DEFMOM(CVIEW,CSOURC,IVIEW,ISOURC,                      &
+     &  IWVSRF,BRDFUN,PARAMS,NGAUS,NAZ,GPHI,GPHIWT)
+
+!     DEFMOM DEFINES AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       IVIEW   INDEX FOR THE SURFACE VIEW ZENITH ANGLE.
+!       ISOURC  INDEX FOR THE SURFACE SOURCE ZENITH ANGLE.
+!       IWVSRF  CURRENT SPECTRAL WAVELENGTH INDEX.
+!       BRDFUN  BIDIRECTIONAL REFLECTIVITY DISTRIBUTION FUNCTION.
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION.
+!       NGAUS   NUMBER OF QUADRATURE POINTS FOR INTEGRATING THE BRDF.
+!       NAZ     NUMBER OF DISORT AZIMUTH COMPONENTS.
+!       GPHI    QUADRATURE POINTS ON (0,PI).
+!       GPHIWT  QUADRATURE-WEIGHTED FOURIER COMPONENT COSINE TERMS.
+      INTEGER IVIEW,ISOURC,IWVSRF,NGAUS,NAZ
+      REAL CVIEW,CSOURC,BRDFUN,                                         &
+     &  PARAMS(*),GPHI(NGAUS),GPHIWT(0:MAZ,1:NGAUS)
+      EXTERNAL BRDFUN
+
+!     COMMONS:
+
+!     /SRFACE/
+!       NWVSRF  NUMBER OF WAVELENGTH GRID POINTS.
+!       WVSURF  WAVELENGTH GRID FOR TARGET-PIXEL (1) AND
+!               AREA-AVERAGE (2) SURFACES [MICRONS].
+!       SALB    AREA-AVERAGE GROUND SURFACE ALBEDO SPECTRAL ARRAY.
+!       GDIRRF  AREA-AVERAGE GROUND SURFACE DIRECTIONAL REFLECTIVITY
+!               AT SOLAR ANGLE.
+!       HDIR    TARGET-PIXEL HEMISPHERE DIRECTIONAL REFLECTANCES
+!               AT VIEWING ANGLE.
+!       BRDF    TARGET-PIXEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!               FUNCTION AT VIEWING, SUN AND RELATIVE AZIMUTH ANGLES.
+!       GDIREM  AREA-AVERAGED GROUND DIRECTIONAL EMISSIVITIES
+!               AT VIEWING AND GAUSSIAN QUADRATURE ANGLES.
+!       GNDMOM  AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS.
+      INTEGER NWVSRF
+      REAL WVSURF,SALB,GDIRRF,HDIR,BRDF,GDIREM,GNDMOM
+      COMMON/SRFACE/NWVSRF(2),WVSURF(2,MWVSRF),SALB(MWVSRF),            &
+     &  GDIRRF(MWVSRF),HDIR(MWVSRF),BRDF(MWVSRF),                       &
+     &  GDIREM(0:MI,1:MWVSRF),GNDMOM(0:MI,0:MI,0:MAZ,1:MWVSRF)
+
+!     LOCAL VARIABLES:
+!       IAZ     DISORT AZIMUTH COMPONENT LOOP INDEX.
+      INTEGER IAZ
+      REAL SUM
+      INTEGER K
+
+!     INITIALIZE AREA-AVERAGED GROUND BRDF AZIMUTH FOURIER MOMENTS:
+      GNDMOM(IVIEW,ISOURC,0,IWVSRF)=SALB(IWVSRF)
+      !CHANGES SUGGESTED BY VINCENT ROSS TO GET FLUXES RIGHT
+      !DRF DO IAZ=1,NAZ
+      !DRF     GNDMOM(IVIEW,ISOURC,IAZ,IWVSRF)=0.
+      !DRF ENDDO
+      DO IAZ=0,NAZ
+        SUM = 0.0
+        DO K = 1, NGAUS
+           SUM = SUM +                                                  & 
+     &       MAX(BRDFUN(CVIEW,CSOURC,GPHI(K),PARAMS),0.)*GPHIWT(IAZ,k)
+        ENDDO
+        GNDMOM(IVIEW,ISOURC,IAZ,IWVSRF) = SUM
+      ENDDO
+      RETURN
+      END
+      REAL FUNCTION REFWAL(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFWAL RETURNS THE 4-PARAMETER WALTHALL MODEL
+!     BIDIRECTIONAL REFLECTANCE DISTRIBUTION FUNCTION (BRDF).
+!     [C.L. WALTHALL, J.M. NORMAN, J.M. WELLES, G. CAMPBELL, AND
+!     B.L. BLAD, "SIMPLE EQUATION TO APPROXIMATE THE BIDIRECTIONAL
+!     REFLECTANCE FROM VEGETATION CANOPIES AND BARE SOIL SURFACES,"
+!     APPL. OPT., VOL 24, 383-387 (1985)].
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+
+!     BRDF(CVIEW,CSOURC,AZIM)
+
+!       = PARAMS(1) + PARAMS(2) * ACOS(CVIEW) * ACOS(CSOURC) * COS(PHI)
+
+!                                            2               2
+!                   + PARAMS(3) * ACOS(CVIEW)  * ACOS(CSOURC)
+
+!                                              2               2
+!                   + PARAMS(4) * [ ACOS(CVIEW)  + ACOS(CSOURC)  ]
+
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     LOCAL VARIABLES:
+!       VIEW    SURFACE VIEW ZENITH ANGLE [RADIANS].
+!       SOURC   SURFACE SOURCE ZENITH ANGLE [RADIANS].
+!       COSPHI  COSINE OF THE SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE.
+!       VWSRC   PRODUCT OF VIEW AND SOURC.
+      REAL VIEW,SOURC,COSPHI,VWSRC
+
+!     BRDF FUNCTION:
+      COSPHI=COS(PHI)
+      VIEW=ACOS(CVIEW)
+      SOURC=ACOS(CSOURC)
+      VWSRC=VIEW*SOURC
+      REFWAL=PARAMS(1)+VWSRC*(COSPHI*PARAMS(2)+VWSRC*PARAMS(3))         &
+     &  +(VIEW**2+SOURC**2)*PARAMS(4)
+      RETURN
+      END
+      REAL FUNCTION REFWLS(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFWLS RETURNS THE 4-PARAMETER SINUSOIDAL WALTHALL MODEL
+!     BIDIRECTIONAL REFLECTANCE DISTRIBUTION FUNCTION (BRDF).
+!     [C.L. WALTHALL, J.M. NORMAN, J.M. WELLES, G. CAMPBELL, AND
+!     B.L. BLAD, "SIMPLE EQUATION TO APPROXIMATE THE BIDIRECTIONAL
+!     REFLECTANCE FROM VEGETATION CANOPIES AND BARE SOIL SURFACES,"
+!     APPL. OPT., VOL 24, 383-387 (1985)].
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+
+!     BRDF(CVIEW,CSOURC,AZIM)
+
+!       = PARAMS(1) + PARAMS(2) * SIN(VIEW) * SIN(SOURC) * COS(PHI)
+
+!                                          2             2
+!                   + PARAMS(3) * SIN(VIEW)  * SIN(SOURC)
+
+!                                            2             2
+!                   + PARAMS(4) * [ SIN(VIEW)  + SIN(SOURC)  ]
+
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     LOCAL VARIABLES:
+!       VIEW    SINE OF SURFACE VIEW ZENITH ANGLE.
+!       SOURC   SINE OF SURFACE SOURCE ZENITH ANGLE.
+!       COSPHI  COSINE OF THE SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE.
+!       VWSRC   PRODUCT OF VIEW AND SOURC.
+      REAL VIEW,SOURC,COSPHI,VWSRC
+
+!     BRDF FUNCTION:
+      COSPHI=COS(PHI)
+      VIEW=1.-CVIEW**2
+      SOURC=1.-CSOURC**2
+      VWSRC=VIEW*SOURC
+      REFWLS=PARAMS(1)+SQRT(VWSRC)*COSPHI*PARAMS(2)+VWSRC*PARAMS(3)     &
+     &  +(VIEW+SOURC)*PARAMS(4)
+      RETURN
+      END
+      REAL FUNCTION REFROU(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFROU RETURNS THE 3-PARAMETER ROUJEAN MODEL
+!     BIDIRECTIONAL REFLECTANCE DISTRIBUTION FUNCTION (BRDF).
+!     [J.L. ROUJEAN, M. LEROY, AND P.Y. DESCHAMPS,
+!     "A BIDIRECTIONAL REFLECTANCE MODEL OF THE EARTH
+!     SURFACE FOR THE CORRECTION OF REMOTE SENSING DATA,"
+!     J. GEOPHYS. RES., VOL 97, 20,455-20,468 (1992)].
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+!         PARAMS(1)  ISOTROPIC FACTOR.
+!         PARAMS(2)  SURFACE SCATTERING PARAMETER.
+!         PARAMS(3)  VOLUME SCATTERING PARAMETER.
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     COMMON/RCNSTN/
+!       PI       THE CONSTANT PI.
+!       DEG      NUMBER OF DEGREES IN ONE RADIAN.
+!       BIGNUM   MAXIMUM SINGLE PRECISION NUMBER.
+!       BIGEXP   MAXIMUM EXPONENTIAL ARGUMENT WITHOUT OVERFLOW.
+!       RRIGHT   SMALLEST SINGLE PRECISION REAL ADDED TO 1 EXCEEDS 1.
+      REAL PI,DEG,BIGNUM,BIGEXP,RRIGHT
+      COMMON/RCNSTN/PI,DEG,BIGNUM,BIGEXP,RRIGHT
+
+!     LOCAL VARIABLES:
+!       SVIEW   SINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       SSOURC  SINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       TVIEW   TANGENT OF THE SURFACE VIEW ZENITH ANGLE.
+!       TSOURC  TANGENT OF THE SURFACE SOURCE ZENITH ANGLE.
+!       COSPHI  COSINE OF THE SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE.
+!       GEO     GEOMETRY FACTOR.
+!       F1      SURFACE REFLECTANCE COMPONENT.
+!       CPHASE  COSINE OF THE PHASE ANGLE.
+!       PHASE   PHASE ANGLE [RADIANS].
+!       F2      VOLUME SCATTERING COMPONENT.
+      REAL SVIEW,SSOURC,TVIEW,TSOURC,COSPHI,GEO,F1,CPHASE,PHASE,F2
+
+!     SURFACE REFLECTANCE COMPONENT:
+      SVIEW=SQRT(1.-CVIEW**2)
+      SSOURC=SQRT(1.-CSOURC**2)
+      TVIEW=SVIEW/CVIEW
+      TSOURC=SSOURC/CSOURC
+      COSPHI=COS(PHI)
+      GEO=SQRT((TVIEW-TSOURC)**2+2*TVIEW*TSOURC*(1.-COSPHI))
+      F1=.5*((PI-PHI)*COSPHI+SIN(PHI))*TVIEW*TSOURC-(TVIEW+TSOURC+GEO)
+
+!     VOLUME SCATTERING COMPONENT:
+      CPHASE=CVIEW*CSOURC+SVIEW*SSOURC*COSPHI
+      PHASE=ACOS(CPHASE)
+      F2=(4*(SIN(PHASE)+(PI/2-PHASE)*CPHASE)/(PI*(CVIEW+CSOURC))-1)/3
+
+!     BRDF FUNCTION:
+      REFROU=PARAMS(1)+PARAMS(2)*F1/PI+PARAMS(3)*F2
+      RETURN
+      END
+      REAL FUNCTION REFHAP(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFHAP RETURNS THE 3-PARAMETER HAPKE 1981 MODEL
+!     BIDIRECTIONAL REFLECTANCE DISTRIBUTION FUNCTION (BRDF).
+!     [B.W. HAPKE, "BIDIRECTIONAL REFLECTANCE SPECTROSCOPY,
+!     1, THEORY," J. GEOPHYS. RES., VOL 86, 3039-3054 (1981);
+!     B.W. HAPKE, "BIDIRECTIONAL REFLECTANCE SPECTROSCOPY,
+!     3, CORRECTION FOR MACROSCOPIC ROUGHNESS, ICARUS, VOL 59,
+!     41-59 (1984);  B.W. HAPKE, "BIDIRECTIONAL REFLECTANCE
+!     SPECTROSCOPY, 4, THE EXTINCTION COEFFICIENT AND THE
+!     OPPOSITION EFFECT," ICARUS, VOL 67, 264-280 (1986)].
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+!         PARAMS(1)  SURFACE PARTICLE SINGLE SCATTERING ALBEDO.
+!         PARAMS(2)  HENYEY-GREENSTEIN ASYMMETRY FACTOR.
+!         PARAMS(3)  HOT SPOT WIDTH.
+!         PARAMS(4)  HOT SPOT AMPLITUDE.
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     LOCAL VARIABLES:
+!       CPHASE  COSINE OF THE PHASE ANGLE.
+!       ONEMP2  ONE MINUS THE HENYEY-GREENSTEIN ASYMMETRY FACTOR.
+!       ONEPP2  ONE PLUS THE HENYEY-GREENSTEIN ASYMMETRY FACTOR.
+!       HGZERO  HENYEY-GREENSTEIN PHASE FUNCTION AT 0.
+!       DENOM   FACTOR IN DENOMINATOR OF HENYEY-GREENSTEIN FUNCTION.
+!       HGPHAS  HENYEY-GREENSTEIN PHASE FUNCTION AT PHASE ANGLE.
+!       BCKSCT  BACKSCATTERING FUNCTION.
+!       RCOALB  ROOT OF THE SURFACE PARTICLE SINGLE SCATTERING COALBEDO.
+!       HS      MULTIPLE SCATTERING TERM AT SOURCE ANGLE.
+!       HV      MULTIPLE SCATTERING TERM AT VIEW ANGLE.
+      REAL CPHASE,ONEMP2,ONEPP2,HGZERO,DENOM,HGPHAS,BCKSCT,RCOALB,HS,HV
+      REAL THETA_S,THETA_V
+      LOGICAL DUMMY
+
+      DUMMY = .FALSE.
+!     HENYEY-GREENSTEIN PHASE FUNCTION:
+      CPHASE=CVIEW*CSOURC+COS(PHI)*SQRT((1.-CVIEW**2)*(1.-CSOURC**2))
+      ONEMP2=1.-PARAMS(2)
+      ONEPP2=1.+PARAMS(2)
+      HGZERO=ONEMP2/ONEPP2**2
+      DENOM=1.+2*PARAMS(2)*CPHASE+PARAMS(2)**2
+      HGPHAS=ONEMP2*ONEPP2/(DENOM*SQRT(DENOM))
+      
+      !IF (DUMMY) THEN
+
+!     BACKSCATTER FUNCTION:
+!      BCKSCT=PARAMS(4)                                                  &
+!     &  /(PARAMS(1)*HGZERO*(SQRT((1.+CPHASE)/(1.-CPHASE))/PARAMS(3)+1.))
+      BCKSCT = 0.0
+      
+!     MULTIPLE SCATTERING FUNCTIONS:
+      RCOALB=SQRT(1.-PARAMS(1))         !DRF CHECK
+      HS=(.5+CSOURC)/(.5+CSOURC*RCOALB) !DRF CHECK
+      HV=(.5+CVIEW)/(.5+CVIEW*RCOALB)   !DRF CHECK
+
+!     BRDF FUNCTION:
+
+                                !WRITE(*,*) 'into hap',CPHASE
+                                !WRITE(*,*) 'CVIEW = ',THETA_V
+                                !WRITE(*,*) 'CSOURC = ',THETA_S
+                                !WRITE(*,*) 'PHI = ',PHI
+      
+      REFHAP=.25*PARAMS(1)*((1+BCKSCT)*HGPHAS+HV*HS-1.)/(CSOURC+CVIEW)
+      !IF (CPHASE.LT.-1.0 .OR. CPHASE.GE.1.0) THEN
+      !   REFHAP = 0.0
+      !ELSE
+      !   !WRITE(*,*) 'PARAM(1)= ',PARAMS(1)
+      !   !WRITE(*,*) 'PARAM(2) = ',PARAMS(2)
+      !   !WRITE(*,*) 'CVIEW = ',CVIEW
+      !   !WRITE(*,*) 'CSOURC = ',CSOURC
+      !   !WRITE(*,*) 'PHI = ',PHI
+      !ENDIF
+
+      !ENDIF
+      !REFHAP = PARAMS(1) !DRF just lambertian
+      RETURN
+      END
+      REAL FUNCTION REFRAH(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFHAP RETURNS THE 3-PARAMETER RAHMAN MODEL BIDIRECTIONAL
+!     REFLECTANCE DISTRIBUTION FUNCTION (BRDF).  [H. RAHMAN,
+!     B. PINTY, AND M.M. VERSTRAETE, "COUPLED SURFACE-ATMOSPHERE
+!     REFLECTANCE (CSAR) MODEL, 2. SEMIEMPIRICAL SURFACE MODEL
+!     USABLE WITH NOAA ADVANCED VERY HIGH RESOLUTION RADIOMETER
+!     DATA," J. GEOPHYS. RES., VOL D98, 20,791-20,801 (1993).]
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+!         PARAMS(1)  REFLECTANCE INTENSITY FACTOR.
+!         PARAMS(2)  HENYEY-GREENSTEIN ASYMMETRY FACTOR.
+!         PARAMS(3)  SURFACE ANISOTROPY PARAMETER.
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     LOCAL VARIABLES:
+!       SVIEW   SINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       SSOURC  SINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       COSPHI  COSINE OF THE SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE.
+!       CPHASE  COSINE OF THE PHASE ANGLE.
+!       ASYMSQ  HENYEY-GREENSTEIN ASYMMETRY FACTOR SQUARED.
+!       DENOM   FACTOR IN DENOMINATOR OF HENYEY-GREENSTEIN FUNCTION.
+!       HGPHAS  HENYEY-GREENSTEIN PHASE FUNCTION AT PHASE ANGLE.
+!       TVIEW   TANGENT OF THE SURFACE VIEW ZENITH ANGLE.
+!       TSOURC  TANGENT OF THE SURFACE SOURCE ZENITH ANGLE.
+!       GEO     GEOMETRY FACTOR.
+!       HOTSPT  HOT SPOT FUNCTION
+      REAL SVIEW,SSOURC,COSPHI,CPHASE,ASYMSQ,DENOM,HGPHAS,              &
+     &  TVIEW,TSOURC,GEO,HOTSPT
+
+!     HENYEY-GREENSTEIN FUNCTION:
+      SVIEW=SQRT(1.-CVIEW**2)
+      SSOURC=SQRT(1.-CSOURC**2)
+      COSPHI=COS(PHI)
+      CPHASE=CVIEW*CSOURC+SVIEW*SSOURC*COSPHI
+      ASYMSQ=PARAMS(2)**2
+      DENOM=1.+2*PARAMS(2)*CPHASE+ASYMSQ
+      HGPHAS=(1.-ASYMSQ)/(DENOM*SQRT(DENOM))
+
+!     HOT SPOT:
+      TVIEW=SVIEW/CVIEW
+      TSOURC=SSOURC/CSOURC
+      GEO=SQRT((TVIEW-TSOURC)**2+2*TVIEW*TSOURC*(1.-COSPHI))
+      HOTSPT=1.+(1.-PARAMS(1))/(1.+GEO)
+
+!     BRDF FUNCTION:
+      REFRAH=PARAMS(1)*HGPHAS*HOTSPT                                    &
+     &  *(CSOURC*CVIEW*(CSOURC+CVIEW))**(PARAMS(3)-1.)
+      RETURN
+      END
+      REAL FUNCTION REFRL(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFRL RETURNS THE 5-PARAMETER ROSS-LI (RECIPROCAL ROSS THICK
+!     LI SPARSE) MODEL BIDIRECTIONAL REFLECTANCE DISTRIBUTION
+!     FUNCTION (BRDF).  [W. WANNER, X. LI AND A.H. STRAHLER, "ON THE
+!     DERIVATION OF KERNELS FOR KERNEL-DRIVEN MODELS OF BIDIRECTIONAL
+!     REFLECTANCE," J. GEOPHYS. RES., VOL D100, 21,077-21,090 (1995);
+!     W. WANNER, A.H. STRAHLER, B. HU, X. LI, C.L. BARKER SCHAAF,
+!     P. LEWIS, J.-P. MULLER AND M.J. BARNSLEY, "GLOBAL RETRIEVAL
+!     OF BIDIRECTIONAL REFLECTANCE AND ALBEDO OVER LAND FROM EOS
+!     MODIS AND MISR DATA: THEORY AND ALGORITHM, J. GEOPHYS. RES.,
+!     VOL 102D, 17,143-17,162 (1997); AND W. LUCHT, C.B. SCHAAF
+!     AND A.H. STRAHLER, "AN ALGORITHM FOR THE RETRIEVAL OF ALBEDO
+!     FROM SPACE USING SEMIEMPIRICAL BRDF MODELS," IEEE TRANS.
+!     GEOSCI. REMOTE SENS., IN PRESS, 1999.]
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+!         PARAMS(1)  ISOTROPIC FACTOR.
+!         PARAMS(2)  SURFACE SCATTERING PARAMETER.
+!         PARAMS(3)  VOLUME SCATTERING PARAMETER.
+!         PARAMS(4)  DIMENSIONLESS CROWN RELATIVE HEIGHT PARAMETER.
+!         PARAMS(5)  CROWN VERTICAL TO HORIZONTAL RADIUS RATIO.
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     COMMON/RCNSTN/
+!       PI       THE CONSTANT PI.
+!       DEG      NUMBER OF DEGREES IN ONE RADIAN.
+!       BIGNUM   MAXIMUM SINGLE PRECISION NUMBER.
+!       BIGEXP   MAXIMUM EXPONENTIAL ARGUMENT WITHOUT OVERFLOW.
+!       RRIGHT   SMALLEST SINGLE PRECISION REAL ADDED TO 1 EXCEEDS 1.
+      REAL PI,DEG,BIGNUM,BIGEXP,RRIGHT
+      COMMON/RCNSTN/PI,DEG,BIGNUM,BIGEXP,RRIGHT
+
+!     LOCAL VARIABLES:
+!       SVIEW   SINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       SSOURC  SINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       TANVP   CROWN VERTICAL TO HORIZONTAL RADIUS RATIO TIMES
+!               TANGENT OF THE SURFACE VIEW ZENITH ANGLE.
+!       TANSP   CROWN VERTICAL TO HORIZONTAL RADIUS RATIO TIMES
+!               TANGENT OF THE SURFACE SOURCE ZENITH ANGLE.
+!       TANVSP  PRODUCT OF TANVP AND TANSP.
+!       SECVP   SQUARE ROOT OF ONE PLUS TANVP SQUARED.
+!       SECSP   SQUARE ROOT OF ONE PLUS TANSP SQUARED.
+!       SECVSP  SUM OF SECVP AND SECSP.
+!       COSPHI  COSINE OF THE SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE.
+!       TTCPHI  PRODUCT OF TANVP, TANSP, AND COSPHI.
+!       COST2   SQUARE OF COSINE OF PARAMETER T.
+!       SIN2T   SINE OF TWO TIMES PARAMETER T.
+!       F1      THE LI SPARSE RECIPROCAL KERNEL.
+!       CPHASE  COSINE OF THE PHASE ANGLE.
+!       PHASE   PHASE ANGLE [RADIANS].
+!       F2      VOLUME SCATTERING COMPONENT.
+      REAL SVIEW,SSOURC,TANVP,TANSP,TANVSP,SECVP,SECSP,SECVSP,COSPHI,   &
+     &  TTCPHI,COST2,SIN2T,F1,CPHASE,PHASE,F2
+
+!     SURFACE REFLECTANCE COMPONENT:
+      SVIEW=SQRT(1.-CVIEW**2)
+      SSOURC=SQRT(1.-CSOURC**2)
+      TANVP=PARAMS(5)*SVIEW/CVIEW
+      TANSP=PARAMS(5)*SSOURC/CSOURC
+      TANVSP=TANVP*TANSP
+      SECVP=SQRT(1.+TANVP**2)
+      SECSP=SQRT(1.+TANSP**2)
+      SECVSP=SECVP+SECSP
+      COSPHI=COS(PHI)
+      TTCPHI=TANVSP*COSPHI
+      F1=(SECVP*SECSP+1.+TTCPHI)/2-SECVSP
+      COST2=(PARAMS(4)/SECVSP)**2                                       &
+     &  *(TANVP**2+TANSP**2-2*TTCPHI+(TANVSP-TTCPHI)*(TANVSP+TTCPHI))
+      IF(COST2.LT.1.)THEN
+
+!         ADD OVERLAP TERM:
+          SIN2T=2*SQRT(COST2-COST2**2)
+          F1=F1+SECVSP*(ASIN(SIN2T)-SIN2T)/(2*PI)
+      ENDIF
+
+!     VOLUME SCATTERING COMPONENT:
+      CPHASE=CVIEW*CSOURC+SVIEW*SSOURC*COSPHI
+      PHASE=ACOS(CPHASE)
+      F2=(SIN(PHASE)+(PI/2-PHASE)*CPHASE)/(CVIEW+CSOURC)-PI/4
+
+!     BRDF FUNCTION:
+      REFRL=PARAMS(1)+PARAMS(2)*F1+PARAMS(3)*F2
+      RETURN
+      END
+      REAL FUNCTION REFPV(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFPV RETURNS THE 4-PARAMETER PINTY AND VERSTRAETE 1991 MODEL
+!     BIDIRECTIONAL REFLECTANCE DISTRIBUTION FUNCTION (BRDF).
+!     [B. PINTY AND M.M. VERSTRAETE, "EXTRACTING INFORMATION ON
+!     SURFACE PROPERTIES FROM BIDIRECIONAL REFLECTANCE MEASUREMENTS,"
+!     J. GEOPHYS. RES., VOL 96, 2865-2874 (1991).]
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+!         PARAMS(1)  SURFACE PARTICLE SINGLE SCATTERING ALBEDO.
+!         PARAMS(2)  HENYEY-GREENSTEIN ASYMMETRY FACTOR.
+!         PARAMS(3)  GOUDRIAAN SCATTERER ANGLE DISTRIBUTION PARAMETER.
+!           = -0.4 FOR ERECTOPHILE CANOPY (MOSTLY VERITCAL SCATTERERS).
+!           =  0.0 FOR UNIFORM (SPHERICAL) DISTRIBUTION
+!           =  0.6 FOR PLANOPHILE CANOPY (MOSTLY HORIZONTAL SCATTERERS).
+!         PARAMS(4)  CANOPY SCATTERER AREA DENSITY * SUN FLECK RADIUS.
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     LOCAL VARIABLES:
+!       PSI1    GOUDRIAAN (1977) SCATTERER ORIENTATION FUNCTION.
+!       PSI2    GOUDRIAAN (1977) SCATTERER ORIENTATION FUNCTION.
+!       KAPPAV  GOUDRIAAN (1977) SCATTERER ORIENTATION PARAMETER.
+!       MUKAPV  SCALED COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       MUKAPS  SCALED COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       SVIEW   SINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       SSOURC  SINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       COSPHI  COSINE OF THE SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE.
+!       CPHASE  COSINE OF THE PHASE ANGLE.
+!       ASYMSQ  HENYEY-GREENSTEIN ASYMMETRY FACTOR SQUARED.
+!       DENOM   FACTOR IN DENOMINATOR OF HENYEY-GREENSTEIN FUNCTION.
+!       HGPHAS  HENYEY-GREENSTEIN PHASE FUNCTION AT PHASE ANGLE.
+!       TVIEW   TANGENT OF THE SURFACE VIEW ZENITH ANGLE.
+!       TSOURC  TANGENT OF THE SURFACE SOURCE ZENITH ANGLE.
+!       GEO     GEOMETRY FACTOR.
+!       TRANFN  INGOING/OUTGOING TRANSMISSION FUNCTION.
+!       RCOALB  ROOT OF THE SURFACE PARTICLE SINGLE SCATTERING COALBEDO.
+!       HS      MULTIPLE SCATTERING TERM AT SOURCE ANGLE.
+!       HV      MULTIPLE SCATTERING TERM AT VIEW ANGLE.
+      REAL PSI1,PSI2,KAPPAV,MUKAPV,MUKAPS,SVIEW,SSOURC,COSPHI,CPHASE,   &
+     &  ASYMSQ,DENOM,HGPHAS,TVIEW,TSOURC,GEO,TRANFN,RCOALB,HS,HV
+
+!     DATA:
+!       PVCONS  CONSTANT USED IN CALCULATION OF PV [= 2 - 8 / (3 PI) ]
+      REAL PVCONS
+      SAVE PVCONS
+      DATA PVCONS/1.1511736/
+
+!     SCATTERER ORIENTATION DISTRIBUTION FUNCTIONS: [J. GOUDRIAAN, "CROP
+!     MICROMETEOROLOGY: A SIMULATION STUDY, REPORT," WAGENINGEN CENT.
+!     FOR AGRIC. PUBL. AND DOC., WAGENINGEN, THE NETHERLANDS, 1977].
+      PSI1=0.5-(0.6333+0.33*PARAMS(3))*PARAMS(3)
+      PSI2=0.877-1.754*PSI1
+      KAPPAV=PSI1+PSI2*CVIEW
+      MUKAPV=CVIEW/KAPPAV
+      MUKAPS=CSOURC/(PSI1+PSI2*CSOURC)
+
+!     HENYEY-GREENSTEIN FUNCTION:
+      SVIEW=SQRT(1.-CVIEW**2)
+      SSOURC=SQRT(1.-CSOURC**2)
+      COSPHI=COS(PHI)
+      CPHASE=CVIEW*CSOURC+SVIEW*SSOURC*COSPHI
+      ASYMSQ=PARAMS(2)**2
+      DENOM=1.+2*PARAMS(2)*CPHASE+ASYMSQ
+      HGPHAS=(1.-ASYMSQ)/(DENOM*SQRT(DENOM))
+
+!     INGOING/OUTGOING TRANSMISSION FUNCTION (INCLUDES HOT SPOT):
+      TVIEW=SVIEW/CVIEW
+      TSOURC=SSOURC/CSOURC
+      GEO=SQRT((TVIEW-TSOURC)**2+2*TVIEW*TSOURC*(1.-COSPHI))
+      TRANFN=1.+1./(1.+PVCONS*GEO*MUKAPV/PARAMS(4))
+
+!     MULTIPLE SCATTERING COMPONENTS:
+      RCOALB=SQRT(1.-PARAMS(1))
+      HS=(1.+MUKAPS)/(1.+MUKAPS*RCOALB)
+      HV=(1.+MUKAPV)/(1.+MUKAPV*RCOALB)
+
+!     BRDF FUNCTIONS:
+      REFPV=.25*PARAMS(1)*(HGPHAS*TRANFN+HS*HV-1.)/(CVIEW+KAPPAV*MUKAPS)
+      RETURN
+      END
+
+      REAL FUNCTION REFLZ(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFLZ RETURNS THE 0-PARAMETER LI-ZHOU BIDIRECTIONAL REFLECTANCE
+!     DISTRIBUTION FUNCTION (BRDF). FROM LI, S. AND X. ZHOU 
+!     DERIVING RECIPROCAL KERNEL FUNCTIONAL EXPRESSION OF ANTARCTIC SEA
+!     ICE BRDF FROM FIELD MEASUREMENTS.  IEEE 2002 2173-2175
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION (1): REFLECTANCE [0,1]
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     COMMON/RCNSTN/
+!       PI       THE CONSTANT PI.
+!       DEG      NUMBER OF DEGREES IN ONE RADIAN.
+!       BIGNUM   MAXIMUM SINGLE PRECISION NUMBER.
+!       BIGEXP   MAXIMUM EXPONENTIAL ARGUMENT WITHOUT OVERFLOW.
+!       RRIGHT   SMALLEST SINGLE PRECISION REAL ADDED TO 1 EXCEEDS 1.
+      REAL PI,DEG,BIGNUM,BIGEXP,RRIGHT
+      COMMON/RCNSTN/PI,DEG,BIGNUM,BIGEXP,RRIGHT
+
+!     LOCAL VARIABLES:
+!       THETACAP    PHASE ANGLE (SEE LI-ZHOU REFERENCE FOR EXPLANATION)
+!       THETA_V     VIEW ANGLE
+!       THETA_S     SOURCE ANGLE
+      REAL THETACAP,THETA_V,THETA_S
+      LOGICAL DUMMY 
+
+      DUMMY = .FALSE.
+      THETA_V = ACOS(CVIEW)
+      THETA_S = ACOS(CSOURC)
+      THETACAP = ACOS(CVIEW*CSOURC+SIN(THETA_V)*SIN(THETA_S)*COS(PHI))
+
+!     BRDF FUNCTION:
+      REFLZ = 12.711-10.668*COS(THETACAP)-1.238*(COS(THETACAP))**2 -    &
+     &        7.882*THETACAP**2 + 1.916*THETACAP**3 -                   &
+     &        0.0842*(1.0-CSOURC)*(1.0-CVIEW)*COS(PHI) -                &
+     &        0.0823*(1.0-CSOURC)*(1.0-CVIEW)*COS(2*PHI)
+      REFLZ = REFLZ*PARAMS(1)
+
+      RETURN
+      END
+
+      REAL FUNCTION REFCXMK(CVIEW,CSOURC,PHI,PARAMS)
+
+!     REFCXMK RETURNS THE 3-PARAMETER COX-MUNK BIDIRECTIONAL REFLECTANCE
+!     DISTRIBUTION FUNCTION (BRDF).  [F.M. BREON "AN ANALYTICAL MODEL FOR THE
+!     ATMOSPHERE/OCEAN SYSTEM REFLECTANCE," REMOTE SENSING OF ENVIRONMENT, VOL 43(2)
+!     179-192.  
+!     MODIFIED TO CALL THE 6S OCEAN BRDF CODE
+
+!     INPUT ARGUMENTS:
+!       CVIEW   COSINE OF THE SURFACE VIEW ZENITH ANGLE.
+!       CSOURC  COSINE OF THE SURFACE SOURCE ZENITH ANGLE.
+!       PHI     SOURCE-TO-VIEW RELATIVE AZIMUTH ANGLE [0 TO PI RADIANS].
+!       PARAMS  PARAMETERS IN BRDF REPRESENTATION:
+!         PARAMS(1)  WAVELENGTH IN UM
+!         PARAMS(2)  WIND-SPEED IN M/S
+      REAL CVIEW,CSOURC,PHI,PARAMS(*)
+
+!     COMMON/RCNSTN/
+!       PI       THE CONSTANT PI.
+!       DEG      NUMBER OF DEGREES IN ONE RADIAN.
+!       BIGNUM   MAXIMUM SINGLE PRECISION NUMBER.
+!       BIGEXP   MAXIMUM EXPONENTIAL ARGUMENT WITHOUT OVERFLOW.
+!       RRIGHT   SMALLEST SINGLE PRECISION REAL ADDED TO 1 EXCEEDS 1.
+      REAL PI,DEG,BIGNUM,BIGEXP,RRIGHT
+      COMMON/RCNSTN/PI,DEG,BIGNUM,BIGEXP,RRIGHT
+
+!     LOCAL VARIABLES:
+!     
+      REAL PWS,PAW,XSAL,PCL
+      INTEGER MU,NP
+      REAL RM(-1:1),RP,BRDFINT(-1:1,1)
+      REAL PHI2,PHI3  !PHI2 in radiance, PHI3 in degrees
+      REAL CVIEW2,CSOURC2
+      REAL RFOAM,RWAT,RGLIT
+      REAL HALFPI
+      REAL NR,NI,RSW,RGL,WNDWT,AZW,PWL
+      REAL AVIEW,ASOURC
+      LOGICAL TEST_FLAG
+
+!C
+!C INPUT:  pws=wind speed (in m/s)
+!C         paw= azim. of sun - azim. of wind (in deg.)
+!C         xsal=salinity (in ppt)
+!C         pcl=pigment concentration (in mg.m-3)
+!C         pwl=wavelength of the computation (in micrometer)
+!C         mu=number of zenith angle
+!C         np=number of azimuth
+!C         rm=cosine of Gauss's angles for angles between -PI/2 and PI/2 deg
+!C         rp=Gauss's angles for angles between 0 and 2*PI
+!C OUTPUT: brdfint(j,k)=the total reflectance of the sea water
+!C         rfoam= the effective reflectance of the foam (foam coverage x foam reflectance)
+!C         rwat= the reflectance of the water (just above the surface)
+!C         rglit= the reflectance of the sunglint
+
+      !PWS = 5.   !WIND-SPEED
+      IF (PARAMS(2).GT.0. .AND. PARAMS(2).LT.20.) THEN
+         PWS = PARAMS(2)
+      ELSE
+         PWS = 2.0
+      ENDIF
+      PAW = 0.  !WIND-DIRECTION (reflectance is a weak function)
+      XSAL = 35.0
+      PCL = 0.2
+      PWL = PARAMS(1)
+      PHI2 = PHI
+      !HALFPI = 3.1415926535989/2.
+
+!      !!! TEST
+      !PWS = 2.
+      !PAW = 0.
+      !XSAL = 35.
+      !PCL = 0.3
+      !PWL = 0.54
+      !CVIEW2 = 0.
+      !CSOURC2 = .866
+      !PHI2 = 0.
+      !!! TEST
+
+      !CVIEW2 = COS(3.1415926535898/2.-ACOS(CVIEW))
+      CSOURC2 = COS(3.1415926535898/2.-ACOS(CSOURC))
+      CVIEW2 = CVIEW
+      !CSOURC2 = CSOURC
+
+      TEST_FLAG = .FALSE.
+      IF (TEST_FLAG) THEN 
+        !CVIEW2 =  COS(30.*3.14159/180.)
+        !CSOURC2 = COS(30.*3.14159/180.)
+        PHI2 = PHI+3.1415926535898 !0. !3.1415926
+      ENDIF
+
+      !AVIEW = 90.-180./3.1415926535898*ACOS(CVIEW2)
+      !ASOURC = 90.-180./3.1415926535898*ACOS(CSOURC2)
+      !AVIEW = 180./3.1415926535898*ACOS(CVIEW2)
+      !ASOURC = 180./3.1415926535898*ACOS(CSOURC2)
+      !PHI3 = (PHI+3.1415926535898)*180./3.1415926535989
+
+      !CHOOSE NEGATIVE NUMBERS
+
+      MU = 1
+      NP = 1
+      RP = PHI2
+      RM(-1)=PHI2
+      RM(1) = CVIEW2
+      RM(0) = CSOURC2
+
+      CALL OCEABRDF(PWS,PAW,XSAL,PCL,PWL,RFOAM,RWAT,RGLIT,MU,NP,RM,RP,  &
+     &              BRDFINT)
+      !CALL OCEABRDFFAST(PWS,PAW,XSAL,PCL,PWL,MU,NP,RM,RP, BRDFINT)
+
+      !USE FORMULATION FROM SBDART
+      CALL INDWAT(PWL,XSAL,NR,NI)                      
+      !CALL MORCASIWAT(PWL,PCL,RSW)                   
+      !IF (PCL.EQ.0.) THEN
+      !   RSW = 0.
+      !ENDIF
+      !WNDWT = 2.9151E-6*PWS**3.52                   
+      !RFOAM = WNDWT*0.22
+      !AZW = 0.
+
+      !CALL SUNGLINT(PWS,NR,NI,AZW,ASOURC,AVIEW,PHI3,RGL) 
+      !REFCXMK = RWAT*(1.-RFOAM)+RFOAM
+      REFCXMK = BRDFINT(1,1)
+
+      !IF (RGLIT>1.) THEN
+      !   REFCXMK =RFOAM+(1.-WNDWT)*1.+(1.-RFOAM)*RWAT 
+      !ENDIF
+
+      !REFCXMK = RFOAM+(1.-WNDWT)*RGL+(1.-RFOAM)*RWAT
+      !REFCXMK = (1.-WNDWT)*RGL
+
+      !WRITE(*,*) 'AVIEW = ',AVIEW
+      !WRITE(*,*) 'ASOURC = ',ASOURC
+      !WRITE(*,*) 'PHI2 = ',PHI2
+      
+      IF (TEST_FLAG) THEN
+        !WRITE(*,*) 'RFOAM = ',RFOAM
+        WRITE(*,*) 'RGL = ',RGL
+        !WRITE(*,*) 'RSW = ',RSW
+        WRITE(*,*) 'RWAT = ',RWAT
+        WRITE(*,*) 'RGLIT = ',RGLIT
+        WRITE(*,*) 'BRDFINT = ',BRDFINT(1,1)
+        !WRITE(*,*) 'REFCXMK = ',REFCXMK
+        !WRITE(*,*) 'BRDF = ',DUMMY
+        STOP 'ERROR/error in RFLECT.F LINE 3494'
+      ENDIF
+ 
+      !IF (REFCXMK.LT.0. .OR. REFCXMK.GT.100.) THEN
+      !IF (REFCXMK.LT.0.) THEN
+      IF (REFCXMK.LT.0. .OR. REFCXMK.GT.1.) THEN
+         REFCXMK = 0.
+      ENDIF
+
+      !IF(PWL.GT.0.5 .AND. BRDFINT(1,1).GT.0.01) THEN
+      !  WRITE(*,*) 'WIND SPEED = ',PWS
+      !  WRITE(*,*) 'AZIMUTH ANGLE (DEG) = ',PAW
+      !  WRITE(*,*) 'SALINITY = ',XSAL
+      !  WRITE(*,*) 'CHLOROPHYLL = ',PCL
+      !  WRITE(*,*) 'RFOAM = ',RFOAM
+      !  WRITE(*,*) 'RWAT = ',RWAT
+      !  WRITE(*,*) 'RGLIT = ',RGLIT
+      !  WRITE(*,*) 'MU = ',MU
+      !  WRITE(*,*) 'NP = ',NP
+      !  WRITE(*,*) 'RM  = ',RM
+      !  WRITE(*,*) 'RP  = ',RP
+      !  WRITE(*,*) 'WAVELENGTH = ',PWL
+      !  WRITE(*,*) 'CVIEW = ',CVIEW
+      !  WRITE(*,*) 'CSOURC = ',CSOURC
+      !  WRITE(*,*) 'PHI = ',PHI
+      !  WRITE(*,*) 'BRDFINT  = ',BRDFINT(1,1)
+      !  STOP 'ERROR IN RFLECT.F ON LINE 3456'
+      !ENDIF
+      !WRITE(*,*) 'RGLIT = ',RGLIT
+      !WRITE(*,*) 'RFOAM = ',RFOAM
+      !WRITE(*,*) 'RWAT = ',RWAT
+      !WRITE(*,*) 'OCEA BRDF = ',BRDFINT
+      !STOP
+
+      !IF(BRDFINT(1,1).GT.1.) THEN
+      !   REFCXMK = 0.
+      !ELSE
+      !   REFCXMK = BRDFINT(1,1)
+      !ENDIF
+      !REFCXMK = 0.001 !RWAT
+      RETURN
+      END
+

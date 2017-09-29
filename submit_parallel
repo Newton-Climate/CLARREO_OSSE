@@ -1,0 +1,81 @@
+#!/bin/sh
+
+#submit from the directory where the executable is
+
+#==============================================================================
+#  This is a CCSM batch job script for scs
+#==============================================================================
+## BATCH INFO
+#PBS -l nodes=4:ppn=8:lr
+#PBS -l walltime=04:00:00
+#PBS -q lr_batch
+#PBS -A ac_radiation
+#PBS -j oe
+#PBS -N clarreo
+#EXPORT CURRENT ENVIRONMENT
+#PBS -V         
+#End of options
+
+
+#OS SETUP
+module load openmpi/1.2.8-intel
+cd ${PBS_O_WORKDIR}
+ulimit -s unlimited
+export MKL_NUM_THREADS=1
+
+
+#NAME OF INPUT FILE THAT WE WISH TO RUN WITH (not the full path and minus .nc)
+input_name=b30.042a.cam2.h0.2000-07
+input_name2=b30.042a.cam2.h0.2050-07
+
+
+#CREATE NAMES
+base_dir_path=`pwd`
+full_path_binary=${base_dir_path}"/radiation"
+settings_forcing="/global/scratch/drfeldma/qsub/settings_forcing.inp"
+base_input_path="/global/scratch/drfeldma/esg/"
+
+
+#DEBUG INFO
+#echo
+#echo "NAMES"
+#echo "current working directory = "${base_dir_path}
+#echo "full path for the executable = "${full_path_binary}
+#echo "full path for the settings_forcing = "${settings_forcing}
+#echo "base path to the input directory = "${base_input_path}
+#echo "END NAMES"
+#echo
+
+
+#SETUP THE SYMBOLIC LINK
+ln -v --symbolic /global/scratch/drfeldma/qsub/modroot.in .
+
+
+
+#EXECUTABLE ARGUMENTS
+input_cam=${base_input_path}${input_name}".nc"
+output_cam=${input_name}".out.nc"
+input_cam2=${base_input_path}${input_name2}".nc"
+output_cam2=${input_name2}".out.nc"
+
+
+#DEBUG INFO
+#echo
+#echo "FILE PATHS"
+#echo "full path for the netcdf input file = "${input_cam}
+#echo "name of the output netcdf file = "${output_cam}
+#echo
+#echo
+#echo "full path for the netcdf input file = "${input_cam2}
+#echo "name of the output netcdf file = "${output_cam2}
+#echo "END FILE PATHS"
+#echo
+
+date
+#EXECUTE
+mpiexec -np 32 ${full_path_binary}  ${input_cam}  ${input_cam}  ${output_cam} < ${settings_forcing}
+
+date
+#mpiexec -np 6 ${full_path_binary}  ${input_cam2}  ${input_cam2}  ${output_cam2} < ${settings_forcing}
+
+exit

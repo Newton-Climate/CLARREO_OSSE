@@ -1,0 +1,148 @@
+      SUBROUTINE AERMRG                                                 &
+     &     (NAERNU,ZMNU,AERNU,ZTOL,ML,LAER1,LAER2,LAER3,LAER4)
+      INTEGER ML
+      REAL ZTOL
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'BASE.h'
+      REAL ZM,PM,TM,RFNDX,DENSTY
+      LOGICAL LRHSET
+      COMMON/MODEL/ZM(LAYDIM),PM(LAYDIM),TM(LAYDIM),                    &
+     &     RFNDX(LAYDIM),DENSTY(MEXT,LAYDIM),LRHSET(LAYDIM)
+      REAL P,T,WH,WCO2,WO,WN2O,WCO,WCH4,WO2
+      COMMON/MDATA/P(LAYDIM),T(LAYDIM),WH(LAYDIM),WCO2(LAYDIM),         &
+     &     WO(LAYDIM),WN2O(LAYDIM),WCO(LAYDIM),WCH4(LAYDIM),WO2(LAYDIM)
+      REAL WNO,WSO2,WNO2,WNH3,WHNO3
+      COMMON/MDATA1/WNO(LAYDIM),WSO2(LAYDIM),WNO2(LAYDIM),              &
+     &  WNH3(LAYDIM),WHNO3(LAYDIM)
+      REAL WMOLXT
+      COMMON/MDATAX/WMOLXT(NMOLX,LAYDIM)
+      INTEGER INDX,J,JLO,JHI,I,IX,IMIN1
+      REAL FAC,EXPINT,TRATIO
+      LOGICAL LAER1,LAER2,LAER3,LAER4
+
+      REAL ZMNU(LAYDIM),AERNU(LAYDIM)
+      INTEGER NAERNU,IAER
+
+      DO 100 IAER=1, NAERNU
+
+!        FIND OUT WHERE ZMNU(IAER) BELONGS IN THE ZM-ARRAY
+         CALL FINDEX(ZM,ML,ZMNU(IAER),INDX,ZTOL,JLO)
+
+         IF (INDX.NE.-1) THEN
+
+!           MATCH OCCURRED; THAT IS, ZM(INDX)=ZMNU(IAER)
+            IF (LAER1) DENSTY(7,INDX)=AERNU(IAER)
+            IF (LAER2) DENSTY(12,INDX)=AERNU(IAER)
+            IF (LAER3) DENSTY(13,INDX)=AERNU(IAER)
+            IF (LAER4) DENSTY(14,INDX)=AERNU(IAER)
+         ELSEIF (INDX.EQ.-1) THEN
+
+!           NO MATCH, INSERT NEW LAYER
+            ML=ML+1
+            J=JLO+1
+            JHI=JLO+2
+
+!           SHIFT (MOVE UP)
+            DO 110 I=ML,JHI,-1
+               IMIN1=I-1
+               ZM(I)=ZM(IMIN1)
+               P(I)=P(IMIN1)
+               T(I)=T(IMIN1)
+               RELHUM(I)=RELHUM(IMIN1)
+               WH(I)=WH(IMIN1)
+               WCO2(I)=WCO2(IMIN1)
+               WO(I)=WO(IMIN1)
+               WN2O(I)=WN2O(IMIN1)
+               WCO(I)=WCO(IMIN1)
+               WCH4(I)=WCH4(IMIN1)
+               WO2(I)=WO2(IMIN1)
+               WHNO3(I)=WHNO3(IMIN1)
+               WNO(I)=WNO(IMIN1)
+               WSO2(I)=WSO2(IMIN1)
+               WNO2(I)=WNO2(IMIN1)
+               WNH3(I)=WNH3(IMIN1)
+               DO 10 IX=1,NMOLX
+                  WMOLXT(IX,I)=WMOLXT(IX,IMIN1)
+ 10            CONTINUE
+               IF (.NOT.LAER1) DENSTY(7,I)=DENSTY(7,IMIN1)
+               IF (.NOT.LAER2) DENSTY(12,I)=DENSTY(12,IMIN1)
+               IF (.NOT.LAER3) DENSTY(13,I)=DENSTY(13,IMIN1)
+               IF (.NOT.LAER4) DENSTY(14,I)=DENSTY(14,IMIN1)
+               DENSTY(16,I)=DENSTY(16,IMIN1)
+ 110        CONTINUE
+            ZM(J)=ZMNU(IAER)
+            IF (LAER1) DENSTY(7,J)=AERNU(IAER)
+            IF (LAER2) DENSTY(12,J)=AERNU(IAER)
+            IF (LAER3) DENSTY(13,J)=AERNU(IAER)
+            IF (LAER4) DENSTY(14,J)=AERNU(IAER)
+
+!           ASSIGN VALUES AT NEW ALTITUDE WHICH IS ZM(J)
+            FAC=(ZM(J)-ZM(JHI))/(ZM(JLO)-ZM(JHI))
+            P(J)=EXPINT(P(JHI),P(JLO),FAC)
+            T(J)=(T(JLO)-T(JHI))*FAC+T(JHI)
+            TRATIO=273.15/T(J)
+            RELHUM(J)=EXPINT(RELHUM(JHI),RELHUM(JLO),FAC)
+            WH(J)=0.01*RELHUM(J)*TRATIO*                                &
+     &           EXP(18.9766-(14.9595+2.43882*TRATIO)*TRATIO)
+            WCO2(J)=EXPINT(WCO2(JHI),WCO2(JLO),FAC)
+            WO(J)=EXPINT(WO(JHI),WO(JLO),FAC)
+            WN2O(J)=EXPINT(WN2O(JHI),WN2O(JLO),FAC)
+            WCO(J)=EXPINT(WCO(JHI),WCO(JLO),FAC)
+            WCH4(J)=EXPINT(WCH4(JHI),WCH4(JLO),FAC)
+            WO2(J)=EXPINT(WO2(JHI),WO2(JLO),FAC)
+            WHNO3(J)=EXPINT(WHNO3(JHI),WHNO3(JLO),FAC)
+            WNO(J)=EXPINT(WNO(JHI),WNO(JLO),FAC)
+            WSO2(J)=EXPINT(WSO2(JHI),WSO2(JLO),FAC)
+            WNO2(J)=EXPINT(WNO2(JHI),WNO2(JLO),FAC)
+            WNH3(J)=EXPINT(WNH3(JHI),WNH3(JLO),FAC)
+            DO 40 IX=1,NMOLX
+               WMOLXT(IX,J)=EXPINT(WMOLXT(IX,JHI),WMOLXT(IX,JLO),FAC)
+ 40         CONTINUE
+            IF (.NOT.LAER1) DENSTY(7,J)=                                &
+     &           EXPINT(DENSTY(7,JHI),DENSTY(7,JLO),FAC)
+            IF (.NOT.LAER2) DENSTY(12,J)=                               &
+     &           EXPINT(DENSTY(12,JHI),DENSTY(12,JLO),FAC)
+            IF (.NOT.LAER3) DENSTY(13,J)=                               &
+     &           EXPINT(DENSTY(13,JHI),DENSTY(13,JLO),FAC)
+            IF (.NOT.LAER4) DENSTY(14,J)=                               &
+     &           EXPINT(DENSTY(14,JHI),DENSTY(14,JLO),FAC)
+            DENSTY(16,J)=EXPINT(DENSTY(16,JHI),DENSTY(16,JLO),FAC)
+         ENDIF
+ 100  CONTINUE
+      RETURN
+      END
+
+      SUBROUTINE FINDEX(XA,N,X,INDX,TOL,JLO)
+      INTEGER N,JLO,INDX,JLPREV,JLNEXT
+      REAL XA(N),X,TOL
+
+!     RETURNED VALUE IS INDX AND JLO.
+
+!     THIS ROUTINE FIRST CALLS HUNT - CALL HUNT(XA,N,X,JLO).
+!     HUNT DOES THIS:
+!     XA(1), XA(2), XA(3), ..., XA(N) ARE THE MONOTONIC GRID PTS.
+!     RETURNS JLO=J, IF X IS INBETWEEN XA(J) & XA(J+1).
+!     IF X=XA(J), RETURNS JLO=J-1.
+!     IF OUT OF RANGE, RETURNS 0 OR N.
+
+!     WE NEED TO KNOW FOR WHICH J, XA(J)=X WITHIN TOLERANCE, TOL.
+!     INDX IS RETURNED BY SETTING IT EQUAL TO J.
+!     IF THERE IS NO EXACT MATCH -1 IS RETURNED.
+
+      CALL HUNT(XA,N,X,JLO)
+
+!     NOTE THAT JLO IS BETWEEN 0 TO N, BOTH INCLUSIVE.
+
+      INDX=-1
+      JLPREV=JLO-1
+      JLNEXT=JLO+1
+      IF (JLNEXT .LE. N) THEN
+         IF (ABS(XA(JLNEXT)-X) .LE. TOL) INDX=JLNEXT
+      ENDIF
+      IF (JLPREV .GT. 0) THEN
+         IF (ABS(XA(JLPREV)-X) .LE. TOL) INDX=JLPREV
+      ENDIF
+      IF (JLO .GT. 0) THEN
+         IF (ABS(XA(JLO)-X) .LE. TOL) INDX=JLO
+      ENDIF
+      END

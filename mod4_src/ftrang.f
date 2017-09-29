@@ -1,0 +1,201 @@
+      SUBROUTINE FTRANG(H1,H2,RANGE,ANGLE,PHI,LENN,HMIN,IERROR)
+
+!     PARAMETERS:
+      INCLUDE 'ERROR.h'
+
+!     GIVEN H1, H2 AND RANGE, THIS SUBROUTINE CALCULATES THE ZENITH
+!     ANGLE AT H1 (ANGLE) AND AT H2 (PHI).
+
+!     DECLARE ARGUMENTS:
+!       H1      OBSERVER ALTITUDE [KM].
+!       H2      FINAL ALTITUDE [KM].
+!       RANGE   SLANT PATH RANGE [KM].
+!       ANGLE   ZENITH ANGLE AT H1 TOWARDS H2 [DEG].
+!       PHI     ZENITH ANGLE AT H2 TOWARDS H1 [DEG].
+!       LENN    PATH LENGTH SWITCH (=0 SHORT PATH,
+!                 =1 FOR PATH THROUGH TANGENT POINT).
+!       HMIN    PATH MINIMUM ALTITUDE [KM].
+!       IERROR  ERROR FLAG (=0 FOR SUCCESS, =1 FOR FAILURE).
+      DOUBLE PRECISION H1,H2,RANGE,ANGLE,PHI,HMIN
+      INTEGER LENN,IERROR
+
+!     LIST COMMONS:
+      INCLUDE 'IFIL.h'
+      REAL RE,ZMAX
+      INTEGER IPATH
+      COMMON/PARMTR/RE,ZMAX,IPATH
+      REAL GNDALT
+      COMMON/GRAUND/GNDALT
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     DECLARE LOCAL VARIABLES:
+!       LOWER   FLAG, .TRUE. WHEN ANGLE INCREMENT NEEDS TO BE DECREASED.
+!       DANGLE  ANGLE INCREMENT [DEG].
+!       HA      THE LOWER OF H1 AND H2 [KM].
+!       HB      THE HIGHER OF H1 AND H2 [KM].
+!       HBSAV   SAVED VALUE OF HB [KM].
+!       ANGLE1  CURRENT GUESS FOR ANGLE [DEG].
+!       ITER    ITERATION COUNTER.
+      LOGICAL LOWER
+      DOUBLE PRECISION DANGLE,HA,HB,HBSAV,RA,COEF,STORE,ANGLE1,         &
+     &  BETA,RANGE1,BENDNG,TERM1,TERM2,ADDRAN,ADDANG,ARG,DPRE
+      INTEGER ITER
+
+!     DECLARE DATA:
+!       TOLRNC  MAXIMUM ALLOWED RANGE ERROR [KM].
+!       ITERMX  MAXIMUM NUMBER OF ITERATIONS.
+!       IAMT    COLUMN AMOUNT CALCULATION SWITCH.
+      REAL TOLRNC
+      INTEGER ITERMX,IAMT
+      DOUBLE PRECISION DPDEG
+      LOGICAL LWARN
+      DATA TOLRNC/1.E-3/,ITERMX/30/,IAMT/2/,DPDEG/57.2957795131D0/,     &
+     &  LWARN/.TRUE./
+
+!     INITIALIZE PARAMETERS
+      LOWER=.FALSE.
+      DANGLE=.1D0
+      HA=H1
+      HB=H2
+      IF(H1.GT.H2)THEN
+          HA=H2
+          HB=H1
+      ENDIF
+
+!     HBSAV IS DEFINED TO PROTECT AGAINST RPATH REDEFINING HB
+      HBSAV=HB
+
+!     GUESS AT ANGLE, INTEGRATE OVER PATH TO FIND RANGE, TEST
+!     FOR CONVERGENCE, AND ITERATE ANGLE IF NECESSARY.
+      IF(.NOT.LJMASS) WRITE(IPR,'(///A,3F10.5,A,//A,//(2A))')           &
+     &  ' CASE 2C: GIVEN H1, H2, RANGE:  (',H1,H2,RANGE,' )',           &
+     &  ' ITERATE AROUND ANGLE UNTIL RANGE CONVERGES',                  &
+     &  ' ITER    ANGLE      RANGE     DRANGE    ',                     &
+     &  '   BETA       HMIN        PHI    BENDING',                     &
+     &  '         (DEG)       (KM)      (KM)     ',                     &
+     &  '  (DEG)       (KM)      (DEG)     (DEG)'
+
+!     CALCULATE THE NO REFRACTION ZENITH ANGLE AS AN INITIAL GUESS
+      DPRE=DBLE(RE)
+      RA=DPRE+HA
+      COEF=.5D0/RA
+      STORE=(HB-HA)*(DPRE+HB+RA)
+      ANGLE=DPDEG*ACOS(COEF*(STORE/RANGE-RANGE))
+      ANGLE1=ANGLE
+
+!     BEGIN ITERATIVE PROCEDURE
+      ITER=0
+   10 ITER=ITER+1
+          IF(ITER.GT.ITERMX)THEN
+
+! JMASS TREATS FOLLOWING MESSAGE AS WARNING??
+              WRITE(IPR,'(41h0FITRNG, CASE 2C (H1,H2,RANGE): SOLUTION , &
+     &          16hDID NOT CONVERGE,//10X,4hH1 =,F13.6,4x,4hH2 =,F13.6, &
+     &          4x,7hRANGE =,F13.6,4x,12hITERATIONS =,I5,//10X,5hLAST , &
+     &          9hITERATION,//10X,7hANGLE =,F16.9,4x,7hRANGE =,F16.9)') &
+     &          H1,H2,BETA,ITER,ANGLE1,RANGE1
+              IERROR=1
+              RETURN
+          ENDIF
+
+!         DETERMINE RANGE1, THE RANGE CORRESPONDING TO ANGLE1
+          HB=HBSAV
+          IF(ANGLE1.LE.90.D0)THEN
+
+!             SHORT UPWARD PATH
+              LENN=0
+              CALL DPFNMN(HA,ANGLE1,HB,LENN,ITER,HMIN,PHI,IERROR,LWARN)
+              CALL DPRFPA(HA,HB,ANGLE1,PHI,LENN,                        &
+     &          HMIN,IAMT,BETA,RANGE1,BENDNG)
+          ELSE
+
+!             LONG PATH
+              LENN=1
+              CALL DPFNMN(HA,ANGLE1,HB,LENN,ITER,HMIN,PHI,IERROR,LWARN)
+              IF(HA.LE.HMIN)THEN
+
+!                 BECAUSE ANGLE1 EXCEEDS 90 DEGREES BY SO
+!                 LITTLE, HA DOES NOT EXCEED HMIN.  CORRECT
+!                 BY DECREASING ANGLE1 TO 90 DEGREES, SETTING
+!                 HMIN TO HA, AND CHANGING LENN FROM 1 TO 0.
+                  HMIN=HA
+                  ANGLE1=90.D0
+                  LENN=0
+                  CALL DPRFPA(HA,HB,ANGLE1,PHI,LENN,                    &
+     &              HMIN,IAMT,BETA,RANGE1,BENDNG)
+              ELSE
+                  CALL DPRFPA(HA,HB,ANGLE1,PHI,LENN,                    &
+     &              HMIN,IAMT,BETA,RANGE1,BENDNG)
+                  IF(LENN.EQ.0)THEN
+
+!                     PATH INTERSECTED THE EARTH.  DECREASE ANGLE BY .1
+                      IF(.NOT.LJMASS) WRITE(IPR,'(I3,7F11.5)')          &
+     &                   ITER,ANGLE1,                                   &
+     &                   RANGE1,RANGE-RANGE1,BETA,HMIN,PHI,BENDNG
+                      LOWER=.TRUE.
+                      ANGLE1=ANGLE1-DANGLE
+                      GOTO10
+                  ENDIF
+              ENDIF
+          ENDIF
+
+!         IF THE FINAL ALTITUDE HB HAS BEEN LOWERED (BECAUSE
+!         HB WAS ABOVE THE TOP OF THE ATMOSPHERE), ADD ON THE
+!         REMAINDER OF PATH LENGTH ASSUMING NO REFRACTION.
+          IF(HBSAV.GT.HB)THEN
+              TERM1=(DPRE+HB)*COS(PHI/DPDEG)
+              TERM2=(HBSAV-HB)*(2*DPRE+HBSAV+HB)
+              ADDRAN=TERM2/(SQRT(TERM1*TERM1+TERM2)-TERM1)
+              RANGE1=RANGE1+ADDRAN
+              ADDANG=DPDEG*ASIN(ADDRAN*SIN(PHI/DPDEG)/(DPRE+HBSAV))
+              BETA=BETA+ADDANG
+              PHI=PHI+ADDANG
+          ENDIF
+          IF(.NOT.LJMASS) WRITE(IPR,'(I3,7F11.5)')                      &
+     &      ITER,ANGLE1,RANGE1,RANGE-RANGE1,BETA,HMIN,PHI,BENDNG
+
+!         CHECK FOR CONVERGENCE
+          IF(ABS(RANGE-RANGE1).LT.TOLRNC .OR.                           &
+     &      ABS(1.D0-RANGE1/RANGE).LT.2.D-6)THEN
+              RANGE=RANGE1
+              IF(H1.LE.H2)THEN
+                  ANGLE=ANGLE1
+              ELSE
+                  ANGLE=PHI
+                  PHI=ANGLE1
+              ENDIF
+              IF(HMIN.GE.GNDALT)RETURN
+
+! JMASS TREATS FOLLOWING MESSAGE AS WARNING??
+              WRITE(IPR,'(/A,//8X,2A)')                                 &
+     &          'FTRANG, CASE 2B (H1,H2,RANGE):  RANGE IS TOO LARGE.',  &
+     &          ' REFRACTED PATH TANGENT HEIGHT IS LESS THAN',          &
+     &          ' GROUND ALTITUDE; THE PATH INTERSECTS THE EARTH.'
+              IERROR=1
+              RETURN
+          ENDIF
+
+!         DETERMINE NEW VALUE FOR ANGLE (.6 IS A FUDGE FACTOR INTRODUCED
+!         TO AVOID OVER CORRECTING AND SPEED UP CONVERGENCE).
+          IF(RANGE1.LE.0.) THEN
+              IF(LJMASS)CALL WRTBUF(FATAL)
+              STOP 'FTRANG error:  Range is zero or less.'
+          ENDIF
+          ARG=COEF*(STORE/RANGE1-RANGE1)
+          IF(ARG.GE.1)THEN
+              ANGLE1=ANGLE1+.6D0*ANGLE
+          ELSEIF(ARG.GT.-1)THEN
+              ANGLE1=ANGLE1+.6D0*(ANGLE-DPDEG*ACOS(ARG))
+          ELSE
+              ANGLE1=ANGLE1+.6D0*(ANGLE-180.D0)
+          ENDIF
+
+!         CHECK IF ANGLE INCREMENT MUST BE LOWERED
+          IF(LOWER)THEN
+              DANGLE=.2D0*DANGLE
+              LOWER=.FALSE.
+          ENDIF
+      GOTO10
+      END

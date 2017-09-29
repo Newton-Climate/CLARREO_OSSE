@@ -1,0 +1,6 @@
+qsub -I -q devel -lselect=2:ncpus=8:model=san,walltime=0:30:00
+
+mpiexec -np 16 /nobackupp2/nhnguye3/osse_inmcm4/clarreo_osse/trunk/NOAA_modtran_surface/radiation /nobackupp2/nhnguye3/cmip5_inmcm4/inmcm4_2092_02.nc /nobackupp2/nhnguye3/cmip5_inmcm4/inmcm4_2092_02.nc blah.nc < /nobackupp2/nhnguye3/osse_inmcm4/clarreo_osse/trunk/NOAA_modtran_surface/set.inp>foo.txt
+
+mpiexec -np 4 /nobackupp2/nhnguye3/osse_inmcm4/clarreo_osse/trunk/NOAA_modtran_surface/radiation /nobackupp2/nhnguye3/cmip5_inmcm4/inmcm4_2092_02.nc /nobackupp2/nhnguye3/cmip5_inmcm4/inmcm4_2092_02.nc blah.nc < /nobackupp2/nhnguye3/osse_inmcm4/clarreo_osse/trunk/NOAA_modtran_surface/set.inp>foo.txt
+

@@ -1,0 +1,88 @@
+#PBS -S /bin/csh 
+## BATCH INFO
+#PBS -l select=128:ncpus=8:mpiprocs=8
+#PBS -l walltime=4:00:00
+#PBS -N clarreo
+#PBS -j oe
+##PBS -m abe
+##PBS -q debug
+###PBS -M daniel_r_feldman@berkeley.edu
+#PBS -V      
+
+
+#NAME OF INPUT FILE THAT WE WISH TO RUN WITH (not the full path and minus .nc)
+##set input_name=b30.042a.cam2.h0.2000-07
+#set input_name=b30.042a.cam2.h0.2090-01
+#set input_name=b30.042a.cam2.h0.2050-07
+set input_name=b30.036a.cam2.h0.2005-05
+
+
+#SET THE TOTAL NUMBER OF PROCESSORS BEING USED FOR THE -np ARGUMENT TO mpiexec
+#IT SHOULD BE EQUAL TO (value of select)*8 ON PLEIADES
+set total_procs=1024
+
+#DO NOT TOUCH ANYTHING BELOW HERE
+#######################################################################################
+#######################################################################################
+
+
+#Enter into the directory where you submitted from
+cd $PBS_O_WORKDIR
+
+
+#Add modules
+#module load mpi/mvapich_intel
+module load netcdf/3.6.0/intel
+module load comp/intel/11.0.083_64
+
+
+#Set OS conditions
+limit stacksize unlimited
+unlimit descriptors
+setenv MKL_NUM_THREADS 1
+setenv OMP_NUM_THREADS 1
+
+
+#Obtain the revision number of the code
+set revision=`cat svn_info.txt | grep Revision | gawk '{print $2}'`
+
+
+#Create names
+set base_dir_path=`pwd`
+set full_path_binary=${base_dir_path}"/radiation"
+set base_input_path="/nobackupp2/dfeldman/b30.036a/"
+#Note:this is hardwired internally in the code
+#in the i/o section of Main.F90
+set settings_forcing="/home1/dfeldman/settings_forcing.inp.b30.036a"
+
+
+#Executable arguments
+set input_cam=${base_input_path}${input_name}".nc"
+set output_cam=${input_name}".procs"${total_procs}".r"${revision}".out.nc"
+
+
+#Debug info
+echo
+echo "NAMES"
+echo "current working directory = "${base_dir_path}
+echo "full path for the executable = "${full_path_binary}
+echo "full path for the settings_forcing = "${settings_forcing}
+echo "full path to the input file= "${input_cam}
+echo "END NAMES"
+echo
+
+
+date
+echo
+
+
+#Execute
+mpiexec -np ${total_procs} ${full_path_binary} ${input_cam} ${input_cam}  \
+${output_cam} < ${settings_forcing}
+
+
+echo
+date
+
+
+exit

@@ -1,0 +1,17 @@
+#! /bin/csh
+
+#THIS SCRIPT WILL SUBMIT THE BATCH JOB
+
+#SCRIPT USED TO GET THE REVISION NUMBER OF THE CODE
+#RIGHT NOW THE SVN COMMAND IS NOT AVAILABLE ON THE COMPUTE NODES
+
+
+
+#Note: svn_info.txt will continually get clobbered which is ok
+svn info > svn_info.txt
+
+
+qsub submit-pleiades-parallel
+
+
+exit 0

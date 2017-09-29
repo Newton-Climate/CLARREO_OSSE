@@ -1,0 +1,11 @@
+Path: .
+URL: file:///home5/dfeldman/svn/clarreo_osse/trunk/NOAA_modtran_surface
+Repository Root: file:///home5/dfeldman/svn
+Repository UUID: f54e7782-9a71-0410-bb08-a1fb44d8e5cf
+Revision: 110
+Node Kind: directory
+Schedule: normal
+Last Changed Author: dfeldman
+Last Changed Rev: 110
+Last Changed Date: 2012-03-03 11:12:00 -0800 (Sat, 03 Mar 2012)
+

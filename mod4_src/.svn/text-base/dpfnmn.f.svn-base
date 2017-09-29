@@ -1,0 +1,150 @@
+      SUBROUTINE DPFNMN(H1,ANGLE,H2,LENN,ITER,HMIN,PHI,IERROR,LWARN)
+!***********************************************************************
+!     DOUBLE PRECISION VERSION OF THE FORMER ROUTINE FNDHMN.
+
+!     THIS SUBROUTINE CALCULATES THE MINIMUM ALTITUDE HMIN ALONG
+!     THE REFRACTED PATH AND THE FINAL ZENITH ANGLE PHI.
+!     THE PARAMETER LENN INDICATES WHETHER THE PATH GOES THROUGH
+!     A TANGENT HEIGHT (LENN=1) OR NOT (LENN=0).  IF ANGLE > 90 AND
+!     H1 > H2, THEN LENN CAN EITHER BE 1 OR 0, AND THE CHOICE IS
+!     LEFT TO THE USER.
+!     THE (INDEX OF REFRACTION - 1.0) IS MODELED AS AN EXPONENTIAL
+!     BETWEEN THE LAYER BOUNDARIES, WITH A SCALE HEIGHT SH AND AN
+!     AMOUNT AT THE GROUND GAMMA.
+!     CPATH IS THE REFRACTIVE CONSTANT FOR THIS PATH AND
+!     EQUALS  INDEX(H1)*(RE+H1)*SIN(ANGLE).
+      LOGICAL LWARN
+      INCLUDE 'ERROR.h'
+      INTEGER LENN,ITER,IERROR,N
+      DOUBLE PRECISION H1,ANGLE,H2,HMIN,PHI,DPANDX,SH,ZMIN,HT,TANHT,    &
+     &  GAMMA,CPATH,CH2,CMIN,HT1,CT1,HT2,CT2,HT3,CT3,DC,DPRE,DPDH
+      REAL GNDALT
+      COMMON/GRAUND/GNDALT
+      INCLUDE 'IFIL.h'
+      REAL RE,ZMAX
+      INTEGER IPATH
+      COMMON/PARMTR/RE,ZMAX,IPATH
+
+!     /CNTRL/
+!       IKMAX    NUMBER OF PATH SEGMENTS ALONG LINE-OF-SIGHT.
+!       ML       NUMBER OF ATMOSPHERIC PROFILE LEVELS.
+!       MLFLX    NUMBER OF LEVELS FOR WHICH FLUX VALUES ARE WRITTEN.
+!       ISSGEO   LINE-OF-SIGHT FLAG (0 = SENSOR PATH, 1 = SOLAR PATHS).
+!       IMULT    MULTIPLE SCATTERING FLAG
+!                  (0=NONE, 1=AT SENSOR, -1=AT FINAL OR TANGENT POINT).
+      INTEGER IKMAX,ML,MLFLX,ISSGEO,IMULT
+      COMMON/CNTRL/IKMAX,ML,MLFLX,ISSGEO,IMULT
+
+!     /CARD1/
+      INTEGER MODEL,ITYPE,IEMSCT,M1,M2,M3,IM,NOPRNT
+      LOGICAL MODTRN
+      COMMON/CARD1/MODEL,ITYPE,IEMSCT,M1,M2,M3,IM,NOPRNT,MODTRN
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+      REAL ETA
+      DOUBLE PRECISION DPDEG
+      DATA DPDH/1./,ETA/5.0E-8/,DPDEG/57.2957795131D0/
+!***  ETA MAY BE TOO SMALL FOR SOME COMPUTERS. TRY 1.0E-7 FOR 32 BIT
+!***  WORD MACHINES
+      DPRE=DBLE(RE)
+      N = 0
+      CALL DPFISH(H1,SH,GAMMA)
+      CPATH = DPANDX(DPRE+H1,H1,SH,GAMMA)*SIN(ANGLE/DPDEG)
+      CALL DPFISH(H2,SH,GAMMA)
+      CH2 = DPANDX(DPRE+H2,H2,SH,GAMMA)
+      IF(ABS(CPATH/CH2).LE.1.0) THEN
+         IF(ANGLE.LE.90.0)  THEN
+            LENN = 0
+            HMIN = H1
+!***        CALCULATE THE ZENITH ANGLE PHI AT H2
+            PHI=DBLE(180.)-ASIN(CPATH/CH2)*DPDEG
+            RETURN
+         ENDIF
+         IF(H1.LE.H2)  LENN = 1
+         IF(LENN.EQ.0)THEN
+            HMIN = H2
+!***        CALCULATE THE ZENITH ANGLE PHI AT H2
+            PHI = ASIN(CPATH/CH2)*DPDEG
+            RETURN
+         ENDIF
+!***     LONG PATH THROUGH A TANGENT HEIGHT.
+!***     SOLVE ITERATIVELY FOR THE TANGENT HEIGHT HT.
+!***     HT IS THE HEIGHT FOR WHICH  INDEX(HT)*(DPRE+HT) = CPATH.
+         ZMIN=DBLE(GNDALT)
+         CALL DPFISH(ZMIN,SH,GAMMA)
+         CMIN = DPANDX(DPRE+ZMIN,ZMIN,SH,GAMMA)
+!***     FOR BETA CASES (ITER>0), ALLOW FOR HT < 0.0
+         IF(ITER.NE.0 .OR. CPATH.GE.CMIN)  THEN
+            HT1 = (DPRE+H1)*SIN(ANGLE/DPDEG)-DPRE
+            CALL DPFISH(HT1,SH,GAMMA)
+            CT1 = DPANDX(DPRE+HT1,HT1,SH,GAMMA)
+            HT2 = HT1-DPDH
+            CALL DPFISH(HT2,SH,GAMMA)
+            CT2 = DPANDX(DPRE+HT2,HT2,SH,GAMMA)
+!***        ITERATE TO FIND HT
+            N = 2
+ 120        CONTINUE
+            IF(CT2 .NE. CT1) THEN
+               N = N+1
+               HT3 = HT2+(HT2-HT1)*(CPATH-CT2)/(CT2-CT1)
+               CALL DPFISH(HT3,SH,GAMMA)
+               CT3 = DPANDX(DPRE+HT3,HT3,SH,GAMMA)
+               DC = CPATH-CT3
+               IF(ABS((CPATH-CT3)/CPATH).LT.ETA) THEN
+                  HT = HT3
+                  HMIN = HT
+!***              CALCULATE THE ZENITH ANGLE PHI AT H2
+                  PHI=DBLE(180.)-ASIN(CPATH/CH2)*DPDEG
+               ENDIF
+               IF(N.GT.15) THEN
+                  DC = CPATH-CT3
+                  IF(.NOT.LJMASS)WRITE(IPR,24)N,CPATH,CT3,DC,HT3
+ 24   FORMAT(///,' FROM SUBROUTINE FNDHMN :',//,                        &
+     &     10X,'THE PROCEDURE TO FIND THE TANGENT HEIGHT DID NOT ',     &
+     &     'CONVERGE AFTER ',I3,'  ITERATIONS',//,                      &
+     &     10X,'CPATH   = ',F12.5,' KM',//,10X,'CT3     = ',F12.5,' KM',&
+     &     //,10X,'DC      = ',E12.3,' KM',//,                          &
+     &     10X,'HT3     = ',F12.5,' KM')
+                  RETURN
+               ENDIF
+               HT1 = HT2
+               CT1 = CT2
+               HT2 = HT3
+               CT2 = CT3
+               GO TO 120
+            ENDIF
+            HT3 = HT2
+            HT = HT3
+            HMIN = HT
+!***        CALCULATE THE ZENITH ANGLE PHI AT H2
+            PHI=DBLE(180.)-ASIN(CPATH/CH2)*DPDEG
+            RETURN
+         ENDIF
+!***     CALCULATE THE ZENITH ANGLE PHI AT H2
+         HMIN = ZMIN
+         PHI = ASIN(CPATH/CMIN)*DPDEG
+
+!        RETURN WITH AN ERROR FOR PATHS TO THE SUN (OR MOON).
+         IF(ISSGEO.NE.0 .OR. IEMSCT.EQ.3)THEN
+            IERROR=-5
+            RETURN
+         ENDIF
+!***     TANGENT PATH INTERSECTS EARTH
+         IF(.NOT.LJMASS .AND. LWARN)                                    &
+     &      WRITE(IPR,'(///2(A,F11.3),A,//9X,2(A,F11.3),A,I2,A)')       &
+     &        ' TANGENT PATH WITH H1 =',H1,' KM AND ANGLE =',           &
+     &        ANGLE,' DEG INTERSECTS THE EARTH.',                       &
+     &        ' H2 HAS BEEN RESET FROM',H2,' KM TO',ZMIN,               &
+     &        ' KM, AND LEN HAS BEEN RESET FROM',LENN,' TO 0'
+         H2 = ZMIN
+         LENN = 0
+         RETURN
+      ENDIF
+
+!***  H2 LT TANGENT HEIGHT FOR THIS H1 AND ANGLE
+      IERROR = 2
+      IF(LWARN)WRITE(IPR,'(/A,F12.5,A,/10X,A,F12.5,A)')                 &
+     &  ' WARNING:  H2 (=',H2,'km) is less than the tangent',           &
+     &  ' height (=',TANHT(CPATH),'km) and cannot be reached.'
+      END

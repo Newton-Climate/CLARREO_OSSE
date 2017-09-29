@@ -1,0 +1,9 @@
+#!/bin/bash
+#TO BE RUN IN THE DIRECTORY WHERE THE EXECUTABLE IS
+
+
+rm ./modtran_lib/*
+rm ./mod4_obj/*
+make clean
+
+

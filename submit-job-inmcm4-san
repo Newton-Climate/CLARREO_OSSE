@@ -1,0 +1,135 @@
+#PBS -S /bin/csh 
+## BATCH INFO
+#PBS -l select=64:ncpus=8:mpiprocs=8:model=san
+#PBS -l walltime=03:00:00
+#PBS -N san_cmip5_inmcm4
+#PBS -j oe
+###PBS -m abe
+##PBS -q debug
+#PBS -q normal
+###PBS -M daniel_r_feldman@berkeley.edu
+#PBS -V      
+
+set SHELL_DIR = /nobackupp8/dfeldman
+set CASE = ${SHELL_DIR}"/cmip5_inmcm4"
+
+if ( $?CASE) then
+   if ( "$CASE" =~ ?* ) then
+        #OKAY
+   else
+        echo "Environment $CASE exists but does not have a value"
+        exit
+   endif
+else
+   echo "Environment variable $CASE does not exist"
+   exit
+endif
+
+if ( `filetest -e $CASE` == 0 ) then
+   echo "The directory $CASE does not exist"
+   exit
+endif
+
+if ( `filetest -e {$CASE}_done` == 0 ) then
+   echo "The directory {$CASE}_done does not exist -- creating"
+   mkdir -p {$CASE}_done
+endif
+
+# 
+# Find a file to process
+#
+/bin/rm -rf list list_uniq output.txt
+ls -1 ${CASE} > list
+ls -1 {$CASE}_done >> list
+sort list | uniq -u >> list_uniq
+if ( `filetest -z list_uniq ` == 1 ) then
+    echo "All files in $CASE processed -- exiting"
+    exit
+endif
+
+#NAME OF INPUT FILE THAT WE WISH TO RUN WITH (includes .nc)
+set input_cam = `head -1 list_uniq`
+set input_cam2 = ${CASE}"/"${input_cam}
+
+#SET THE TOTAL NUMBER OF PROCESSORS BEING USED FOR THE -np ARGUMENT TO mpiexec
+#IT SHOULD BE EQUAL TO (value of select)*8 ON PLEIADES
+set total_procs=512
+
+#DO NOT TOUCH ANYTHING BELOW HERE
+#######################################################################################
+#######################################################################################
+
+#Enter into the directory where you submitted from
+cd $PBS_O_WORKDIR
+
+#Add modules
+#module load mpi-mvapich2
+module load netcdf/3.6.0/intel
+module load nco
+module unload comp-intel/11.1.072
+module load comp-intel
+module load mpi-sgi/mpt
+module load mpi-sgi/mpt.2.12r26
+
+
+#Set OS conditions
+limit stacksize unlimited
+setenv MKL_NUM_THREADS 1
+setenv OMP_NUM_THREADS 1
+
+#Obtain the revision number of the code
+set revision=`cat svn_info.txt | grep Revision | gawk '{print $2}'`
+
+#Create names
+set base_dir_path=`pwd`
+set full_path_binary=${base_dir_path}"/radiation"
+#Note:this is hardwired internally in the code
+#in the i/o section of Main.F90
+set settings_forcing="/home5/dfeldman/settings_forcing.inp.inmcm4"
+
+#Executable arguments
+set output_cam=${input_cam}".procs"${total_procs}".r"${revision}".out.nc"
+
+
+#Debug info
+echo
+echo "NAMES"
+echo "current working directory = "${base_dir_path}
+echo "full path for the executable = "${full_path_binary}
+echo "full path for the settings_forcing = "${settings_forcing}
+echo "full path to the input file= "${input_cam2}
+echo "END NAMES"
+echo
+
+date
+echo "SandyBridge"
+
+#
+# Tag the file as done
+#
+cd {$CASE}_done
+ln -s ${CASE}/${input_cam} .
+cd $base_dir_path 
+
+/bin/rm -rf list list_uniq 
+
+#Execute
+mpiexec -np ${total_procs} ${full_path_binary} ${input_cam2} ${input_cam2}  \
+${output_cam} < ${settings_forcing} 
+
+echo
+date
+
+
+# 
+# Copy file to mass store, copy to CCP, remove the output file
+#
+# scp ${output_cam} lou:~/osse
+
+#
+# Invoke the script recursively
+#
+qsub submit-job-inmcm4-san
+exit
+
+

@@ -1,0 +1,540 @@
+ task_no is            0  of total            1  tasks
+ total tasks=           1  lat_chunk=           2
+ ********************INPUT/OUTPUT***********************************************
+ **************
+ my rank is            0  my master_proc value is T
+ my rank is            0  my start lat is=           1  my end lat is=
+           2
+ ********************INPUT/OUTPUT***********************************************
+ **************
+ ********************END OUTPUT*************************************************
+ ************
+ my OUT1 rank is            0  my master_proc value is T
+ my OUT1 rank is            0  my start lat is=           1  my end lat is=
+           2
+ *******************END OUTPUT**************************************************
+ ***********
+ ********************END OUTPUT*************************************************
+ ************
+ my OUT2 rank is            0  my master_proc value is T
+ my OUT2 rank is            0  my start lat is=           1  my end lat is=
+           2
+ *******************END OUTPUT**************************************************
+ ***********
+ ********************END OUTPUT*************************************************
+ ************
+ my OUT3 rank is            0  my master_proc value is T
+ my OUT3 rank is            0  my start lat is=           1  my end lat is=
+           2
+ *******************END OUTPUT**************************************************
+ ***********
+1 Layer Locations (*1000) 
+   1    2.1941              0.0000              2.1941
+                  3.5446              0.0000              3.5446
+   2    4.8952              0.0000              4.8952
+                  7.3888              0.0000              7.3888
+   3    9.8824              0.0000              9.8824
+                 13.9672              0.0000             13.9672
+   4   18.0520              0.0000             18.0520
+                 23.9446              0.0000             23.9446
+   5   29.8372              0.0000             29.8372
+                 37.2303              0.0000             37.2303
+   6   44.6233              0.0000             44.6233
+                 53.1146              0.0000             53.1146
+   7   61.6059              0.0000             61.6059
+                 70.0592              0.0000             70.0592
+   8   78.5124              0.0000             78.5124
+                 77.9126              7.5265             85.4391
+   9   77.3127             15.0531             92.3658
+                 76.6070             23.9077            100.5147
+  10   75.9013             32.7623            108.6636
+                 75.0711             43.1793            118.2503
+  11   74.2409             53.5962            127.8371
+                 73.2642             65.8512            139.1154
+  12   72.2874             78.1063            150.3937
+                 71.1384             92.5237            163.6621
+  13   69.9893            106.9411            176.9304
+                 68.6375            123.9024            192.5399
+  14   67.2857            140.8637            208.1494
+                 65.6954            160.8179            226.5133
+  15   64.1051            180.7720            244.8771
+                 62.2342            204.2470            266.4812
+  16   60.3632            227.7220            288.0852
+                 58.1622            255.3391            313.5013
+  17   55.9611            282.9562            338.9173
+                 53.3717            315.4463            368.8180
+  18   50.7823            347.9364            398.7187
+                 47.7359            386.1593            433.8952
+  19   44.6896            424.3822            469.0718
+                 41.1058            469.3495            510.4553
+  20   37.5219            514.3168            551.8387
+                 33.3057            567.2185            600.5242
+  21   29.0895            620.1202            649.2097
+                 24.9684            671.8279            696.7963
+  22   20.8474            723.5355            744.3829
+                 17.0959            770.6062            787.7021
+  23   13.3444            817.6768            831.0212
+                 10.2147            856.9461            867.1608
+  24    7.0850            896.2153            903.3003
+                  4.8032            924.8457            929.6489
+  25    2.5214            953.4761            955.9975
+                  1.2607            969.2942            970.5548
+  26    0.0000            985.1122            985.1122
+                  0.0000            992.5561            992.5561
+  27    0.0000           1000.0000           1000.0000
+ reference pressures (Pa)
+   1       219.4067
+                          354.4638       270.1142
+   2       489.5209
+                          738.8814       498.7209
+   3       988.2418
+                         1396.7214       816.9592
+   4      1805.2010
+                         2394.4625      1178.5230
+   5      2983.7240
+                         3723.0290      1478.6100
+   6      4462.3340
+                         5311.4605      1698.2530
+   7      6160.5870
+                         7005.9150      1690.6560
+   8      7851.2430
+                         8543.9115      1385.3370
+   9      9236.5800
+                        10051.4695      1629.7790
+  10     10866.3590
+                        11825.0335      1917.3490
+  11     12783.7080
+                        13911.5395      2255.6630
+  12     15039.3710
+                        16366.2070      2653.6720
+  13     17693.0430
+                        19253.9935      3121.9010
+  14     20814.9440
+                        22651.3265      3672.7650
+  15     24487.7090
+                        26648.1155      4320.8130
+  16     28808.5220
+                        31350.1265      5083.2090
+  17     33891.7310
+                        36881.7980      5980.1340
+  18     39871.8650
+                        43389.5225      7035.3150
+  19     46907.1800
+                        51045.5255      8276.6910
+  20     55183.8710
+                        60052.4200      9737.0980
+  21     64920.9690
+                        69679.6290      9517.3200
+  22     74438.2890
+                        78770.2060      8663.8340
+  23     83102.1230
+                        86716.0760      7227.9060
+  24     90330.0290
+                        92964.8875      5269.7170
+  25     95599.7460
+                        97055.4830      2911.4740
+  26     98511.2200
+                        99255.6100      1488.7800
+  27    100000.0000
+(shr_orb_params) Calculate characteristics of the orbit:
+(shr_orb_params) CVS revision: $Revision: 1.2.4.1 $
+(shr_orb_params) CVS Tag     : $Name:  $
+(shr_orb_params) Calculate orbit for year:      1950
+(shr_orb_params) ------ Computed Orbital Parameters ------
+(shr_orb_params) Eccentricity      =   1.672393E-02
+(shr_orb_params) Obliquity (deg)   =   2.344627E+01
+(shr_orb_params) Obliquity (rad)   =   4.092146E-01
+(shr_orb_params) Long of perh(deg) =   1.020391E+02
+(shr_orb_params) Long of perh(rad) =   4.922510E+00
+(shr_orb_params) Long at v.e.(rad) =  -3.262537E-02
+(shr_orb_params) -----------------------------------------
+ Advected constituent list:
+   1  Q         Specific humidity                                                                                                                 wet
+   2  N2O       Nitrous Oxide                                                                                                                     wet
+   3  CH4       Methane                                                                                                                           wet
+   4  CFC11     CFC11                                                                                                                             wet
+   5  CFC12     CFC12                                                                                                                             wet
+ No nonadvected constituents
+ ghg_surfvals_init: ghg surface values are fixed as follows
+   co2 volume mixing ratio =   3.549999964889139E-004
+   ch4 volume mixing ratio =   1.713999949970457E-006
+   n2o volume mixing ratio =   3.110000079686870E-007
+   f11 volume mixing ratio =   2.799999954117283E-010
+   f12 volume mixing ratio =   5.029999750050251E-010
+ ********************RAD********************************************************
+ *****
+ my RAD rank is            0  my master_proc value is T
+ my RAD rank is            0  my start lat is=           1  my end lat is=
+           2
+ ********************RAD********************************************************
+ *****
+ RADINI: ntoplw =           1  pressure:   354.463800000001     
+ (GETFIL): attempting to find local file abs_ems_factors_fastvx.c030508.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/abs_ems_factors_fastvx.c030508.nc
+  *** SATURATION VAPOR PRESSURE TABLE COMPLETED ***
+ nsecs =  -1649336192
+ nsecs =    6940598400.00000     
+ mdcur =        80331
+ mdcur =    80331.0000000000     
+ mscur =            0
+ mscur =   0.000000000000000E+000
+ nyears =          220
+ ndays_two =           16
+ Here    11567664   600.000000000000                0           0    18700101
+           0       80331           0    20900117      -46592
+   16.4607407407407     
+  _______________________________________________________
+  _______ initializing aerosol optical properties _______
+  _______________________________________________________
+ (GETFIL): attempting to find local file AerosolOptics_c040105.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/AerosolOptics_c040105.nc
+  aer_optics_initialize : nrh_opac =  8
+  aer_optics_initialize : nbnd = 19
+  _______ hygroscopic growth in visible band _______
+  SO4
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            5.581    1.000    0.650
+  0.801           13.614    1.000    0.742
+  0.836           16.185    1.000    0.750
+  0.858           17.971    1.000    0.755
+  0.873           19.389    1.000    0.759
+  0.885           20.585    1.000    0.762
+  0.896           21.630    1.000    0.764
+  0.904           23.093    1.000    0.766
+  0.912           24.959    1.000    0.769
+  0.919           26.745    1.000    0.771
+  0.925           28.462    1.000    0.772
+  0.930           30.121    1.000    0.774
+  0.935           31.730    1.000    0.775
+  0.940           33.293    1.000    0.777
+  0.944           34.817    1.000    0.778
+  0.948           36.305    1.000    0.779
+  0.952           38.717    1.000    0.781
+  0.956           41.820    1.000    0.782
+  0.959           44.986    1.000    0.783
+  0.963           48.213    1.000    0.784
+  0.966           51.498    1.000    0.785
+  0.969           54.841    1.000    0.786
+  0.971           58.241    1.000    0.787
+  0.974           61.695    1.000    0.788
+  0.977           65.207    1.000    0.789
+  0.979           68.771    1.000    0.789
+  0.982           75.009    1.000    0.790
+  0.984           82.961    1.000    0.791
+  0.986           91.458    1.000    0.791
+  0.988          100.506    1.000    0.791
+  0.990          110.112    1.000    0.792
+  0.992          120.296    1.000    0.792
+  0.994          131.074    1.000    0.793
+  0.996          142.462    1.000    0.793
+  0.998          154.473    1.000    0.794
+  1.000          166.809    1.000    0.794
+  SSLT
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            0.395    1.000    0.752
+  0.801            1.495    1.000    0.825
+  0.836            1.689    1.000    0.828
+  0.858            1.818    1.000    0.829
+  0.873            1.918    1.000    0.831
+  0.885            2.000    1.000    0.831
+  0.896            2.072    1.000    0.832
+  0.904            2.173    1.000    0.833
+  0.912            2.303    1.000    0.834
+  0.919            2.425    1.000    0.835
+  0.925            2.540    1.000    0.836
+  0.930            2.650    1.000    0.836
+  0.935            2.755    1.000    0.837
+  0.940            2.856    1.000    0.838
+  0.944            2.953    1.000    0.838
+  0.948            3.047    1.000    0.839
+  0.952            3.215    1.000    0.839
+  0.956            3.436    1.000    0.840
+  0.959            3.660    1.000    0.841
+  0.963            3.885    1.000    0.841
+  0.966            4.113    1.000    0.842
+  0.969            4.343    1.000    0.842
+  0.971            4.575    1.000    0.843
+  0.974            4.808    1.000    0.843
+  0.977            5.044    1.000    0.844
+  0.979            5.281    1.000    0.844
+  0.982            5.740    1.000    0.845
+  0.984            6.339    1.000    0.846
+  0.986            6.977    1.000    0.847
+  0.988            7.656    1.000    0.848
+  0.990            8.376    1.000    0.849
+  0.992            9.138    1.000    0.849
+  0.994            9.943    1.000    0.850
+  0.996           10.793    1.000    0.851
+  0.998           11.688    1.000    0.852
+  1.000           12.607    1.000    0.852
+  OCPHI
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            3.421    0.965    0.621
+  0.801            8.298    0.986    0.710
+  0.836            9.396    0.987    0.717
+  0.858           10.130    0.988    0.722
+  0.873           10.698    0.989    0.725
+  0.885           11.168    0.989    0.727
+  0.896           11.573    0.990    0.729
+  0.904           12.145    0.990    0.732
+  0.912           12.870    0.991    0.734
+  0.919           13.551    0.991    0.737
+  0.925           14.195    0.991    0.739
+  0.930           14.808    0.992    0.741
+  0.935           15.394    0.992    0.742
+  0.940           15.956    0.992    0.744
+  0.944           16.498    0.993    0.745
+  0.948           17.022    0.993    0.747
+  0.952           17.884    0.993    0.749
+  0.956           18.985    0.994    0.751
+  0.959           20.091    0.994    0.752
+  0.963           21.200    0.994    0.754
+  0.966           22.312    0.994    0.756
+  0.969           23.427    0.995    0.758
+  0.971           24.546    0.995    0.759
+  0.974           25.667    0.995    0.761
+  0.977           26.793    0.995    0.762
+  0.979           27.922    0.996    0.764
+  0.982           29.780    0.996    0.765
+  0.984           32.068    0.996    0.767
+  0.986           34.448    0.996    0.769
+  0.988           36.918    0.997    0.771
+  0.990           39.477    0.997    0.773
+  0.992           42.126    0.997    0.774
+  0.994           44.865    0.997    0.776
+  0.996           47.696    0.998    0.777
+  0.998           50.617    0.998    0.779
+  1.000           53.574    0.998    0.781
+  _______________________________________________________
+  _______ initializing land surface properties __________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_brdf_maps_2003.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/modis_snowfree_brdf_maps_2003.nc
+ mcdate_input =    20900117.0000000     
+  _______________________________________________________
+  _______ initializing ocean surface properties _________
+  _______________________________________________________
+ (GETFIL): attempting to find local file ocean_reflectance.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/ocean_reflectance.nc
+  _______________________________________________________
+  _______ initializing ice/snow surface properties ______
+  _______________________________________________________
+ (GETFIL): attempting to find local file snow_reflectance.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/snow_reflectance.nc
+  _______________________________________________________
+  _______ read in snow-fraction--------------------------
+  _______________________________________________________
+ (GETFIL): attempting to find local file 
+ b30.042a.clm2.h0.FSNO.2000-01_cat_2099-12.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/esg/b30.042a.clm2.h0.FSNO.2000-01_cat_2099-12.nc
+ fsno_index =         1081
+  _______________________________________________________
+  _______ initializing ice/snow brdf land type info _____
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_brdf_maps.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/modis_snow_brdf_maps.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow Albedo For Landtype----
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_albedo_2003.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/modis_snow_albedo_2003.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow-Free Albedo properties_
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_albedo_maps_2003.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/modis_snowfree_albedo_maps_2003.n
+ c
+  _______________________________________________________
+  _______ initializing phase function properties ________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modtran_mie_phase_functions.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/modtran_mie_phase_functions.nc
+ aerosol_init: carbon ramping overrides carscl
+ aerosol_init: Using sulfate from cyclic climatology
+ AEROSOLS:  Background aerosol will be limited to bottom            3 
+  model interfaces. Top interface is    90330.0290000002       pascals
+ (GETFIL): attempting to find local file AerosolMass_V_128x256_clim_c031022.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/AerosolMass_V_128x256_clim_c03102
+ 2.nc
+ aerosol_initialize: reading aerosol dataset....  If this seems to be taking too
+ long, perhaps the dataset is being read from an nfs-mounted filesystem.
+ (GETFIL): attempting to find local file carbonscaling_A2_1990-2100_c040609.nc
+ (GETFIL): using 
+ /nobackupp20/dfeldman/input_files/input_files/carbonscaling_A2_1990-2100_c04060
+ 9.nc
+ init_scale: reading scale dataset
+ init_scale: caldayloc   762866.460740741      dateindex,date          10
+   726532.000000000        730182.000000000        733832.000000000     
+   737482.000000000        741132.000000000        744782.000000000     
+   748432.000000000        752082.000000000        755732.000000000     
+   759382.000000000        763032.000000000        766682.000000000     
+    11567664   600.000000000000                0           0    18700101
+           0       80331           0    20900117      -46592
+   16.4607407407407     
+ --> itime, ilat =            1          20
+ coszrs before radcswmx.F90 =   0.726568898063576     
+ scon =    1360000.00000000     
+ tau_rayleigh =   9.0620041E-02
+ total_modtran_extinction =   0.155629457519188     
+ tau_sulfate =   6.3080169E-02
+ tau_dust =   0.1361052    
+ tau_carb =   1.9389650E-04
+ tau_sslt =   4.1197021E-02
+ tau_total =   0.2405763    
+ fname = modtran_out_b30.042a.cam2.h0.2090-01.20.5
+ lchnk =           20
+ mcdate =     20900117
+ land_flag =  F
+ latval =   -62.33380    
+ lonval =    5.62500000000000     
+ my_longitude_end =           10
+ icy combo
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.1
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.2
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.3
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ adding thin layer
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.4
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.5
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.6
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.7
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.8
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.9
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5.10
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ done with modtran
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .1
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .2
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .3
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ adding thin layer
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .4
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .5
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .6
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .7
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .8
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .9
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5     .10
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ FNAME = modtran_out_b30.042a.cam2.h0.2090-01.20.5
+
+ ******* WARNING >>>>>>  UPBEAM--TEMPORARILY REDUCED COSINE SOLAR ZENITH BY 0.01% TO AVOID SINGULAR MATRIX
+ done with modtran
+ tmp_flxupdif_clr_ice =   3.1951282E-02  3.1684365E-02  3.1411044E-02
+  3.1177830E-02  3.1017983E-02  3.1010715E-02  3.1064026E-02  3.1127758E-02
+  3.1186378E-02  3.1235792E-02  3.1274956E-02  3.1303532E-02  3.1321649E-02
+  3.1330746E-02  3.1329468E-02  3.1316403E-02  3.1295527E-02  3.1269714E-02
+  3.1237766E-02  3.1177698E-02  3.1090735E-02  3.0998167E-02  3.0923460E-02
+  3.0872559E-02  3.0841887E-02  3.0825455E-02  1.6094284E-02  1.5792709E-02
+  1.5503787E-02  1.5252662E-02  1.5046668E-02  1.4882363E-02  1.4777021E-02
+  1.4727666E-02  1.4706390E-02  1.4698080E-02  1.4695430E-02  1.4695146E-02
+  1.4695912E-02  1.4697148E-02  1.4698441E-02  1.4699463E-02  1.4700215E-02
+  1.4700684E-02  1.4700833E-02  1.4700355E-02  1.4698902E-02  1.4697044E-02
+  1.4695507E-02  1.4694475E-02  1.4693903E-02  1.4693577E-02
+ tmp_flxupdif_clr_ice =   1.5500068E-03  1.9400704E-03  2.4547139E-03
+  3.0318294E-03  3.6018542E-03  4.0836786E-03  4.5287474E-03  4.8957635E-03
+  5.2079544E-03  5.4763113E-03  5.7072653E-03  5.9050876E-03  6.0728393E-03
+  6.2131514E-03  6.3274442E-03  6.4184866E-03  6.4909752E-03  6.5488680E-03
+  6.5943599E-03  6.6444254E-03  6.6858726E-03  6.7168577E-03  6.7415130E-03
+  6.7588612E-03  6.7694867E-03  6.7752050E-03  1.2549252E-03  1.5010743E-03
+  1.7629673E-03  1.9974879E-03  2.1685467E-03  2.2228374E-03  2.2461826E-03
+  2.2625972E-03  2.2782434E-03  2.2933211E-03  2.3074714E-03  2.3206379E-03
+  2.3329132E-03  2.3442172E-03  2.3542645E-03  2.3629942E-03  2.3704844E-03
+  2.3768570E-03  2.3822528E-03  2.3886855E-03  2.3946648E-03  2.3996469E-03
+  2.4035692E-03  2.4062837E-03  2.4079490E-03  2.4088467E-03
+ tmp_flxupdif_all_ice =    2689.278      2.1601371E-02   2689.278    
+  2.1877209E-02  2.2196518E-02  2.3645457E-02  2.4894373E-02  2.6793281E-02
+  2.9151022E-02  3.0745938E-02  3.2533325E-02  3.3518180E-02  3.4184027E-02
+  3.4944359E-02  3.5123903E-02  3.5482049E-02  3.5543803E-02  3.5703339E-02
+  3.5714384E-02  3.5655055E-02  3.5570092E-02  3.5461098E-02  3.5388749E-02
+  3.5321638E-02  1.1259786E+24  4.3604724E+27  9.5474729E-03  9.3991533E-03
+  9.2615094E-03  9.5646325E-03  9.7061051E-03  1.0800038E-02  1.1622414E-02
+  1.3281791E-02  1.5554539E-02  1.6999008E-02  1.8918058E-02  1.9769259E-02
+  2.0460516E-02  2.1405721E-02  2.1631455E-02  2.2179717E-02  2.8624423E+23
+  2.2621991E-02  2.9388239E+29  7.1446960E+31  2.2701509E-02  1.6634973E+22
+  1.8464869E+25  2.2616269E-02  2.2605803E-02  2.2594435E-02
+ tmp_flxupdif_all_ice =    2689.257      1.1528165E-03   2689.257    
+  2.5298519E-03  3.3484506E-03  5.7997382E-03  7.7410238E-03  1.0606576E-02
+  1.3963773E-02  1.6257185E-02  1.8595994E-02  1.9958705E-02  2.0844350E-02
+  2.1833647E-02  2.2128072E-02  2.2609646E-02  2.2743873E-02  2.2974506E-02
+  2.3035698E-02  2.3042262E-02  2.3024729E-02  2.2980623E-02  2.2959528E-02
+  2.2928976E-02  2.2901136E-02  2.2863805E-02  6.8746443E-04  8.2323514E-04
+  9.5767138E-04  1.6003402E-03  1.9678408E-03  3.4302874E-03  4.4711218E-03
+  6.4236191E-03  8.9837601E-03  1.0610067E-02  1.2657479E-02  1.3587682E-02
+  1.4318111E-02  1.5304665E-02  1.5546327E-02  1.6112257E-02  1.6254285E-02
+  1.6570032E-02  1.6649665E-02  1.6682642E-02  1.6662771E-02  1.6622411E-02
+  1.6605970E-02  1.6586188E-02  1.6576976E-02  1.6566399E-02
+ bb_updiffuse_clr =   3.1274341E-03  3.7608852E-03  4.5354245E-03  5.3461785E-03
+  6.0875560E-03  6.6254479E-03  7.0964256E-03  7.4823941E-03  7.8125540E-03
+  8.0980258E-03  8.3448598E-03  8.5572582E-03  8.7383855E-03  8.8908067E-03
+  9.0156067E-03  9.1154445E-03  9.1952467E-03  9.2591858E-03  9.3095722E-03
+  9.3650231E-03  9.4109643E-03  9.4455183E-03  9.4731469E-03  9.4926627E-03
+  9.5046563E-03  9.5111253E-03
+ bb_updiffuse_all =    2689.257      2.1849156E-03   2689.258      4.3457132E-03
+  7.4436570E+21  2.8826358E+25  1.2475011E-02  1.7322656E-02  2.3276731E-02
+  2.7221413E-02  3.1635690E-02  3.3943933E-02  3.5570603E-02  3.7558943E-02
+  3.8098283E-02  3.9151974E-02  3.9429523E-02  3.9978765E-02  4.0119901E-02
+  4.0158682E-02  4.0119883E-02  4.0033679E-02  4.4954217E+20  2.9072033E+19
+  4.5291920E+20  4.8689948E+29

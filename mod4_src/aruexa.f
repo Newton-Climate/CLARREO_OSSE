@@ -1,0 +1,137 @@
+      SUBROUTINE ARUEXA(A_FLAG,M_AEROSOL,O_AEROSOL,AC_WAVELEN,          &
+     &                  NUM_LEVS,NUM_AC_WVL)
+      REAL ALTB
+      INTEGER I, IHC, IK, IREG, IREGC
+
+!     READ IN USER DEFINED EXTINCTION, ABSORPTION COEFFICIENTS AND
+!     ASYMMETRY PARAMETERS FOR THE USS OPTION
+
+!     ARGUMENTS:
+      LOGICAL A_FLAG
+      INTEGER NUM_LEVS,NUM_AC_WVL
+      REAL AC_WAVELEN(NUM_AC_WVL) !WAVELENGTHS OF AEROSOLS
+      REAL M_AEROSOL(NUM_LEVS,4),O_AEROSOL(NUM_AC_WVL,12)
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'ERROR.h'
+
+!     COMMONS:
+      INCLUDE 'BASE.h'
+      LOGICAL ARUSSL
+      INTEGER NARSPC
+      REAL VARSPC
+      COMMON /USSPC/ NARSPC(4),VARSPC(4,NWAVLN),ARUSSL
+      INCLUDE 'IFIL.h'
+      COMMON /CARD2D/ IREG(4), ALTB(4), IREGC(4)
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+      CHARACTER*4 TITLE(18)
+
+      LOGICAL DRF_FLAG !DRF
+
+!     ANNOUNCE READING OF AEROSOL SPECTRAL DATA
+      IF(.NOT.LJMASS)WRITE(IPR,'(/A)')                                  &
+     &  ' USER-SUPPLIED SPECTRAL DATA (USS ENHANCEMENT)'
+
+!     FOR THE USUAL AEROSOLS (NON-USS CASE)
+!     THE 4 IREG'S ARE 1 OR 0 AND READ IF IHAZE=7 OR ICLD=11.
+!     BUT FOR THE USS SCHEME, IREG(IK)=0 HAS THE SAME MEANING.
+!     THAT IS, IREG(IK)=0 MEANS USE BUILTIN MODEL SPECTRAL DATA
+
+!     BUT IREG(IK) = INTEGER MEANS READ USER-DEFINED SPECTRAL DATA.
+!     AFTER THE DATA IS READ, IREG(IK) WILL BE RESET TO 1.
+
+      DRF_FLAG = .TRUE.
+
+      IF(LJMASS)THEN
+         CALL INITCARD( 'CARD2D' )
+      ELSE
+         IF(.NOT.DRF_FLAG) THEN
+          READ(IRD, 9001)(IREG(IK), IK=1, 4) !DRF
+          WRITE(IPR, 9002)(IREG(IK), IK=1, 4) !DRF
+         ELSE
+            !DRF
+            DO I=1,4
+               IREG(I) = NUM_AC_WVL
+               !WRITE(*,*) 'IREG(I) = ',SIZE(AC_WAVELEN,1)
+            END DO
+         ENDIF
+      ENDIF
+
+      !!!DRF
+      IHC = 1
+      !NARSPC = 1
+      !WRITE(*,*) 'NARSPC = ',NARSPC
+      !WRITE(*,*) 'IREG = ',IREG
+
+         !NARSPC(IHC)=IREG(IHC)        
+!        CHECK THAT NARSPC IS NOT TOO LARGE
+
+
+
+!!!! DRF      
+
+      DO 110 IHC = 1, 4 !DRF
+         NARSPC(IHC)=IREG(IHC)        
+!        CHECK THAT NARSPC IS NOT TOO LARGE
+         IF(NARSPC(IHC).GT.MXWVLN)THEN
+            WRITE(IPR,'(/2A,I3,/14X,A,I3,A)')                           &
+     &           ' FATAL ERROR:  INPUT NUMBER OF AEROSOL',              &
+     &           ' SPECTRAL DATA POINTS (NARSPC =',NARSPC(IHC),         &
+     &           ' EXCEEDS THE MAXIMUM NUMBER (PARAMETER MXWVLN =',     &
+     &           MXWVLN, ' IN FILE PARAMS.h).'
+            IF(LJMASS)CALL WRTBUF(FATAL)
+            STOP ' ARUEXA: NUMBER OF SPECTRAL POINTS IS TOO LARGE.'
+         ENDIF
+
+         IF(NARSPC(IHC).LT.0)THEN
+            IF(LJMASS)CALL WRTBUF(FATAL)
+            STOP ' ARUEXA: NUMBER OF SPECTRAL DATA MUST BE POSITIVE.'
+         ENDIF
+         IF(NARSPC(IHC).NE.0)THEN
+            IF(LJMASS)THEN
+               CALL INITCARD( 'CARD2D1' )
+            ELSE
+               IF (DRF_FLAG) THEN
+                  AWCCON(IHC) = 0.1 !!!!! UNIT ISSUES
+                  TITLE = ' AER'
+
+                  DO I=1,NUM_AC_WVL
+                     VARSPC(IHC,I) = AC_WAVELEN(I)
+                     EXTC(IHC,I) = O_AEROSOL(I,IHC*3-2)
+                     ABSC(IHC,I) = O_AEROSOL(I,IHC*3-1)
+                     ASYM(IHC,I) = O_AEROSOL(I,IHC*3)
+                  ENDDO
+                  !WRITE(*,*) 'into this part' !YES, IT GOES HERE
+               ELSE
+                  READ(IRD, 9003)AWCCON(IHC), TITLE
+               READ(IRD, '((3(F6.2,2F7.5,F6.4)))')                      &
+     &           (VARSPC(IHC,I), EXTC(IHC,I), ABSC(IHC,I), ASYM(IHC,I), &
+     &           I=1, NARSPC(IHC))
+               ENDIF
+               WRITE(IPR, 9004)AWCCON(IHC), TITLE
+               WRITE(IPR, 9005)
+               WRITE(IPR, '(3(F6.2,1X,2(F7.5,1X),F6.4,1X))')            &
+     &           (VARSPC(IHC,I), EXTC(IHC,I), ABSC(IHC,I), ASYM(IHC,I), &
+     &           I=1, NARSPC(IHC))
+            ENDIF
+
+!JMASS      TITLE NOT USED IN JMASS, OTHER VARIABLES AVAILABLE IN COMMON
+!           BLOCK, NWAVLN DEFINED IN PARAMS.h
+
+!           SET NON-ZERO IREG VALUES TO 1 TO TRIGGER USER-DEFINED OPTION
+!           THIS IS NOT NECESSARY BUT DOES NOT HURT
+!           THE USER-DEFINED VALUE IS USED FOR ANY NON-ZER0 IREG(IHC)
+!           IREG(IHC) IS NON-ZERO HERE ANYWAY
+            IREG(IHC)=1
+         ENDIF
+ 110  CONTINUE
+      RETURN
+ 9001 FORMAT(4I5)
+ 9002 FORMAT('1 CARD 2D *****', 4I5,                                    &
+     &     ' (NUMBER OF USER-DEFINED SPECTRAL POINTS FOR AEROSOLS)')
+ 9003 FORMAT(E10.3, 18A4)
+ 9004 FORMAT('0 CARD 2D1 **** EQUIVALENT WATER = ', 1PE10.3, 18A4)
+ 9005 FORMAT('0 CARD 2D2 ****')
+      END

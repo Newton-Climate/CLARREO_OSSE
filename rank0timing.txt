@@ -1,0 +1,2890 @@
+ Total time of the program is    33.5012177899480     
+ Message time is    7.26539793796837     
+ Total time of the program is    28.0260971810203     
+ Message time is    7.51861255394761     
+ Total time of the program is    4402.21739232296     
+ Message time is    443.345743739046     
+ Total time of the program is    4374.62026453204     
+ Message time is    438.157618940109     
+ Total time of the program is    5784.43229703093     
+ Message time is    931.568884549895     
+ Total time of the program is    35.1914729818236     
+ Message time is    7.26425802195445     
+ Total time of the program is    34.4353618971072     
+ Message time is    7.31024122913368     
+ Total time of the program is    34.6515399320051     
+ Message time is    8.48784572095610     
+ Total time of the program is    36.8351873429492     
+ Message time is    9.34730416606180     
+ Total time of the program is    6347.42041046103     
+ Message time is    4698.35728905816     
+ Total time of the program is    5705.18929357501     
+ Message time is    4224.28796437709     
+ Total time of the program is    4765.58684186894     
+ Message time is    3457.93961068988     
+ Total time of the program is    5474.09678403195     
+ Message time is    4057.67636566190     
+ Total time of the program is    6482.72604263620     
+ Message time is    4840.37395960605     
+ Total time of the program is    4864.99807052384     
+ Message time is    586.140645660926     
+ Total time of the program is    4396.01743691997     
+ Message time is    443.208870525006     
+ Total time of the program is    4502.67721410212     
+ Message time is    328.171967654023     
+ Total time of the program is    4497.50368201290     
+ Message time is    369.528041518992     
+ Total time of the program is    6579.96604375192     
+ Message time is    699.555139390053     
+ Total time of the program is    7016.83377995295     
+ Message time is    5088.68790509203     
+ Total time of the program is    5348.98310209205     
+ Message time is    3965.90622532810     
+ Total time of the program is    6622.78076177812     
+ Message time is    4984.36632803897     
+ Total time of the program is    5349.72498960106     
+ Message time is    285.267072412069     
+ Total time of the program is    4770.40961925592     
+ Message time is    361.376508462010     
+ Total time of the program is    4522.83138981508     
+ Message time is    252.552260412835     
+ Total time of the program is    4487.28658084502     
+ Message time is    426.486860019853     
+ Total time of the program is    5751.81973933009     
+ Message time is    813.878199436935     
+ Total time of the program is    6275.42592613609     
+ Message time is    4614.62565956195     
+ Total time of the program is    5394.31486129016     
+ Message time is    3972.18036234681     
+ Total time of the program is    6114.21066254494     
+ Message time is    4566.65332601708     
+ Total time of the program is    6553.91072009690     
+ Message time is    4808.61514777411     
+ Total time of the program is    5336.09501866996     
+ Message time is    277.704868617002     
+ Total time of the program is    4623.18355267798     
+ Message time is    290.867049792083     
+ Total time of the program is    4440.99319545692     
+ Message time is    528.234036547132     
+ Total time of the program is    6743.13839598186     
+ Message time is    792.299824318150     
+ Total time of the program is    6548.23048216105     
+ Message time is    4889.77788333991     
+ Total time of the program is    5942.77616969496     
+ Message time is    4447.90601558913     
+ Total time of the program is    5232.84478900000     
+ Message time is    340.767485507997     
+ Total time of the program is    5396.10010905401     
+ Message time is    406.053281255998     
+ Total time of the program is    5089.58053428098     
+ Message time is    676.535077634966     
+ Total time of the program is    5710.25374695798     
+ Message time is    648.465889300918     
+ Total time of the program is    7059.77245952492     
+ Message time is    5224.13255725801     
+ Total time of the program is    6697.49688025191     
+ Message time is    4348.44678163202     
+ Total time of the program is    5614.43530066987     
+ Message time is    4141.78093590518     
+ Total time of the program is    6710.04783903109     
+ Message time is    4944.88153119385     
+ Total time of the program is    6687.08074684301     
+ Message time is    829.737121472135     
+ Total time of the program is    4492.23400851316     
+ Message time is    287.223882891005     
+ Total time of the program is    4528.04990689596     
+ Message time is    555.339338104939     
+ Total time of the program is    6785.94489781000     
+ Message time is    4357.66688765725     
+ Total time of the program is    5685.78136519506     
+ Message time is    4213.37617064989     
+ Total time of the program is    6797.16621386190     
+ Message time is    5051.29944284819     
+ Total time of the program is    6592.98963808408     
+ Message time is    4843.94463713793     
+ Total time of the program is    5312.99204548611     
+ Message time is    498.539834141033     
+ Total time of the program is    4489.97370345006     
+ Message time is    403.835558212362     
+ Total time of the program is    4587.82355861808     
+ Message time is    511.532889525872     
+ Total time of the program is    6149.29242804996     
+ Message time is    941.148598517058     
+ Total time of the program is    6618.97689528996     
+ Message time is    4692.83758079493     
+ Total time of the program is    5189.98376541305     
+ Message time is    3820.45786110498     
+ Total time of the program is    5335.39463619201     
+ Message time is    3910.18280960299     
+ Total time of the program is    5506.49500827189     
+ Message time is    369.410185985034     
+ Total time of the program is    5525.01113798004     
+ Message time is    848.244594358839     
+ Total time of the program is    5033.74877756392     
+ Message time is    179.724744624924     
+ Total time of the program is    6546.89431322896     
+ Message time is    891.662776206038     
+ Total time of the program is    5682.12265359005     
+ Message time is    4181.67083792621     
+ Total time of the program is    6248.68488336401     
+ Message time is    4397.66388450097     
+ Total time of the program is    5905.20016221999     
+ Message time is    495.809534385044     
+ Total time of the program is    4422.74372108560     
+ Message time is    445.465639986098     
+ Total time of the program is    4979.27261750819     
+ Message time is    379.273300394882     
+ Total time of the program is    5524.39692219603     
+ Message time is    684.506520522991     
+ Total time of the program is    6006.10171766672     
+ Message time is    4444.31567295501     
+ Total time of the program is    6407.78619763814     
+ Message time is    4268.46216109581     
+ Total time of the program is    6114.37030236004     
+ Message time is    4549.18072212208     
+ Total time of the program is    5372.05101337470     
+ Message time is    4019.07422523899     
+ Total time of the program is    5982.06619682093     
+ Message time is    4403.52510263189     
+ Total time of the program is    5948.20155439898     
+ Message time is    392.920571162016     
+ Total time of the program is    5344.95304220798     
+ Message time is    318.854715061985     
+ Total time of the program is    4411.97135216600     
+ Message time is    135.873258622989     
+ Total time of the program is    4671.44102160001     
+ Message time is    474.043589159002     
+ Total time of the program is    6461.47501912294     
+ Message time is    4584.10218597716     
+ Total time of the program is    5883.47960455200     
+ Message time is    4324.46964427400     
+ Total time of the program is    5334.17759158509     
+ Message time is    3953.07040854101     
+ Total time of the program is    6853.56648712000     
+ Message time is    5069.71526146308     
+ Total time of the program is    4604.12992980797     
+ Message time is    380.087969440967     
+ Total time of the program is    4474.63479072787     
+ Message time is    461.966214526910     
+ Total time of the program is    4632.72864155902     
+ Message time is    495.577012358001     
+ Total time of the program is    5736.09304271918     
+ Message time is    928.745060174260     
+ Total time of the program is    6328.74169042613     
+ Message time is    4679.76971195918     
+ Total time of the program is    6622.46160073602     
+ Message time is    5138.04324608296     
+ Total time of the program is    5717.79806167819     
+ Message time is    4150.55810312880     
+ Total time of the program is    6630.62832881697     
+ Message time is    4853.21341714496     
+ Total time of the program is    5300.94958472019     
+ Message time is    385.311314912047     
+ Total time of the program is    4836.16238933802     
+ Message time is    512.751281047997     
+ Total time of the program is    5667.35514072608     
+ Message time is    747.460715238936     
+ Total time of the program is    5177.06960109388     
+ Message time is    65.4231120343320     
+ Total time of the program is    5757.33175539970     
+ Message time is    647.112064888235     
+ Total time of the program is    6703.13922081888     
+ Message time is    5056.92944473890     
+ Total time of the program is    4902.34905776381     
+ Message time is    3551.07518934878     
+ Total time of the program is    5890.31301238295     
+ Message time is    4321.98015855020     
+ Total time of the program is    6528.48002003925     
+ Message time is    4788.97580174403     
+ Total time of the program is    5306.53169795126     
+ Message time is    664.605528817046     
+ Total time of the program is    4313.15147125069     
+ Message time is    391.261845539324     
+ Total time of the program is    5504.54533470934     
+ Message time is    1309.34212002903     
+ Total time of the program is    6562.10922400397     
+ Message time is    651.691073023947     
+ Total time of the program is    6169.10818871623     
+ Message time is    4799.93966025906     
+ Total time of the program is    6404.09872562625     
+ Message time is    4780.10920529114     
+ Total time of the program is    5489.45316356281     
+ Message time is    522.317443808075     
+ Total time of the program is    4361.73064898700     
+ Message time is    395.437365692109     
+ Total time of the program is    6186.47563499399     
+ Message time is    4563.47083760705     
+ Total time of the program is    5810.92906354001     
+ Message time is    4334.54935932101     
+ Total time of the program is    5570.41770202701     
+ Message time is    793.016015748028     
+ Total time of the program is    4468.46777514199     
+ Message time is    535.671012222010     
+ Total time of the program is    5618.61125310196     
+ Message time is    525.122501717007     
+ Total time of the program is    6461.30947714811     
+ Message time is    5039.11496367911     
+ Total time of the program is    5768.25520673906     
+ Message time is    4197.54005515389     
+ Total time of the program is    7013.23390777800     
+ Message time is    5231.56450804000     
+ Total time of the program is    5857.81473301400     
+ Message time is    496.935373811999     
+ Total time of the program is    4185.71192934690     
+ Message time is    499.220388901420     
+ Total time of the program is    4696.97834056988     
+ Message time is    421.790265349671     
+ Total time of the program is    5552.84908828000     
+ Message time is    1027.32938536908     
+ Total time of the program is    5944.15565551911     
+ Message time is    766.399755596183     
+ Total time of the program is    6190.34240520606     
+ Message time is    4430.77374164900     
+ Total time of the program is    6242.35678257281     
+ Message time is    4584.04285240965     
+ Total time of the program is    5362.25538126472     
+ Message time is    3964.99883251172     
+ Total time of the program is    6115.13059546298     
+ Message time is    4425.00568201498     
+ Total time of the program is    5614.02709257603     
+ Message time is    569.073311260901     
+ Total time of the program is    4495.64380361501     
+ Message time is    475.601560916053     
+ Total time of the program is    5609.45352176484     
+ Message time is    752.240603073034     
+ Total time of the program is    5604.99049858598     
+ Message time is    642.643334461958     
+ Total time of the program is    6203.25423992099     
+ Message time is    4524.00604441698     
+ Total time of the program is    5277.20111348398     
+ Message time is    3891.47102362500     
+ Total time of the program is    6403.43601092510     
+ Message time is    3865.63510641130     
+ Total time of the program is    6232.64307064889     
+ Message time is    4763.23894566111     
+ Total time of the program is    6192.23679693369     
+ Message time is    482.064371723682     
+ Total time of the program is    4594.51240407297     
+ Message time is    436.116985182045     
+ Total time of the program is    4377.76192924706     
+ Message time is    455.544906369876     
+ Total time of the program is    4477.89109555166     
+ Message time is    612.257985224016     
+ Total time of the program is    4377.35303295683     
+ Message time is    457.096794338897     
+ Total time of the program is    6038.18321797997     
+ Message time is    4421.59648790024     
+ Total time of the program is    6216.50695990000     
+ Message time is    4549.48829411100     
+ Total time of the program is    6940.42563156600     
+ Message time is    5190.62776195600     
+ Total time of the program is    6000.98362399638     
+ Message time is    615.724551965483     
+ Total time of the program is    5126.21768230014     
+ Message time is    499.192550976761     
+ Total time of the program is    5852.47701052856     
+ Message time is    519.996067624539     
+ Total time of the program is    5769.65668266700     
+ Message time is    620.576976722001     
+ Total time of the program is    6299.49760702997     
+ Message time is    4518.12823512382     
+ Total time of the program is    6886.02651773300     
+ Message time is    1107.44802950416     
+ Total time of the program is    6301.64567169547     
+ Message time is    4642.94361080974     
+ Total time of the program is    6669.66939750599     
+ Message time is    4896.64141703097     
+ Total time of the program is    4770.03101097117     
+ Message time is    465.167154456023     
+ Total time of the program is    4827.81315024104     
+ Message time is    246.574196350062     
+ Total time of the program is    4491.62700690236     
+ Message time is    474.368128065951     
+ Total time of the program is    5088.40194956306     
+ Message time is    324.014570332132     
+ Total time of the program is    5872.37986055299     
+ Message time is    967.936903484006     
+ Total time of the program is    6626.42523427401     
+ Message time is    4844.46005613699     
+ Total time of the program is    6262.77875741200     
+ Message time is    4604.20618618200     
+ Total time of the program is    5512.68858426101     
+ Message time is    4031.22493165699     
+ Total time of the program is    5509.33903967263     
+ Message time is    4052.18079676013     
+ Total time of the program is    5859.50839387299     
+ Message time is    4040.34221070004     
+ Total time of the program is    6967.66945991199     
+ Message time is    5185.28933932306     
+ Total time of the program is    5376.12187975692     
+ Message time is    618.147620246978     
+ Total time of the program is    4900.71741616610     
+ Message time is    297.544716565870     
+ Total time of the program is    4630.73779275897     
+ Message time is    447.635459084995     
+ Total time of the program is    4619.77712687700     
+ Message time is    233.943797338000     
+ Total time of the program is    4563.13064634600     
+ Message time is    357.291529002001     
+ Total time of the program is    5853.23397459695     
+ Message time is    811.445238293847     
+ Total time of the program is    6466.67855884600     
+ Message time is    4688.74791725600     
+ Total time of the program is    6059.67547240108     
+ Message time is    4400.90705404337     
+ Total time of the program is    5445.65713723912     
+ Message time is    3978.94810365699     
+ Total time of the program is    5666.61797468690     
+ Message time is    4213.94807387004     
+ Total time of the program is    6238.47783825686     
+ Message time is    4246.42759503191     
+ Total time of the program is    6775.81531404378     
+ Message time is    4999.74794977996     
+ Total time of the program is    5467.19860629691     
+ Message time is    517.109537002165     
+ Total time of the program is    5449.10901976191     
+ Message time is    822.258561175084     
+ Total time of the program is    4512.66976474714     
+ Message time is    207.692252781009     
+ Total time of the program is    4678.14313355400     
+ Message time is    721.080305965996     
+ Total time of the program is    6279.38142872497     
+ Message time is    746.239586230018     
+ Total time of the program is    6954.19392593694     
+ Message time is    5001.01114850305     
+ Total time of the program is    6686.05142548599     
+ Message time is    4890.97712856298     
+ Total time of the program is    5403.77751477703     
+ Message time is    3975.52505258401     
+ Total time of the program is    6544.05137962895     
+ Message time is    4788.19009968406     
+ Total time of the program is    5893.40642306895     
+ Message time is    1048.82205482700     
+ Total time of the program is    4867.56774113199     
+ Message time is    373.807711494970     
+ Total time of the program is    4559.28940491891     
+ Message time is    51.4952717879787     
+ Total time of the program is    4729.48451458104     
+ Message time is    658.039998610970     
+ Total time of the program is    6717.65864358994     
+ Message time is    757.655714488006     
+ Total time of the program is    6791.43859590404     
+ Message time is    4959.98692534002     
+ Total time of the program is    5649.67295405804     
+ Message time is    4181.85131843598     
+ Total time of the program is    6828.51206438697     
+ Message time is    5237.83828169107     
+ Total time of the program is    6574.61606515804     
+ Message time is    4860.10102550301     
+ Total time of the program is    6726.13562377996     
+ Message time is    4966.28573883302     
+ Total time of the program is    5395.29632393993     
+ Message time is    400.598329880973     
+ Total time of the program is    4935.61120852700     
+ Message time is    212.888145131990     
+ Total time of the program is    4433.54362390703     
+ Message time is    364.562307073968     
+ Total time of the program is    4965.26441895799     
+ Message time is    631.318067437038     
+ Total time of the program is    6134.53763747495     
+ Message time is    1236.49538274901     
+ Total time of the program is    6530.33733857295     
+ Message time is    4725.09737865895     
+ Total time of the program is    5928.43903995398     
+ Message time is    4201.98685310304     
+ Total time of the program is    6186.83980912704     
+ Message time is    4597.77702785993     
+ Total time of the program is    6133.40514790302     
+ Message time is    4569.87974488200     
+ Total time of the program is    6768.27118761104     
+ Message time is    4854.25223790901     
+ Total time of the program is    5380.18771190697     
+ Message time is    452.177392687066     
+ Total time of the program is    5354.79281161807     
+ Message time is    577.446697836975     
+ Total time of the program is    4636.04997591698     
+ Message time is    229.158243747079     
+ Total time of the program is    5120.40834679804     
+ Message time is    546.694714708952     
+ Total time of the program is    5720.09994456702     
+ Message time is    299.358410648012     
+ Total time of the program is    6651.14620101894     
+ Message time is    4943.26389101404     
+ Total time of the program is    6036.17507253902     
+ Message time is    4560.97154264199     
+ Total time of the program is    5051.78112584003     
+ Message time is    3624.57166892895     
+ Total time of the program is    5933.20747342304     
+ Message time is    4393.04457979597     
+ Total time of the program is    6734.85149490298     
+ Message time is    4977.47726120404     
+ Total time of the program is    5256.85636343691     
+ Message time is    323.745052895043     
+ Total time of the program is    5396.45262947900     
+ Message time is    326.447461390984     
+ Total time of the program is    4442.97146756999     
+ Message time is    331.032059438992     
+ Total time of the program is    4530.90806889400     
+ Message time is    468.981243995018     
+ Total time of the program is    4552.20390073594     
+ Message time is    383.417125955923     
+ Total time of the program is    6458.51559873304     
+ Message time is    922.465038355964     
+ Total time of the program is    6187.88878448401     
+ Message time is    4526.50358490704     
+ Total time of the program is    5518.87767434702     
+ Message time is    4043.06469517993     
+ Total time of the program is    5514.58672251698     
+ Message time is    4052.29301811196     
+ Total time of the program is    5952.28152476798     
+ Message time is    4389.14954702300     
+ Total time of the program is    6409.32735601901     
+ Message time is    4657.29266925601     
+ Total time of the program is    5237.48449940304     
+ Message time is    596.347970225965     
+ Total time of the program is    4781.31112944405     
+ Message time is    206.494714071043     
+ Total time of the program is    4592.92025036807     
+ Message time is    311.918277453980     
+ Total time of the program is    4581.62512547500     
+ Message time is    425.056130611105     
+ Total time of the program is    4497.22822757508     
+ Message time is    530.443648242974     
+ Total time of the program is    5853.77140329592     
+ Message time is    886.562927954015     
+ Total time of the program is    6445.46638738201     
+ Message time is    4674.91373293195     
+ Total time of the program is    5765.83327204804     
+ Message time is    4131.23503292701     
+ Total time of the program is    6033.30244227406     
+ Message time is    4552.96395188791     
+ Total time of the program is    5531.95572374703     
+ Message time is    4079.97962927993     
+ Total time of the program is    5763.31467290304     
+ Message time is    4197.86098341795     
+ Total time of the program is    6592.79329159204     
+ Message time is    4803.64475295600     
+ Total time of the program is    5360.77314847102     
+ Message time is    582.687852888019     
+ Total time of the program is    4861.94284874108     
+ Message time is    131.715627729078     
+ Total time of the program is    4470.57430709002     
+ Message time is    348.984751609969     
+ Total time of the program is    4568.13670774503     
+ Message time is    338.789372786996     
+ Total time of the program is    4585.92172819399     
+ Message time is    567.742218321073     
+ Total time of the program is    6047.41521315789     
+ Message time is    809.102322098915     
+ Total time of the program is    6623.43418185390     
+ Message time is    4836.94187030708     
+ Total time of the program is    6011.20544185396     
+ Message time is    4378.42881026294     
+ Total time of the program is    5490.60896999098     
+ Message time is    4093.37703906000     
+ Total time of the program is    5163.24253199087     
+ Message time is    3762.53508936800     
+ Total time of the program is    5519.39183539012     
+ Message time is    4055.92695586802     
+ Total time of the program is    5176.63484111801     
+ Message time is    371.000966715161     
+ Total time of the program is    4849.02638198622     
+ Message time is    549.525531683117     
+ Total time of the program is    4475.18519049417     
+ Message time is    81.8357576290146     
+ Total time of the program is    4447.25322395470     
+ Message time is    362.273395547178     
+ Total time of the program is    4541.64626119891     
+ Message time is    643.153866226086     
+ Total time of the program is    6160.62110596290     
+ Message time is    1080.08388606389     
+ Total time of the program is    6367.39890962210     
+ Message time is    4607.03718200210     
+ Total time of the program is    5921.14768233383     
+ Message time is    4296.88739700709     
+ Total time of the program is    5338.30178056611     
+ Message time is    3839.31264676480     
+ Total time of the program is    2487.78662847541     
+ Message time is    2055.41844504513     
+ Total time of the program is    3224.98446987290     
+ Message time is    2678.53065938991     
+ Total time of the program is    3146.56717381789     
+ Message time is    2604.54949070420     
+ Total time of the program is    1051.47044683015     
+ Message time is    184.174109573010     
+ Total time of the program is    1477.99805281125     
+ Message time is    187.027405617759     
+ Total time of the program is    952.078986242181     
+ Message time is    7.20433355798014     
+ Total time of the program is    3516.12018239894     
+ Message time is    2837.89146423410     
+ Total time of the program is    3877.81988765206     
+ Message time is    3182.37185585406     
+ Total time of the program is    3053.55220284127     
+ Message time is    2636.16982301185     
+ Total time of the program is    1545.26735035283     
+ Message time is    80.7258789148182     
+ Total time of the program is    1316.11137179192     
+ Message time is    111.383597693406     
+ Total time of the program is    2852.61305586714     
+ Message time is    2202.41201282199     
+ Total time of the program is    3436.08411420498     
+ Message time is    2836.06207313703     
+ Total time of the program is    2392.80889389012     
+ Message time is    2033.75114864437     
+ Total time of the program is    1482.29532614490     
+ Message time is    43.9758919340093     
+ Total time of the program is    1340.59116512095     
+ Message time is    182.883997848956     
+ Total time of the program is    832.540642389096     
+ Message time is    84.2059824911412     
+ Total time of the program is    3098.32114665210     
+ Message time is    2490.28975675511     
+ Total time of the program is    1363.97207309399     
+ Message time is    121.158843513113     
+ Total time of the program is    1420.50605304306     
+ Message time is    111.744636020157     
+ Total time of the program is    916.259325360181     
+ Message time is    50.1922088828869     
+ Total time of the program is    1347.45201691613     
+ Message time is    151.974105694331     
+ Total time of the program is    2856.76217213878     
+ Message time is    2359.55179898022     
+ Total time of the program is    3300.72577897494     
+ Message time is    2654.05986346595     
+ Total time of the program is    3627.00515522109     
+ Message time is    2882.62426048517     
+ Total time of the program is    3062.07976093562     
+ Message time is    2463.21560077881     
+ Total time of the program is    2969.29699978372     
+ Message time is    2468.65609074617     
+ Total time of the program is    2547.82094913721     
+ Message time is    2134.26559486007     
+ Total time of the program is    1105.27980585000     
+ Message time is    108.578161914018     
+ Total time of the program is    1702.36624225206     
+ Message time is    116.072274248116     
+ Total time of the program is    1529.70699526975     
+ Message time is    62.2102721980773     
+ Total time of the program is    936.709960546112     
+ Message time is    79.5264599749353     
+ Total time of the program is    2946.69128456712     
+ Message time is    2447.79328313610     
+ Total time of the program is    2902.77332859882     
+ Message time is    2246.53440722800     
+ Total time of the program is    3435.47633487207     
+ Message time is    2752.68583300500     
+ Total time of the program is    3062.56376398611     
+ Message time is    2446.03742453293     
+ Total time of the program is    2701.52063474897     
+ Message time is    2293.04232020001     
+ Total time of the program is    1088.75834745099     
+ Message time is    70.9645744760055     
+ Total time of the program is    1451.87921495107     
+ Message time is    199.891837280942     
+ Total time of the program is    1696.25698615704     
+ Message time is    127.181405873969     
+ Total time of the program is    1363.17695015529     
+ Message time is    6.55412399489433     
+ Total time of the program is    940.771765855956     
+ Message time is    26.4910076360684     
+ Total time of the program is    2939.65392201534     
+ Message time is    2432.23721035570     
+ Total time of the program is    3581.14201859431     
+ Message time is    2897.93388371123     
+ Total time of the program is    3288.93085630378     
+ Message time is    2575.70304323686     
+ Total time of the program is    3406.26709723799     
+ Message time is    2728.88241416169     
+ Total time of the program is    2925.10501931899     
+ Message time is    2344.49097192404     
+ Total time of the program is    2867.86505353008     
+ Message time is    2457.35368956206     
+ Total time of the program is    1433.56044170307     
+ Message time is    97.1018065540120     
+ Total time of the program is    1321.93739749212     
+ Message time is    47.5736661562696     
+ Total time of the program is    2627.56138485111     
+ Message time is    2175.05502049392     
+ Total time of the program is    3266.11885766103     
+ Message time is    2551.17951884191     
+ Total time of the program is    3082.61149028828     
+ Message time is    2504.88197782030     
+ Total time of the program is    3379.76508771698     
+ Message time is    2787.28143627802     
+ Total time of the program is    2792.34088719869     
+ Message time is    2416.10523252282     
+ Total time of the program is    1723.36102692969     
+ Message time is    174.407701183110     
+ Total time of the program is    1556.33752736496     
+ Message time is    237.456747123040     
+ Total time of the program is    785.118615258951     
+ Message time is    46.1997526069172     
+ Total time of the program is    3388.25632545911     
+ Message time is    2772.52310044831     
+ Total time of the program is    3601.35260332702     
+ Message time is    2878.67267789971     
+ Total time of the program is    2979.83457545005     
+ Message time is    2366.87479824992     
+ Total time of the program is    2495.60681562591     
+ Message time is    1998.52288804110     
+ Total time of the program is    2424.06954152090     
+ Message time is    2063.88030081429     
+ Total time of the program is    1437.26162638608     
+ Message time is    167.941125815036     
+ Total time of the program is    1496.47462886386     
+ Message time is    54.9297498310916     
+ Total time of the program is    956.791929973057     
+ Message time is    34.4470462440513     
+ Total time of the program is    3360.47958084196     
+ Message time is    2688.23211579700     
+ Total time of the program is    2881.85296083475     
+ Message time is    2263.46670545870     
+ Total time of the program is    3078.68927427381     
+ Message time is    2493.74388544681     
+ Total time of the program is    2713.00739553198     
+ Message time is    2288.29500999209     
+ Total time of the program is    1486.83692753827     
+ Message time is    202.748727898113     
+ Total time of the program is    1647.56431582430     
+ Message time is    196.701959475875     
+ Total time of the program is    959.609674918931     
+ Message time is    95.8113494971767     
+ Total time of the program is    3149.85098390607     
+ Message time is    2528.44090120913     
+ Total time of the program is    3215.82234547602     
+ Message time is    2579.15949422400     
+ Total time of the program is    2881.99519026105     
+ Message time is    2265.63175560394     
+ Total time of the program is    2786.67844142497     
+ Message time is    2261.59808664292     
+ Total time of the program is    2896.94068005402     
+ Message time is    2489.46054333996     
+ Total time of the program is    985.123356055934     
+ Message time is    205.954160527326     
+ Total time of the program is    1452.32849893882     
+ Message time is    268.289134880994     
+ Total time of the program is    1540.97874330496     
+ Message time is    179.796373659279     
+ Total time of the program is    1504.96569834999     
+ Message time is    159.142955208081     
+ Total time of the program is    963.072859159671     
+ Message time is    41.3394350209273     
+ Total time of the program is    2876.03013029881     
+ Message time is    2423.10007907008     
+ Total time of the program is    3165.26919716100     
+ Message time is    2489.46292609200     
+ Total time of the program is    2771.46726418100     
+ Message time is    2165.96462903381     
+ Total time of the program is    2782.17200436800     
+ Message time is    2200.19334908900     
+ Total time of the program is    2431.92009400995     
+ Message time is    2073.36412243498     
+ Total time of the program is    1301.10212091077     
+ Message time is    264.090304328129     
+ Total time of the program is    1395.44191401685     
+ Message time is    102.827532076277     
+ Total time of the program is    794.314966590144     
+ Message time is    58.8141545481049     
+ Total time of the program is    3247.39295774000     
+ Message time is    2634.16116968682     
+ Total time of the program is    3290.24685600493     
+ Message time is    2596.97034981009     
+ Total time of the program is    2570.77537161810     
+ Message time is    2170.54728641897     
+                                                                                                  Total time of the program is    1284.46925588464     
+ Message time is    231.947074294090     
+ Total time of the program is    1547.81708093400     
+ Message time is    141.587265313996     
+ Total time of the program is    1303.45370161301     
+ Message time is    159.064989702078     
+ Total time of the program is    2423.08955397829     
+ Message time is    2003.33950721426     
+ Total time of the program is    3218.96172988741     
+ Message time is    2629.72789156297     
+ Total time of the program is    2790.36072826618     
+ Message time is    2179.83175500575     
+ Total time of the program is    2917.28836486675     
+ Message time is    2289.24779266212     
+ Total time of the program is    3017.52298642400     
+ Message time is    2477.25014239500     
+ Total time of the program is    2328.92332440615     
+ Message time is    1967.94435504079     
+ Total time of the program is    974.212620592210     
+ Message time is    7.46509775193408     
+ Total time of the program is    1270.06090518599     
+ Message time is    226.640748401638     
+ Total time of the program is    1465.09640036011     
+ Message time is    164.511298741912     
+ Total time of the program is    1380.73862420698     
+ Message time is    177.874668812146     
+ Total time of the program is    1347.83859645342     
+ Message time is    99.7997994297184     
+ Total time of the program is    823.527030576020     
+ Message time is    71.4888626879547     
+ Total time of the program is    2665.03039893880     
+ Message time is    2197.58435187116     
+ Total time of the program is    2951.86040724907     
+ Message time is    2364.94560100231     
+ Total time of the program is    3043.59264414199     
+ Message time is    2436.10542733083     
+ Total time of the program is    3300.58323344076     
+ Message time is    2686.45242207171     
+ Total time of the program is    2787.71292862995     
+ Message time is    2291.75955149112     
+ Total time of the program is    2469.51412935182     
+ Message time is    2105.67247682204     
+ Total time of the program is    958.978359448025     
+ Message time is    79.1914978658315     
+ Total time of the program is    1262.86642213305     
+ Message time is    210.404451604001     
+ Total time of the program is    1450.79593603600     
+ Message time is    218.700905824007     
+ Total time of the program is    1330.00090216799     
+ Message time is    226.786075855140     
+ Total time of the program is    1305.05659564602     
+ Message time is    119.505163021968     
+ Total time of the program is    815.496523857000     
+ Message time is    20.6994239400083     
+ Total time of the program is    2737.67964066518     
+ Message time is    2266.56253192900     
+ Total time of the program is    3176.06279936014     
+ Message time is    2577.84386357991     
+ Total time of the program is    3013.55871512392     
+ Message time is    2405.38864860707     
+ Total time of the program is    3271.10863671219     
+ Message time is    2664.82707291190     
+ Total time of the program is    2752.07057633693     
+ Message time is    2266.19562383601     
+ Total time of the program is    2424.39240841521     
+ Message time is    2079.33208464226     
+ Total time of the program is    935.092031606007     
+ Message time is    57.8283610222861     
+ Total time of the program is    1206.86792955175     
+ Message time is    27.8421510397457     
+ Total time of the program is    1506.68167086365     
+ Message time is    177.358405486215     
+ Total time of the program is    1347.05345598515     
+ Message time is    110.071009451058     
+ Total time of the program is    1287.58590614004     
+ Message time is    52.4689525719732     
+ Total time of the program is    833.487153206952     
+ Message time is    92.7269230540842     
+ Total time of the program is    2521.55825475790     
+ Message time is    2067.91442606691     
+ Total time of the program is    2997.61736730905     
+ Message time is    2417.49890755583     
+ Total time of the program is    2881.73815411422     
+ Message time is    2240.59440699709     
+ Total time of the program is    3052.88821693882     
+ Message time is    2441.86227240879     
+ Total time of the program is    2513.23798992182     
+ Message time is    2036.53658791701     
+ Total time of the program is    2437.26362060383     
+ Message time is    2079.36684294743     
+ Total time of the program is    906.667939244770     
+ Message time is    60.5396193140186     
+ Total time of the program is    1211.85877165059     
+ Message time is    127.834271606058     
+ Total time of the program is    1433.76857312163     
+ Message time is    16.2569218431599     
+ Total time of the program is    1345.36623148667     
+ Message time is    190.636316768825     
+ Total time of the program is    1326.71759868506     
+ Message time is    83.1674008700065     
+ Total time of the program is    810.529063924681     
+ Message time is    94.6695913472213     
+ Total time of the program is    2549.86899796408     
+ Message time is    2114.87629528670     
+ Total time of the program is    3048.80425788974     
+ Message time is    2458.56891193474     
+ Total time of the program is    3154.99622913171     
+ Message time is    2536.40655741887     
+ Total time of the program is    2907.07128331298     
+ Message time is    2314.34494630666     
+ Total time of the program is    3021.52092005219     
+ Message time is    2518.08449093485     
+ Total time of the program is    2105.15344558703     
+ Message time is    1748.77209346183     
+ Total time of the program is    928.442590917926     
+ Message time is    89.9779238351621     
+ Total time of the program is    1190.09222355112     
+ Message time is    43.8891626880504     
+ Total time of the program is    1427.96620439226     
+ Message time is    141.992516302969     
+ Total time of the program is    1303.86877825623     
+ Message time is    92.5278661139309     
+ Total time of the program is    1322.64810668817     
+ Message time is    170.376363439020     
+ Total time of the program is    799.643325023000     
+ Message time is    61.5020060729998     
+ Total time of the program is    2753.40022912200     
+ Message time is    2310.78614556400     
+ Total time of the program is    3228.14063904000     
+ Message time is    2644.27569295900     
+ Total time of the program is    2958.69744829000     
+ Message time is    2349.65617750700     
+ Total time of the program is    3209.51560547100     
+ Message time is    2584.52912883400     
+ Total time of the program is    3472.22750878300     
+ Message time is    2985.51466570900     
+ Total time of the program is    2323.94631088000     
+ Message time is    1982.13191073600     
+ Total time of the program is    938.057995513002     
+ Message time is    177.452200144002     
+ Total time of the program is    1253.93184280400     
+ Message time is    146.682667685003     
+ Total time of the program is    1455.51934822200     
+ Message time is    128.902636920000     
+ Total time of the program is    1330.37269853000     
+ Message time is    105.948557648000     
+ Total time of the program is    1370.50507725000     
+ Message time is    152.126599744999     
+ Total time of the program is    812.472251795003     
+ Message time is    21.6592449860000     
+ Total time of the program is    2419.52241906400     
+ Message time is    1969.06538980900     
+ Total time of the program is    2392.56068673311     
+ Message time is    2041.60975295492     
+ Total time of the program is    3087.48969112616     
+ Message time is    2511.26846394408     
+ Total time of the program is    2864.82012239400     
+ Message time is    2168.51789055400     
+ Total time of the program is    2902.73036818100     
+ Message time is    2294.20093345200     
+ Total time of the program is    2948.86360008300     
+ Message time is    2400.06071265000     
+ Total time of the program is    2474.82116611200     
+ Message time is    2121.89166966100     
+ Total time of the program is    1034.07612737400     
+ Message time is    186.856983721000     
+ Total time of the program is    1242.11213876400     
+ Message time is    150.275659176998     
+ Total time of the program is    1459.25067191200     
+ Message time is    111.551414737998     
+ Total time of the program is    1320.59502234400     
+ Message time is    146.220004616000     
+ Total time of the program is    1324.17439231700     
+ Message time is    208.281277372000     
+ Total time of the program is    821.980683708000     
+ Message time is    47.8376155740007     
+ Total time of the program is    2593.44361494600     
+ Message time is    2155.98258783300     
+ Total time of the program is    2903.40974230500     
+ Message time is    2331.35173694900     
+ Total time of the program is    2921.78269026700     
+ Message time is    2310.06024070200     
+ Total time of the program is    2780.04266231800     
+ Message time is    2185.54869010600     
+ Total time of the program is    3060.52943670100     
+ Message time is    2540.54145043300     
+ Total time of the program is    2304.41701201801     
+ Message time is    1962.93501857901     
+ Total time of the program is    1019.76760347499     
+ Message time is    218.930905538000     
+ Total time of the program is    1247.41212865300     
+ Message time is    146.348761665984     
+ Total time of the program is    1484.20755475902     
+ Message time is    190.295043769001     
+ Total time of the program is    1341.19445041500     
+ Message time is    185.016974225000     
+ Total time of the program is    1364.85226734800     
+ Message time is    125.391523472004     
+ Total time of the program is    844.467792522017     
+ Message time is    58.5831853150157     
+ Total time of the program is    2575.12678109389     
+ Message time is    2112.92331358464     
+ Total time of the program is    2529.51097861100     
+ Message time is    1982.24858655600     
+ Total time of the program is    2943.02356431200     
+ Message time is    2286.49038797599     
+ Total time of the program is    51.1224584737793     
+ Message time is    9.03132089274004     
+ Total time of the program is    57.4606532130001     
+ Message time is    10.5072557359999     
+ Total time of the program is    49.8087866440001     
+ Message time is    5.24262053099983     
+ Total time of the program is    5591.59770886900     
+ Message time is    4098.92790749000     
+ Total time of the program is    4685.69829329000     
+ Message time is    233.398422978000     
+ Total time of the program is    4552.59316118500     
+ Message time is    519.875094806997     
+ Total time of the program is    4831.28330801300     
+ Message time is    628.258894290000     
+ Total time of the program is    6378.15904943100     
+ Message time is    4567.63388595801     
+ Total time of the program is    5998.53984701800     
+ Message time is    4436.17184964000     
+ Total time of the program is    5536.30278240500     
+ Message time is    4119.98632837800     
+ Total time of the program is    5854.26067132600     
+ Message time is    4295.22872877000     
+ Total time of the program is    6482.08489317200     
+ Message time is    4819.57953103400     
+ Total time of the program is    5162.94147719300     
+ Message time is    372.169432615003     
+ Total time of the program is    4444.48388184101     
+ Message time is    469.911673733994     
+ Total time of the program is    4520.97528335400     
+ Message time is    460.070543131995     
+ Total time of the program is    5465.10107491300     
+ Message time is    517.375124532999     
+ Total time of the program is    5963.01909163500     
+ Message time is    4347.82935351299     
+ Total time of the program is    5282.35112353900     
+ Message time is    3822.45334205600     
+ Total time of the program is    5164.28200294700     
+ Message time is    3692.88967809000     
+ Total time of the program is    6556.12592108600     
+ Message time is    4814.73788430700     
+ Total time of the program is    5036.30843728900     
+ Message time is    383.194567412997     
+ Total time of the program is    4789.63123881401     
+ Message time is    517.821998838015     
+ Total time of the program is    4534.22510698001     
+ Message time is    436.422218201973     
+ Total time of the program is    5880.40344400401     
+ Message time is    914.726468032022     
+ Total time of the program is    5335.14854132000     
+ Message time is    3825.21176364500     
+ Total time of the program is    5640.62173627500     
+ Message time is    4218.66297830100     
+ Total time of the program is    6128.88347015699     
+ Message time is    4488.52272835100     
+ Total time of the program is    6577.77128486700     
+ Message time is    4781.01552405200     
+ Total time of the program is    4461.15792722901     
+ Message time is    317.708672603010     
+ Total time of the program is    6127.33102111099     
+ Message time is    4484.81842414799     
+ Total time of the program is    5480.66785819898     
+ Message time is    4062.26300126300     
+ Total time of the program is    7240.95550883299     
+ Message time is    5293.02503138900     
+ Total time of the program is    5002.72607921797     
+ Message time is    488.485727609019     
+ Total time of the program is    4563.65773754800     
+ Message time is    490.858109572000     
+ Total time of the program is    4383.78412670700     
+ Message time is    366.069347376004     
+ Total time of the program is    4412.36849865099     
+ Message time is    495.561997550016     
+ Total time of the program is    6533.03775176100     
+ Message time is    4673.37681079200     
+ Total time of the program is    6809.34683803000     
+ Message time is    4974.23412591000     
+ Total time of the program is    4571.05902993400     
+ Message time is    183.943694336980     
+ Total time of the program is    6571.69146144000     
+ Message time is    4740.75588098197     
+ Total time of the program is    5963.88280612603     
+ Message time is    4330.63960721297     
+ Total time of the program is    4958.56459751097     
+ Message time is    126.049314361007     
+ Total time of the program is    5874.02437693300     
+ Message time is    714.523345195048     
+ Total time of the program is    5814.40368641098     
+ Message time is    4261.49794959696     
+                                                                                                  Total time of the program is    5270.26488974597     
+ Message time is    3856.41248573299     
+ Total time of the program is    5419.18146642199     
+ Message time is    570.837913238036     
+ Total time of the program is    4526.40614290704     
+ Message time is    613.423933606013     
+ Total time of the program is    4453.18671981996     
+ Message time is    567.016979206994     
+ Total time of the program is    6543.95854504898     
+ Message time is    4728.57343711000     
+ Total time of the program is    5281.74042146996     
+ Message time is    3845.93516536901     
+ Total time of the program is    6048.84313564800     
+ Message time is    4445.45626035804     
+ Total time of the program is    4926.00928151900     
+ Message time is    479.639510441993     
+ Total time of the program is    4637.23339630300     
+ Message time is    340.298448925001     
+ Total time of the program is    5964.84766143500     
+ Message time is    805.447347954001     
+ Total time of the program is    5892.74325000500     
+ Message time is    4253.63000807100     
+ Total time of the program is    6400.68389265798     
+ Message time is    4660.14239887201     
+ Total time of the program is    5181.10241414601     
+ Message time is    125.222482505007     
+ Total time of the program is    4535.10563946400     
+ Message time is    397.727547995004     
+ Total time of the program is    6271.85762225703     
+ Message time is    4661.72972487798     
+ Total time of the program is    4919.04901058809     
+ Message time is    572.187204928836     
+ Total time of the program is    52.5620271959342     
+ Message time is    17.0105029991828     
+ Total time of the program is    32.8969115509826     
+ Message time is    8.88760101198568     
+ Total time of the program is    33.7249182039814     
+ Message time is    9.24044808500912     
+ Total time of the program is    34.9655055130002     
+ Message time is    8.26871124799982     
+ Total time of the program is    33.6927910060040     
+ Message time is    8.29131718000281     
+ Total time of the program is    33.4988569699926     
+ Message time is    8.30435777700040     
+ Total time of the program is    34.1915004519979     
+ Message time is    8.28474259198993     
+ Total time of the program is    31.5613567130058     
+ Message time is    8.45266705399263     
+ Total time of the program is    32.1591391630063     
+ Message time is    8.78694753098534     
+ Total time of the program is    35.0762031030026     
+ Message time is    8.87573007700848     
+ Total time of the program is    33.8650665080058     
+ Message time is    8.84950597898569     
+ Total time of the program is    34.5442630879988     
+ Message time is    9.04635188702377     
+ Total time of the program is    31.8874940020032     
+ Message time is    8.81073092401493     
+ Total time of the program is    32.5231779919995     
+ Message time is    8.87589237198699     
+ Total time of the program is    34.5079535160039     
+ Message time is    8.80913885199698     
+ Total time of the program is    32.9178670429974     
+ Message time is    8.44810511500691     
+ Total time of the program is    35.2060118720110     
+ Message time is    8.42758868899546     
+ Total time of the program is    30.7479933630093     
+ Message time is    7.73268222698243     
+ Total time of the program is    33.7913960959995     
+ Message time is    8.32782515900908     
+ Total time of the program is    33.5115182540030     
+ Message time is    8.33593470801134     
+ Total time of the program is    34.7274067319813     
+ Message time is    8.74223577001248     
+ Total time of the program is    32.9386707530357     
+ Message time is    8.77028050925583     
+ Total time of the program is    32.7858689199202     
+ Message time is    9.56319583533332     
+ Total time of the program is    33.4709206991829     
+ Message time is    8.80515276128426     
+ Total time of the program is    34.5689933969988     
+ Message time is    8.70372128501185     
+ Total time of the program is    33.3845270499587     
+ Message time is    8.87776772305369     
+ Total time of the program is    33.3803056820179     
+ Message time is    8.82095239200862     
+ Total time of the program is    34.9810727240000     
+ Message time is    8.86715183100000     
+ Total time of the program is    33.6195655950000     
+ Message time is    9.62155329899997     
+ Total time of the program is    31.2098098540446     
+ Message time is    8.11898003600072     
+ Total time of the program is    31.5581386900001     
+ Message time is    8.32260090399996     
+ Total time of the program is    32.6398551299999     
+ Message time is    7.55524644100001     
+ Total time of the program is    30.7521013129999     
+ Message time is    8.17689733599991     
+ Total time of the program is    32.9402914889999     
+ Message time is    7.84530546199994     
+ Total time of the program is    34.2552658800000     
+ Message time is    7.59173694500009     
+ Total time of the program is    31.2423424350000     
+ Message time is    7.91130886900010     
+ Total time of the program is    31.8298283370000     
+ Message time is    8.49363801800018     
+ Total time of the program is    31.5643390109999     
+ Message time is    8.12452533399983     
+ Total time of the program is    31.3659336299997     
+ Message time is    8.20299164799962     
+ Total time of the program is    31.7776472119999     
+ Message time is    8.19550767100009     
+ Total time of the program is    31.2418589069998     
+ Message time is    7.54449656199995     
+ Total time of the program is    38.3842063599996     
+ Message time is    7.58236068999940     
+ Total time of the program is    31.0926490680004     
+ Message time is    7.70658689999982     
+ Total time of the program is    34.0302251920000     
+ Message time is    8.41936983300008     
+ Total time of the program is    30.7356525380000     
+ Message time is    8.02003136999997     
+ Total time of the program is    33.3624011790000     
+ Message time is    8.99903567599995     
+ Total time of the program is    33.6029924949999     
+ Message time is    9.28579991800007     
+ Total time of the program is    34.3879325700000     
+ Message time is    8.70507631900000     
+ Total time of the program is    33.6921893859999     
+ Message time is    8.67489294400002     
+ Total time of the program is    34.8740045820000     
+ Message time is    8.69504267299999     
+ Total time of the program is    34.4978768799997     
+ Message time is    9.27458220700009     
+ Total time of the program is    33.4529123910002     
+ Message time is    8.23020363799969     
+ Total time of the program is    33.9784533660004     
+ Message time is    8.23363155500010     
+ Total time of the program is    34.6868899440001     
+ Message time is    8.21783698999980     
+ Total time of the program is    34.8801394020002     
+ Message time is    8.19046071100001     
+ Total time of the program is    33.5695486699988     
+ Message time is    8.23383844999989     
+ Total time of the program is    33.0177307699996     
+ Message time is    8.62504956500015     
+ Total time of the program is    32.6928555750001     
+ Message time is    8.68325140399975     
+ Total time of the program is    31.5060567790006     
+ Message time is    8.07619840400002     
+ Total time of the program is    33.6620407179998     
+ Message time is    9.31341810699996     
+ Total time of the program is    31.0680399489993     
+ Message time is    8.04994908200024     
+ Total time of the program is    32.4705018929999     
+ Message time is    8.65417811199950     
+ Total time of the program is    31.2958716049998     
+ Message time is    8.15144062299987     
+ Total time of the program is    34.2710175040011     
+ Message time is    8.24716970599911     
+ Total time of the program is    31.4025841811672     
+ Message time is    7.53684266097844     
+ Total time of the program is    30.0600728034042     
+ Message time is    7.57782839564607     
+ Total time of the program is    30.7031830320000     
+ Message time is    9.26925482399997     
+ Total time of the program is    34.3318926970005     
+ Message time is    9.24926674900053     
+ Total time of the program is    31.2481668480000     
+ Message time is    8.93984497700001     
+ Total time of the program is    30.4586346609976     
+ Message time is    8.08647176899831     
+ Total time of the program is    33.6052131240012     
+ Message time is    8.69049114299924     
+ Total time of the program is    31.3962158020004     
+ Message time is    7.57612087099915     
+ Total time of the program is    34.2114690100007     
+ Message time is    8.29714503600007     
+ Total time of the program is    35.7809319009993     
+ Message time is    8.22650097999940     
+ Total time of the program is    33.8359330350067     
+ Message time is    8.48952567201923     
+ Total time of the program is    33.1730769799906     
+ Message time is    8.31635607100907     
+ Total time of the program is    35.2262611860060     
+ Message time is    8.68336510501103     
+ Total time of the program is    35.6199513100000     
+ Message time is    8.81852791599999     
+ Total time of the program is    33.5391512630000     
+ Message time is    8.75039377299993     
+ Total time of the program is    32.8777477530000     
+ Message time is    9.47943568899996     
+ Total time of the program is    33.8472645310001     
+ Message time is    8.72334072000012     
+ Total time of the program is    32.2539896339999     
+ Message time is    8.71380971500002     
+ Total time of the program is    35.8454570490001     
+ Message time is    8.69453850400009     
+ Total time of the program is    33.8471153660003     
+ Message time is    8.42416856099999     
+ Total time of the program is    34.1663403039997     
+ Message time is    8.26005030199985     
+ Total time of the program is    33.4740286540000     
+ Message time is    8.16517675000023     
+ Total time of the program is    35.8374996380003     
+ Message time is    8.20382606299972     
+ Total time of the program is    33.0456888240001     
+ Message time is    8.23322305900001     
+ Total time of the program is    34.1502963929997     
+ Message time is    8.59024630199974     
+ Total time of the program is    32.9414348280002     
+ Message time is    8.93438984400018     
+ Total time of the program is    34.9853899280001     
+ Message time is    8.67803720500024     
+ Total time of the program is    33.9466460270000     
+ Message time is    8.76072386600026     
+ Total time of the program is    33.7847257839999     
+ Message time is    8.75218625099978     
+ Total time of the program is    33.5862821540004     
+ Message time is    8.69300347399985     
+ Total time of the program is    39.0112985050000     
+ Message time is    8.73066154200023     
+ Total time of the program is    34.3827213049999     
+ Message time is    8.24639695899987     
+ Total time of the program is    33.4574917419995     
+ Message time is    8.37376452900025     
+ Total time of the program is    33.1584597250003     
+ Message time is    8.43283480700029     
+ Total time of the program is    34.4054926580002     
+ Message time is    8.19540560399946     
+ Total time of the program is    33.4107452810003     
+ Message time is    8.25356492199990     
+ Total time of the program is    34.8357013069999     
+ Message time is    8.60850388200015     
+ Total time of the program is    33.2731459819997     
+ Message time is    8.99849154099957     
+ Total time of the program is    37.0841059269997     
+ Message time is    9.76131985399934     
+ Total time of the program is    34.4164306109997     
+ Message time is    8.68980313200063     
+ Total time of the program is    33.7401603740000     
+ Message time is    8.66175025799930     
+ Total time of the program is    32.7249253829996     
+ Message time is    8.82669941899985     
+ Total time of the program is    32.5297269730008     
+ Message time is    9.50439069900040     
+ Total time of the program is    34.1164465319998     
+ Message time is    8.32105135699931     
+ Total time of the program is    34.1956492070003     
+ Message time is    8.23845664500004     
+ Total time of the program is    36.1635847919997     
+ Message time is    8.17292191999968     
+ Total time of the program is    34.1227586710002     
+ Message time is    8.18590007200055     
+ Total time of the program is    33.7168345880000     
+ Message time is    8.24654844399993     
+ Total time of the program is    33.4395598840000     
+ Message time is    8.60029345600003     
+ Total time of the program is    37.6502567890000     
+ Message time is    8.75834629099995     
+ Total time of the program is    33.8550406470000     
+ Message time is    8.68838858799995     
+ Total time of the program is    33.5738544300000     
+ Message time is    8.67693808400008     
+ Total time of the program is    32.9311765929999     
+ Message time is    8.70774697299998     
+ Total time of the program is    36.2349651500001     
+ Message time is    9.13308008300010     
+ Total time of the program is    35.6903223050001     
+ Message time is    8.72232380499986     
+ Total time of the program is    36.8428593250001     
+ Message time is    8.26247372900002     
+ Total time of the program is    33.8808125099999     
+ Message time is    8.29620262399999     
+ Total time of the program is    34.5426117020002     
+ Message time is    8.20276371799991     
+ Total time of the program is    32.5598158960001     
+ Message time is    8.19276658800027     
+ Total time of the program is    34.3071482509999     
+ Message time is    8.23841929000037     
+ Total time of the program is    33.4193008400002     
+ Message time is    8.59359237999979     
+ Total time of the program is    34.0077404459998     
+ Message time is    8.71993684000017     
+ Total time of the program is    32.4562599950000     
+ Message time is    9.67120054700035     
+ Total time of the program is    33.9241556180000     
+ Message time is    8.70881365500009     
+ Total time of the program is    29.4578538690002     
+ Message time is    8.05548010599887     
+ Total time of the program is    33.1104811019995     
+ Message time is    9.23362261200054     
+ Total time of the program is    31.4648597769992     
+ Message time is    8.83579618200019     
+ Total time of the program is    33.6427107310010     
+ Message time is    8.20638962200064     
+ Total time of the program is    29.4578552390012     
+ Message time is    8.03417244799857     
+ Total time of the program is    35.7494807440016     
+ Message time is    8.73032246199909     
+ Total time of the program is    31.3569764250024     
+ Message time is    7.47366240400152     
+ Total time of the program is    31.6110080079998     
+ Message time is    8.19685905599908     
+ Total time of the program is    31.0706613779985     
+ Message time is    7.93980621599985     
+ Total time of the program is    33.2978462540195     
+ Message time is    8.86062087601749     
+ Total time of the program is    34.5198237309232     
+ Message time is    8.83979463670403     
+ Total time of the program is    29.8871630819995     
+ Message time is    8.13854147399979     
+ Total time of the program is    33.4224870940000     
+ Message time is    7.64515976799998     
+ Total time of the program is    31.9662050590000     
+ Message time is    7.71301380499995     
+ Total time of the program is    31.0056984190001     
+ Message time is    7.46322891199998     
+ Total time of the program is    32.0552819449999     
+ Message time is    7.38308187400003     
+ Total time of the program is    32.4101857120002     
+ Message time is    7.31555096299985     
+ Total time of the program is    31.2006550640003     
+ Message time is    7.28575587099976     
+ Total time of the program is    31.9410412409998     
+ Message time is    7.40678741100010     
+ Total time of the program is    32.5733151480003     
+ Message time is    7.58816869800012     
+ Total time of the program is    30.2007075709998     
+ Message time is    7.65526913200029     
+ Total time of the program is    30.0250553000001     
+ Message time is    7.64347082999984     
+ Total time of the program is    32.1203391539998     
+ Message time is    8.10749182200016     
+ Total time of the program is    32.9579036629998     
+ Message time is    7.63331930499999     
+ Total time of the program is    31.6551261589998     
+ Message time is    8.67254509900022     
+ Total time of the program is    31.9609728450000     
+ Message time is    8.78956806500037     
+ Total time of the program is    30.9349670330994     
+ Message time is    7.41563621303067     
+ Total time of the program is    31.3576419251040     
+ Message time is    7.38416623091325     
+ Total time of the program is    35.8457642590001     
+ Message time is    8.24367577999510     
+ Total time of the program is    32.5697606160029     
+ Message time is    8.25660921300005     
+ Total time of the program is    34.1365086680016     
+ Message time is    8.31225777499640     
+ Total time of the program is    33.8121744949967     
+ Message time is    8.67524705200049     
+ Total time of the program is    31.7446919070062     
+ Message time is    8.82174142499571     
+ Total time of the program is    36.4658320329982     
+ Message time is    8.92743770399829     
+ Total time of the program is    33.4218044459994     
+ Message time is    9.31474640299712     
+ Total time of the program is    33.9535693689977     
+ Message time is    8.88745539599768     
+ Total time of the program is    34.4083290410053     
+ Message time is    9.67671349100419     
+ Total time of the program is    35.3398373759992     
+ Message time is    8.81171466100204     
+ Total time of the program is    33.7380497060003     
+ Message time is    8.30449232600222     
+ Total time of the program is    34.7079754989973     
+ Message time is    8.37441871399642     
+ Total time of the program is    33.8650631979981     
+ Message time is    8.25326324100024     
+ Total time of the program is    36.3653952520035     
+ Message time is    8.16574355500052     
+ Total time of the program is    31.8048190330010     
+ Message time is    8.34531185100059     
+ Total time of the program is    34.7426762749965     
+ Message time is    8.64936634199694     
+ Total time of the program is    32.4931965180003     
+ Message time is    8.75053097400087     
+ Total time of the program is    35.6228588419981     
+ Message time is    8.77548607999779     
+ Total time of the program is    34.1082675680000     
+ Message time is    9.21411294399968     
+ Total time of the program is    33.2000036760001     
+ Message time is    8.76341583800240     
+ Total time of the program is    33.3109878139949     
+ Message time is    8.92585549600335     
+ Total time of the program is    33.6779095200036     
+ Message time is    9.33399296900461     
+ Total time of the program is    35.8406512610018     
+ Message time is    8.35271178299445     
+ Total time of the program is    35.7359129540000     
+ Message time is    8.23998891900010     
+ Total time of the program is    32.1780145039957     
+ Message time is    8.22744359700300     
+ Total time of the program is    33.8828139270045     
+ Message time is    8.20331720600370     
+ Total time of the program is    34.8044266750003     
+ Message time is    8.33667614799924     
+ Total time of the program is    33.7375526939941     
+ Message time is    7.91275983200467     
+ Total time of the program is    32.4361802190033     
+ Message time is    9.99731460399926     
+ Total time of the program is    32.2417592080019     
+ Message time is    7.66032382099365     
+ Total time of the program is    33.9483668310058     
+ Message time is    9.69526575599593     
+ Total time of the program is    31.2224293590043     
+ Message time is    7.65906587100471     
+ Total time of the program is    33.0969469240008     
+ Message time is    9.63399000799836     
+ Total time of the program is    31.3624891169966     
+ Message time is    7.94852139699651     
+ Total time of the program is    35.6280187620068     
+ Message time is    8.76026438300323     
+ Total time of the program is    33.2372629120000     
+ Message time is    7.40131205299986     
+ Total time of the program is    33.6476472709983     
+ Message time is    9.06571805999556     
+ Total time of the program is    30.9039382819974     
+ Message time is    7.31491778700001     
+ Total time of the program is    33.9628012339963     
+ Message time is    8.22173276799731     
+ Total time of the program is    30.5008866049975     
+ Message time is    7.54768116299965     
+ Total time of the program is    34.0228815660012     
+ Message time is    9.79660813599912     
+ Total time of the program is    31.5129709169996     
+ Message time is    7.66861059400253     
+ Total time of the program is    32.3979029950060     
+ Message time is    9.81820221800444     
+ Total time of the program is    30.5709578309979     
+ Message time is    7.65101823200530     
+ Total time of the program is    31.5984483580032     
+ Message time is    9.50155448100122     
+ Total time of the program is    32.3004469959997     
+ Message time is    7.92057097899669     
+ Total time of the program is    39.3206145360018     
+ Message time is    8.65101998900354     
+ Total time of the program is    32.9037084349984     
+ Message time is    8.16310600399993     
+ Total time of the program is    34.5568217760010     
+ Message time is    8.26672775699990     
+ Total time of the program is    31.8011880920021     
+ Message time is    7.28911949000030     
+ Total time of the program is    35.4152922039993     
+ Message time is    8.64430392800023     
+ Total time of the program is    34.2154847880010     
+ Message time is    9.77428837199841     
+ Total time of the program is    31.9670602269998     
+ Message time is    8.69265996899958     
+ Total time of the program is    32.4017825529991     
+ Message time is    7.68377096100085     
+ Total time of the program is    31.4669591079983     
+ Message time is    7.70560193799975     
+ Total time of the program is    33.6279037519998     
+ Message time is    9.85280720900482     
+ Total time of the program is    31.4180960519989     
+ Message time is    7.45112745400183     
+ Total time of the program is    30.9904620460002     
+ Message time is    7.40324176700233     
+ Total time of the program is    30.5231754039996     
+ Message time is    7.39921396100181     
+ Total time of the program is    33.4187835570010     
+ Message time is    7.35969385899807     
+ Total time of the program is    29.2489591269987     
+ Message time is    7.36547948299994     
+ Total time of the program is    33.7396077290032     
+ Message time is    10.0218059929975     
+ Total time of the program is    33.5604444660057     
+ Message time is    9.57317255499947     
+ Total time of the program is    31.1448943979995     
+ Message time is    7.81086042599782     
+ Total time of the program is    33.5586343109971     
+ Message time is    9.05273719099932     
+ Total time of the program is    32.2313933330006     
+ Message time is    8.17700786299974     
+ Total time of the program is    33.6151102610020     
+ Message time is    8.48841767900012     
+ Total time of the program is    31.3087853289981     
+ Message time is    7.36013023600026     
+ Total time of the program is    33.6972405269989     
+ Message time is    8.15978234000067     
+ Total time of the program is    36.9302248009990     
+ Message time is    8.26100762600254     
+ Total time of the program is    30.0452864510000     
+ Message time is    7.67896592599999     
+ Total time of the program is    33.8848637190000     
+ Message time is    7.71770433900008     
+ Total time of the program is    29.8606485990000     
+ Message time is    7.73734356900002     
+ Total time of the program is    31.3054022950000     
+ Message time is    7.68151083400005     
+ Total time of the program is    31.4652803490000     
+ Message time is    8.25656939100008     
+ Total time of the program is    32.7457561819999     
+ Message time is    7.92713675000005     
+ Total time of the program is    31.8516327650000     
+ Message time is    7.44992736500012     
+ Total time of the program is    31.6306071869999     
+ Message time is    7.29134385199995     
+ Total time of the program is    32.3871633670001     
+ Message time is    7.34775221399991     
+ Total time of the program is    31.7405737530000     
+ Message time is    7.31491839799992     
+ Total time of the program is    32.8076036900002     
+ Message time is    7.59150109200004     
+ Total time of the program is    31.6794147399996     
+ Message time is    8.72022264399993     
+ Total time of the program is    31.1452033349997     
+ Message time is    7.69559911799979     
+ Total time of the program is    33.3368389349998     
+ Message time is    8.21632909300024     
+ Total time of the program is    30.9056325799975     
+ Message time is    8.56395893100125     
+ Total time of the program is    31.4478712979981     
+ Message time is    7.96837709800457     
+ Total time of the program is    29.6122861059994     
+ Message time is    7.88024312900234     
+ Total time of the program is    31.1823897200011     
+ Message time is    7.41581071600376     
+ Total time of the program is    32.8156689860043     
+ Message time is    7.39142957400327     
+ Total time of the program is    32.1736201149979     
+ Message time is    7.33457546299906     
+ Total time of the program is    31.8262165100000     
+ Message time is    7.51490895300003     
+ Total time of the program is    29.0551430182531     
+ Message time is    7.28937377920374     
+ Total time of the program is    33.9405500181019     
+ Message time is    7.51512223901227     
+ Total time of the program is    32.5801029379945     
+ Message time is    8.87897618592251     
+ Total time of the program is    36.5215407409705     
+ Message time is    8.83554449095391     
+ Total time of the program is    39.2316489289515     
+ Message time is    9.00644977705088     
+ Total time of the program is    47.0880961209768     
+ Message time is    22.9010559160961     
+ Total time of the program is    34.3845190160209     
+ Message time is    9.56841132498812     
+ Total time of the program is    35.1393330910942     
+ Message time is    8.28273625008296     
+ Total time of the program is    31.3148227110505     
+ Message time is    7.63376990496181     
+ Total time of the program is    35.7808821030194     
+ Message time is    8.21113801200408     
+ Total time of the program is    34.2609730260447     
+ Message time is    7.59027384698857     
+ Total time of the program is    33.1873592869379     
+ Message time is    8.20864456496201     
+ Total time of the program is    31.5445712599903     
+ Message time is    7.89787790202536     
+ Total time of the program is    35.0439748759381     
+ Message time is    8.71393668802921     
+ Total time of the program is    31.5536706340499     
+ Message time is    9.20873132196721     
+ Total time of the program is    34.9264493240044     
+ Message time is    8.72036852699239     
+ Total time of the program is    33.4057837419678     
+ Message time is    8.91707378602587     
+ Total time of the program is    36.6270362549694     
+ Message time is    8.29060669499449     
+ Total time of the program is    34.6840957419481     
+ Message time is    8.24973495199811     
+ Total time of the program is    32.9834551920649     
+ Message time is    9.00885841005947     
+ Total time of the program is    34.1129049590090     
+ Message time is    8.17722998990212     
+ Total time of the program is    34.2159761430230     
+ Message time is    8.19475648796652     
+ Total time of the program is    34.7301265010610     
+ Message time is    8.62948843906634     
+ Total time of the program is    34.6769851190038     
+ Message time is    9.27497478399891     
+ Total time of the program is    33.8826148689259     
+ Message time is    8.83341081894469     
+ Total time of the program is    47.2997955119936     
+ Message time is    22.5441700490192     
+ Total time of the program is    32.5613907409133     
+ Message time is    9.07840584102087     
+ Total time of the program is    33.4550978930201     
+ Message time is    8.66267792694271     
+ Total time of the program is    33.3281117830193     
+ Message time is    9.14806758693885     
+ Total time of the program is    34.9342190310126     
+ Message time is    8.60729060298763     
+ Total time of the program is    34.7620900220936     
+ Message time is    8.25269460794516     
+ Total time of the program is    34.2075914429734     
+ Message time is    8.21200123196468     
+ Total time of the program is    35.9400503130164     
+ Message time is    8.18552774493583     
+ Total time of the program is    34.5743096689694     
+ Message time is    8.16189858899452     
+ Total time of the program is    35.2424719519913     
+ Message time is    8.61636017507408     
+ Total time of the program is    34.1632118528942     
+ Message time is    8.99490208993666     
+ Total time of the program is    34.1968939399812     
+ Message time is    8.74965488899034     
+ Total time of the program is    33.8759207690600     
+ Message time is    9.18625777005218     
+ Total time of the program is    33.5832742250059     
+ Message time is    8.72714249498677     
+ Total time of the program is    33.7449131190078     
+ Message time is    8.67988892598078     
+ Total time of the program is    33.2623250850011     
+ Message time is    8.70624562003650     
+ Total time of the program is    35.0736426759977     
+ Message time is    8.28777991398238     
+ Total time of the program is    35.5372614860535     
+ Message time is    8.28422824898735     
+ Total time of the program is    37.0944149020361     
+ Message time is    8.19604953099042     
+ Total time of the program is    36.9914516740246     
+ Message time is    8.15248109097593     
+ Total time of the program is    34.5831462449860     
+ Message time is    8.15957442799117     
+ Total time of the program is    39.0003292480251     
+ Message time is    8.65433580905665     
+ Total time of the program is    32.3854981429176     
+ Message time is    8.72203790000640     
+ Total time of the program is    34.1564608910121     
+ Message time is    8.71974469209090     
+ Total time of the program is    34.9789952049032     
+ Message time is    8.68227887898684     
+ Total time of the program is    31.5475123069482     
+ Message time is    8.70424328104127     
+ Total time of the program is    34.6737998879980     
+ Message time is    8.71801086200867     
+ Total time of the program is    35.5179275950001     
+ Message time is    8.28368841099996     
+ Total time of the program is    34.2403809588868     
+ Message time is    8.26111792610027     
+ Total time of the program is    34.5435309780296     
+ Message time is    8.18292937194929     
+ Total time of the program is    36.0447843640577     
+ Message time is    8.18351049406920     
+ Total time of the program is    32.1630245869746     
+ Message time is    8.18808711098973     
+ Total time of the program is    34.0445240529953     
+ Message time is    8.60548665397801     
+ Total time of the program is    34.5665426570922     
+ Message time is    8.70395135995932     
+ Total time of the program is    32.6283059970010     
+ Message time is    9.12094919406809     
+ Total time of the program is    34.4421847619815     
+ Message time is    8.79445772804320     
+ Total time of the program is    33.2122890260071     
+ Message time is    8.88172134303022     
+ Total time of the program is    33.7158667999320     
+ Message time is    9.03505334700458     
+ Total time of the program is    32.4790679329308     
+ Message time is    9.06084272498265     
+ Total time of the program is    34.9628117689863     
+ Message time is    8.29021765501238     
+ Total time of the program is    33.4254392270232     
+ Message time is    8.21802659193054     
+ Total time of the program is    35.4259311850183     
+ Message time is    8.21256088605151     
+ Total time of the program is    35.7710544449510     
+ Message time is    8.14830837503541     
+ Total time of the program is    33.8724520989927     
+ Message time is    8.14554003195371     
+ Total time of the program is    5000.69735263900     
+ Message time is    358.978981368000     
+ Total time of the program is    4597.80258684698     
+ Message time is    384.726927910000     
+ Total time of the program is    5006.60713493195     
+ Message time is    455.802425815025     
+ Total time of the program is    6683.98456291400     
+ Message time is    4865.56625038403     
+ Total time of the program is    6514.93964270400     
+ Message time is    4819.35778235100     
+ Total time of the program is    5433.31847905600     
+ Message time is    3941.75989426905     
+ Total time of the program is    6032.40661643608     
+ Message time is    4471.44464612706     
+ Total time of the program is    6586.87289057500     
+ Message time is    4856.73335860400     
+ Total time of the program is    5202.22565089900     
+ Message time is    422.552413933998     
+ Total time of the program is    4758.64101511682     
+ Message time is    454.123796045082     
+ Total time of the program is    4394.37351224200     
+ Message time is    509.886896454002     
+ Total time of the program is    4336.24266127904     
+ Message time is    367.712631018017     
+ Total time of the program is    4971.81916084897     
+ Message time is    428.512824759004     
+ Total time of the program is    6527.41094012326     
+ Message time is    4738.67060038401     
+ Total time of the program is    6567.62855182611     
+ Message time is    4771.95548076485     
+ Total time of the program is    5497.24717730703     
+ Message time is    3894.49086640193     
+ Total time of the program is    5898.44759618305     
+ Message time is    4306.99972020788     
+ Total time of the program is    6223.17961170501     
+ Message time is    4492.73954509315     
+ Total time of the program is    4659.20093701710     
+ Message time is    515.632645340869     
+ Total time of the program is    4942.85727294395     
+ Message time is    344.704916751944     
+ Total time of the program is    4977.39632878895     
+ Message time is    191.727952505928     
+ Total time of the program is    5204.60305580893     
+ Message time is    846.311415154021     
+ Total time of the program is    6222.27083812701     
+ Message time is    664.508775007911     
+ Total time of the program is    5135.37607212202     
+ Message time is    3698.52438846091     
+ Total time of the program is    5143.11104744207     
+ Message time is    3714.89743519202     
+ Total time of the program is    5930.23499498912     
+ Message time is    4366.31736265682     
+ Total time of the program is    6254.46590797696     
+ Message time is    4529.19021407701     
+ Total time of the program is    5309.33341464098     
+ Message time is    570.837475321023     
+ Total time of the program is    4870.96641107695     
+ Message time is    605.307956620818     
+ Total time of the program is    4504.66472029919     
+ Message time is    546.850570817012     
+ Total time of the program is    4474.57162595494     
+ Message time is    306.763146447949     
+ Total time of the program is    4483.07740217401     
+ Message time is    509.333933590911     
+ Total time of the program is    5788.28860347089     
+ Message time is    701.881052626064     
+ Total time of the program is    6281.67152276635     
+ Message time is    4526.45024070377     
+ Total time of the program is    6007.85020923615     
+ Message time is    4362.72841195110     
+ Total time of the program is    5081.54699653666     
+ Message time is    3623.02337145619     
+ Total time of the program is    5461.25800483488     
+ Message time is    3975.93090849905     
+ Total time of the program is    5958.13838768494     
+ Message time is    4386.79047352495     
+ Total time of the program is    6358.97330919595     
+ Message time is    4632.97378592892     
+ Total time of the program is    5799.76444314979     
+ Message time is    7.22971303761005     
+ Total time of the program is    5378.02180517511     
+ Message time is    671.536225343123     
+ Total time of the program is    5063.63760605594     
+ Message time is    541.779397906968     
+ Total time of the program is    6446.68871127209     
+ Message time is    698.519611815922     
+ Total time of the program is    6737.86436283495     
+ Message time is    4916.34345375490     
+ Total time of the program is    5114.80705885007     
+ Message time is    3650.90031393501     
+ Total time of the program is    5981.32858699700     
+ Message time is    4373.75786987785     
+ Total time of the program is    5263.48668373190     
+ Message time is    162.804201500956     
+ Total time of the program is    4820.43115779385     
+ Message time is    478.886453432031     
+ Total time of the program is    4572.24063594197     
+ Message time is    584.685897603864     
+ Total time of the program is    4514.41343111196     
+ Message time is    625.173695300007     
+ Total time of the program is    4439.76732651144     
+ Message time is    297.406386713497     
+ Total time of the program is    5774.19273353880     
+ Message time is    665.138569586910     
+ Total time of the program is    6773.64130573906     
+ Message time is    4957.73537079059     
+ Total time of the program is    6221.95279566199     
+ Message time is    4539.69755877228     
+ Total time of the program is    6232.05619871221     
+ Message time is    4602.52489326405     
+ Total time of the program is    5901.38649581792     
+ Message time is    4351.69659585482     
+ Total time of the program is    6750.86648671702     
+ Message time is    4938.52841002308     
+ Total time of the program is    6573.81903954316     
+ Message time is    4741.58166392799     
+ Total time of the program is    5258.28123981110     
+ Message time is    406.732355419779     
+ Total time of the program is    4759.68456447194     
+ Message time is    185.516924551921     
+ Total time of the program is    4586.24342266098     
+ Message time is    463.948503812077     
+ Total time of the program is    5022.39432084095     
+ Message time is    547.804661931004     
+ Total time of the program is    7160.60304479604     
+ Message time is    5194.32822755398     
+ Total time of the program is    6833.21222683974     
+ Message time is    5018.25584667781     
+ Total time of the program is    5148.23537279805     
+ Message time is    3662.70128109492     
+ Total time of the program is    6006.15325148497     
+ Message time is    4382.16557660187     
+ Total time of the program is    6639.30481609097     
+ Message time is    4906.42046860419     
+ Total time of the program is    6981.91567982687     
+ Message time is    5071.36491520004     
+ Total time of the program is    5837.24870246300     
+ Message time is    484.302056121873     
+ Total time of the program is    5348.23423998104     
+ Message time is    658.250676203053     
+ Total time of the program is    5065.59077958995     
+ Message time is    281.533902419033     
+ Total time of the program is    4612.57288881904     
+ Message time is    372.384689291008     
+ Total time of the program is    4539.92306024674     
+ Message time is    528.392194152810     
+ Total time of the program is    5817.72726184991     
+ Message time is    980.402002868010     
+ Total time of the program is    6543.09400727088     
+ Message time is    4785.18643973512     
+ Total time of the program is    7084.01062692585     
+ Message time is    5276.68928908696     
+ Total time of the program is    6519.98535358813     
+ Message time is    4877.41326907394     
+ Total time of the program is    6104.32276160014     
+ Message time is    4461.06193501782     
+ Total time of the program is    6578.51917345007     
+ Message time is    4781.88306050887     
+ Total time of the program is    6998.53793568601     
+ Message time is    5056.93019043503     
+ Total time of the program is    5988.46360691800     
+ Message time is    853.940244163037     
+ Total time of the program is    4767.39221542398     
+ Message time is    299.143734124023     
+ Total time of the program is    4486.95902228984     
+ Message time is    189.038397481898     
+ Total time of the program is    5105.27281465707     
+ Message time is    408.400298258057     
+ Total time of the program is    5077.44497087807     
+ Message time is    403.516565283993     
+ Total time of the program is    6390.35720946616     
+ Message time is    4610.17098923889     
+ Total time of the program is    7041.01628042781     
+ Message time is    5208.11175488494     
+ Total time of the program is    6648.97806004714     
+ Message time is    4922.44667373318     
+ Total time of the program is    6567.14304277627     
+ Message time is    4838.32728500804     
+ Total time of the program is    4481.19458402903     
+ Message time is    391.578401450999     
+ Total time of the program is    5050.22994743916     
+ Message time is    583.846864472842     
+ Total time of the program is    5822.77848942485     
+ Message time is    686.566816632636     
+ Total time of the program is    6097.19375921879     
+ Message time is    4407.98303132970     
+ Total time of the program is    5379.42380757607     
+ Message time is    3868.98638465209     
+ Total time of the program is    5531.17225952889     
+ Message time is    4077.31358989910     
+ Total time of the program is    5627.47673910204     
+ Message time is    4086.18063877104     
+ Total time of the program is    6718.43133671593     
+ Message time is    4957.56119583803     
+ Total time of the program is    5280.37795093795     
+ Message time is    412.511102579068     
+ Total time of the program is    4699.89769989997     
+ Message time is    203.712158111157     
+ Total time of the program is    4427.97328771418     
+ Message time is    202.783871002961     
+ Total time of the program is    4468.86019989802     
+ Message time is    613.066663736012     
+ Total time of the program is    4472.52821147488     
+ Message time is    508.918480572989     
+ Total time of the program is    5891.08124727290     
+ Message time is    742.848260499770     
+ Total time of the program is    6277.86934115086     
+ Message time is    4524.86785659497     
+ Total time of the program is    5634.95582697308     
+ Message time is    4016.02177153993     
+ Total time of the program is    5528.66921028099     
+ Message time is    4093.57927746396     
+ Total time of the program is    5465.99976121495     
+ Message time is    4042.17632836499     
+ Total time of the program is    5711.77944966801     
+ Message time is    4165.66415092396     
+ Total time of the program is    6293.44662298402     
+ Message time is    4579.82780740503     
+ Total time of the program is    5164.46771090920     
+ Message time is    548.520266596926     
+ Total time of the program is    4711.42042478686     
+ Message time is    353.882997756125     
+ Total time of the program is    4388.54961984186     
+ Message time is    526.434398462065     
+ Total time of the program is    4470.33144446090     
+ Message time is    587.478155910969     
+ Total time of the program is    4418.71571963327     
+ Message time is    256.745980115142     
+ Total time of the program is    5568.32735587377     
+ Message time is    311.906185094267     
+ Total time of the program is    6281.58590557100     
+ Message time is    4500.56151707796     
+ Total time of the program is    5521.10226961691     
+ Message time is    3914.88446917804     
+ Total time of the program is    5028.31431624900     
+ Message time is    3656.09615530400     
+ Total time of the program is    5161.90012962200     
+ Message time is    3797.10203457900     
+ Total time of the program is    6862.63686503470     
+ Message time is    5136.44527312461     
+ Total time of the program is    6169.12488426000     
+ Message time is    265.012716435001     
+ Total time of the program is    4712.24576312500     
+ Message time is    496.551770334001     
+ Total time of the program is    4429.27393516200     
+ Message time is    365.226188167988     
+ Total time of the program is    4503.47418702114     
+ Message time is    353.207943798043     
+ Total time of the program is    4456.75559480200     
+ Message time is    392.864805815989     
+ Total time of the program is    6519.03952964700     
+ Message time is    814.100844597000     
+ Total time of the program is    6342.66484844801     
+ Message time is    4667.11572242799     
+ Total time of the program is    6163.94848286547     
+ Message time is    4549.81643232517     
+ Total time of the program is    6689.18883566599     
+ Message time is    4792.19245708000     
+ Total time of the program is    5781.18437969900     
+ Message time is    249.228719223000     
+ Total time of the program is    5013.81057968500     
+ Message time is    81.4073534719937     
+ Total time of the program is    5003.18133001700     
+ Message time is    451.616925437993     
+ Total time of the program is    6560.81201367500     
+ Message time is    4761.21227807200     
+ Total time of the program is    5500.74709993694     
+ Message time is    4032.48438175209     
+ Total time of the program is    5652.85363183497     
+ Message time is    4112.83730351133     
+ Total time of the program is    5255.18114941100     
+ Message time is    221.221548700001     
+ Total time of the program is    4389.33746632608     
+ Message time is    238.879990502261     
+ Total time of the program is    4495.58324917802     
+ Message time is    475.980099238048     
+ Total time of the program is    6617.61867646500     
+ Message time is    4807.83836492803     
+ Total time of the program is    5443.20381721601     
+ Message time is    3968.70085906799     
+ Total time of the program is    5758.37555797165     
+ Message time is    4223.00207823701     
+ Total time of the program is    5134.47140247910     
+ Message time is    598.105466031004     
+ Total time of the program is    5480.03704523700     
+ Message time is    387.453762222984     
+ Total time of the program is    5025.17364975100     
+ Message time is    651.104791348014     
+ Total time of the program is    7052.64392803400     
+ Message time is    5124.12144226697     
+ Total time of the program is    6035.00489131687     
+ Message time is    4422.67180801323     
+ Total time of the program is    5632.25143011380     
+ Message time is    4188.78866782482     
+ Total time of the program is    6486.00833500782     
+ Message time is    4795.47259635990     
+ Total time of the program is    4721.81726529542     
+ Message time is    492.955068752170     
+ Total time of the program is    4585.61480721598     
+ Message time is    568.139235298149     
+ Total time of the program is    5731.73226926522     
+ Message time is    825.527147240937     
+ Total time of the program is    5871.26300081200     
+ Message time is    4252.89175670400     
+ Total time of the program is    5581.12615140900     
+ Message time is    4138.27010565699     
+ Total time of the program is    5265.51117552601     
+ Message time is    3846.72388033604     
+ Total time of the program is    5532.12280627500     
+ Message time is    4036.42108383297     
+ Total time of the program is    6230.04809703771     
+ Message time is    4588.59259192366     
+ Total time of the program is    4418.04407275887     
+ Message time is    133.816591755021     
+ Total time of the program is    4385.34245108208     
+ Message time is    258.555232223123     
+ Total time of the program is    4368.98941864300     
+ Message time is    447.389836122002     
+ Total time of the program is    4372.19029973401     
+ Message time is    450.637673524005     
+ Total time of the program is    5658.81358242899     
+ Message time is    829.130322933983     
+ Total time of the program is    6273.75492263300     
+ Message time is    4432.63046517800     
+ Total time of the program is    5116.08435978700     
+ Message time is    3762.66046720801     
+ Total time of the program is    5662.53519084200     
+ Message time is    4199.51920615099     
+ Total time of the program is    5344.29962169699     
+ Message time is    3824.10645166400     
+ Total time of the program is    4712.49775613984     
+ Message time is    6.63559693703428     
+ Total time of the program is    4343.28036315198     
+ Message time is    155.219001160993     
+ Total time of the program is    4614.70010068900     
+ Message time is    449.384875102001     
+ Total time of the program is    6551.10297853700     
+ Message time is    4799.34226234900     
+ Total time of the program is    5585.24121770500     
+ Message time is    4140.25205292100     
+ Total time of the program is    5450.12318515100     
+ Message time is    4006.77273421600     
+ Total time of the program is    4986.26962969601     
+ Message time is    214.038861570996     
+ Total time of the program is    4424.70152854100     
+ Message time is    367.110297817999     
+ Total time of the program is    4366.87509442500     
+ Message time is    208.698485920999     
+ Total time of the program is    5668.33144025900     
+ Message time is    514.338024409000     
+ Total time of the program is    5705.49631756601     
+ Message time is    4117.72486874500     
+ Total time of the program is    5422.68584376300     
+ Message time is    3980.23803687700     
+ Total time of the program is    5201.52664189200     
+ Message time is    3779.27517451499     
+ Total time of the program is    5725.80782305900     
+ Message time is    4229.39385013400     
+ Total time of the program is    6238.25791894500     
+ Message time is    4604.90469069401     
+ Total time of the program is    4967.00281618501     
+ Message time is    399.705423948006     
+ Total time of the program is    4692.12427533101     
+ Message time is    375.905277135986     
+ Total time of the program is    4359.78878818601     
+ Message time is    142.900628597999     
+ Total time of the program is    4483.56748964399     
+ Message time is    515.499306151003     
+ Total time of the program is    4389.58017759299     
+ Message time is    544.059162425023     
+ Total time of the program is    6062.26736115399     
+ Message time is    1045.85102262499     
+ Total time of the program is    6457.86213835402     
+ Message time is    4733.85994980400     
+ Total time of the program is    6013.53895753797     
+ Message time is    4376.95602034096     
+ Total time of the program is    5017.21052740398     
+ Message time is    3598.25161432201     
+ Total time of the program is    5011.64262612298     
+ Message time is    3618.22278426099     
+ Total time of the program is    5488.54750067100     
+ Message time is    4025.37263107701     
+ Total time of the program is    5653.78451090003     
+ Message time is    4062.32882303599     
+ Total time of the program is    4969.77515721798     
+ Message time is    412.576552195009     
+ Total time of the program is    4739.96186238900     
+ Message time is    538.849886058015     
+ Total time of the program is    4412.86749291100     
+ Message time is    408.059835210035     
+ Total time of the program is    4484.05041603302     
+ Message time is    456.417577248998     
+ Total time of the program is    4354.88695258700     
+ Message time is    469.263423835975     
+ Total time of the program is    5673.52473136201     
+ Message time is    682.862057632010     
+ Total time of the program is    6494.47508069902     
+ Message time is    4730.65509425604     
+ Total time of the program is    6051.28977767599     
+ Message time is    4394.00885756098     
+ Total time of the program is    5309.00802379000     
+ Message time is    3873.58396615900     
+ Total time of the program is    5669.41114571400     
+ Message time is    4071.27582311502     
+ Total time of the program is    5551.00272986502     
+ Message time is    4082.24959479494     
+ Total time of the program is    5588.42136968300     
+ Message time is    3974.78050692601     
+ Total time of the program is    4967.96132885606     
+ Message time is    198.767954276991     
+ Total time of the program is    4588.07588670900     
+ Message time is    427.064848436999     
+ Total time of the program is    4357.41394954600     
+ Message time is    374.224570778999     
+ Total time of the program is    4409.21325582103     
+ Message time is    358.226692541037     
+ Total time of the program is    4321.74069039500     
+ Message time is    363.445028090966     
+ Total time of the program is    5871.49271850400     
+ Message time is    895.758480662000     
+ Total time of the program is    6405.12789957691     
+ Message time is    4629.18571717909     
+ Total time of the program is    6217.31290933199     
+ Message time is    4483.53671737597     
+ Total time of the program is    7024.35692010098     
+ Message time is    5111.74966723612     
+ Total time of the program is    6093.25917519000     
+ Message time is    4462.68781566387     
+ Total time of the program is    6571.64449811610     
+ Message time is    4651.77462756610     
+ Total time of the program is    5007.06115473784     
+ Message time is    126.222490679007     
+ Total time of the program is    5196.41113881208     
+ Message time is    506.660060422961     
+ Total time of the program is    4506.43917336699     
+ Message time is    63.7409664309816     
+ Total time of the program is    5079.03531323606     
+ Message time is    343.831547109876     
+ Total time of the program is    6374.26879044296     
+ Message time is    762.693209324963     
+ Total time of the program is    6035.02146904694     
+ Message time is    4431.43442895799     
+ Total time of the program is    6354.63473695284     
+ Message time is    4763.31115467893     
+ Total time of the program is    5510.03711446212     
+ Message time is    3988.93607408693     
+ Total time of the program is    5466.73344193100     
+ Message time is    3875.24469860300     
+ Total time of the program is    5481.54836069094     
+ Message time is    316.428009462077     
+ Total time of the program is    5161.50829449994     
+ Message time is    404.508186542895     
+ Total time of the program is    4815.97245524917     
+ Message time is    291.208185143070     
+ Total time of the program is    4814.74267137295     
+ Message time is    377.808197548031     
+ Total time of the program is    6081.03613755410     
+ Message time is    673.194994057063     
+ Total time of the program is    7173.03623507801     
+ Message time is    5237.84066641191     
+ Total time of the program is    6162.67385178502     
+ Message time is    4455.80198923103     
+ Total time of the program is    5835.16490109498     
+ Message time is    4262.98524734797     
+ Total time of the program is    5758.19465649012     
+ Message time is    4226.41493603191     
+ Total time of the program is    5278.59443460009     
+ Message time is    3745.27644461603     
+ Total time of the program is    5603.23608812597     
+ Message time is    3908.02533664601     
+ Total time of the program is    5423.55210338393     
+ Message time is    464.124133421108     
+ Total time of the program is    5089.53936818498     
+ Message time is    284.353923685849     
+ Total time of the program is    4789.84818555508     
+ Message time is    432.905743793119     
+ Total time of the program is    4887.73540428900     
+ Message time is    574.619192716000     
+ Total time of the program is    4827.57411882799     
+ Message time is    519.071371216996     
+ Total time of the program is    6311.90744085517     
+ Message time is    919.812954158988     
+ Total time of the program is    6527.31862869672     
+ Message time is    4781.45527196117     
+ Total time of the program is    5854.30324098002     
+ Message time is    4291.69470605697     
+ Total time of the program is    4878.25523407687     
+ Message time is    3429.80662540696     
+ Total time of the program is    5012.73947368190     
+ Message time is    3587.75661754515     
+ Total time of the program is    5912.12731054500     
+ Message time is    4202.97215828799     
+ Total time of the program is    5523.17725583096     
+ Message time is    363.682571334997     
+ Total time of the program is    4416.56779272700     
+ Message time is    609.493556126981     
+ Total time of the program is    4900.69789370522     
+ Message time is    717.338339766022     
+ Total time of the program is    6152.63611362601     
+ Message time is    661.615645113983     
+ Total time of the program is    6536.87966652401     
+ Message time is    4889.02536467509     
+ Total time of the program is    5899.72725427500     
+ Message time is    4331.07966309600     
+ Total time of the program is    5976.67449730355     
+ Message time is    4375.45828911290     
+ Total time of the program is    5591.73741822108     
+ Message time is    3972.61947853002     
+ Total time of the program is    5331.69682179810     
+ Message time is    3771.39119478222     
+ Total time of the program is    5171.46102984203     
+ Message time is    427.240558804944     
+ Total time of the program is    4818.44887005514     
+ Message time is    387.919134449912     
+ Total time of the program is    4914.03979373607     
+ Message time is    657.127280316083     
+ Total time of the program is    4911.82521040482     
+ Message time is    443.141438079998     
+ Total time of the program is    6560.00839276891     
+ Message time is    1228.14706405299     
+ Total time of the program is    6924.15912489500     
+ Message time is    5013.57668466680     
+ Total time of the program is    5342.11044631386     
+ Message time is    3962.60444048396     
+ Total time of the program is    5597.90245663800     
+ Message time is    4023.95757781999     
+ Total time of the program is    5032.05231788801     
+ Message time is    3598.98029949912     
+ Total time of the program is    5560.63134460337     
+ Message time is    645.018328371923     
+ Total time of the program is    5053.46193053387     
+ Message time is    244.782679412048     
+ Total time of the program is    5075.48689432594     
+ Message time is    323.822386279004     
+ Total time of the program is    4842.44362684200     
+ Message time is    228.917677581776     
+ Total time of the program is    4925.41362175206     
+ Message time is    732.174016423058     
+ Total time of the program is    5602.24970017187     
+ Message time is    492.282623065170     
+ Total time of the program is    6462.25080671010     
+ Message time is    4829.70367486507     
+ Total time of the program is    5129.38797227899     
+ Message time is    3731.35802497482     
+ Total time of the program is    6291.99016192500     
+ Message time is    4645.85468171100     
+ Total time of the program is    5501.81933781691     
+ Message time is    314.730019588023     
+ Total time of the program is    4952.35027081892     
+ Message time is    319.192972412799     
+ Total time of the program is    4897.38861572696     
+ Message time is    290.446478019003     
+ Total time of the program is    5834.53618768603     
+ Message time is    966.156078610918     
+ Total time of the program is    6309.39735139720     
+ Message time is    4549.86802849406     
+ Total time of the program is    6056.83853649814     
+ Message time is    4465.01852116128     
+ Total time of the program is    5327.17203403404     
+ Message time is    3903.09690454183     
+ Total time of the program is    5272.28970864974     
+ Message time is    3834.25857091276     
+ Total time of the program is    6456.29771449700     
+ Message time is    4812.07589563800     
+ Total time of the program is    7073.55647953600     
+ Message time is    5278.15449309600     
+ Total time of the program is    5488.34039419203     
+ Message time is    401.963113239035     
+ Total time of the program is    4370.75950472895     
+ Message time is    601.933450523298     
+ Total time of the program is    4437.28548433911     
+ Message time is    496.866319878958     
+ Total time of the program is    4356.75384313473     
+ Message time is    435.503727525007     
+ Total time of the program is    6565.02531366795     
+ Message time is    780.253922254080     
+ Total time of the program is    6503.86595036415     
+ Message time is    4785.39719736809     
+ Total time of the program is    6184.77945151203     
+ Message time is    4569.04604684282     
+ Total time of the program is    5471.44367172476     
+ Message time is    4019.00807733601     
+ Total time of the program is    5026.15739631606     
+ Message time is    3646.66881871782     
+ Total time of the program is    5295.70032241195     
+ Message time is    3735.64071712596     
+ Total time of the program is    6068.64443366928     
+ Message time is    840.166691973340     
+ Total time of the program is    6477.62261567100     
+ Message time is    1440.92916383100     
+ Total time of the program is    4407.68786942493     
+ Message time is    572.280915362760     
+ Total time of the program is    4405.76432492118     
+ Message time is    395.076263561379     
+ Total time of the program is    4304.87138992688     
+ Message time is    403.857445606031     
+ Total time of the program is    5747.15415199287     
+ Message time is    696.640553941019     
+ Total time of the program is    7185.75912107201     
+ Message time is    5305.57149423705     
+ Total time of the program is    6119.30622181902     
+ Message time is    4405.10712386086     
+ Total time of the program is    5584.34484486002     
+ Message time is    4190.14743605396     
+ Total time of the program is    5770.34761421196     
+ Message time is    4164.04030016717     
+ Total time of the program is    6198.32733118907     
+ Message time is    4479.82402929896     
+ Total time of the program is    5990.95451037504     
+ Message time is    4178.86874973797     
+ Total time of the program is    5626.53322453203     
+ Message time is    716.518483905005     
+ Total time of the program is    4781.88849634584     
+ Message time is    628.345816764049     
+ Total time of the program is    4257.02566589415     
+ Message time is    243.529050099198     
+ Total time of the program is    4370.05315656192     
+ Message time is    509.503315264825     
+ Total time of the program is    6420.14974041993     
+ Message time is    893.767390780966     
+ Total time of the program is    7015.69627253304     
+ Message time is    5238.52734644490     
+ Total time of the program is    5886.17116237711     
+ Message time is    4391.28128182190     
+ Total time of the program is    5164.40683883661     
+ Message time is    3529.97470988659     
+ Total time of the program is    5234.75945319701     
+ Message time is    547.247784506995     
+ Total time of the program is    5009.79263531300     
+ Message time is    483.658615221968     
+ Total time of the program is    4929.62819757592     
+ Message time is    729.404865589924     
+ Total time of the program is    6279.84938610182     
+ Message time is    579.086811559042     
+ Total time of the program is    5912.08169757499     
+ Message time is    4287.87853115203     
+ Total time of the program is    5358.13758832100     
+ Message time is    3914.56499521597     
+ Total time of the program is    4928.99888674822     
+ Message time is    3651.56793163344     
+ Total time of the program is    4669.86081119347     
+ Message time is    3259.84211472049     
+ Total time of the program is    5189.97976051643     
+ Message time is    3613.24808311835     
+ Total time of the program is    4840.03097072989     
+ Message time is    430.306554508395     
+ Total time of the program is    6601.27386046294     
+ Message time is    4770.37334053498     
+ Total time of the program is    4639.42338955309     
+ Message time is    596.140611613169     
+ Total time of the program is    4400.03926103935     
+ Message time is    509.722299593501     
+ Total time of the program is    4547.23611392453     
+ Message time is    409.135418783873     
+ Total time of the program is    4506.67045894824     
+ Message time is    243.937418327667     
+ Total time of the program is    5816.27516961098     
+ Message time is    4081.37691433262     
+ Total time of the program is    5948.66407211963     
+ Message time is    4360.99097741581     
+ Total time of the program is    5417.80521574300     
+ Message time is    3978.56188480200     
+ Total time of the program is    5766.56424625101     
+ Message time is    4368.56219904521     
+ Total time of the program is    4748.10760803148     
+ Message time is    3298.69416806661     
+ Total time of the program is    5184.82777667197     
+ Message time is    3638.72416414192     
+ Total time of the program is    4800.29497106496     
+ Message time is    136.300709083036     
+ Total time of the program is    4559.74962067499     
+ Message time is    403.036720008007     
+ Total time of the program is    4312.89032122679     
+ Message time is    368.437262824271     
+ Total time of the program is    5699.78358815704     
+ Message time is    958.543876302021     
+ Total time of the program is    5963.39710862294     
+ Message time is    4300.20587366598     
+ Total time of the program is    5392.82263529394     
+ Message time is    3929.41495558806     
+ Total time of the program is    5523.99398366502     
+ Message time is    4193.27073505498     
+ Total time of the program is    4697.60980301601     
+ Message time is    526.163591290009     
+ Total time of the program is    4111.02801340900     
+ Message time is    418.792096274003     
+ Total time of the program is    4176.26682145521     
+ Message time is    599.865653958172     
+ Total time of the program is    6032.97578929085     
+ Message time is    4376.70697493292     
+ Total time of the program is    5957.92659504618     
+ Message time is    4341.05588925444     
+ Total time of the program is    5306.00075125042     
+ Message time is    3914.01189911179     
+ Total time of the program is    4898.49774316233     
+ Message time is    3512.23281918280     
+ Total time of the program is    5055.82218420482     
+ Message time is    495.405453417916     
+ Total time of the program is    4288.17823034991     
+ Message time is    132.506589372177     
+ Total time of the program is    4404.32432709727     
+ Message time is    477.800546110142     
+ Total time of the program is    6262.68457168294     
+ Message time is    4514.82160753710     
+ Total time of the program is    5389.18431604002     
+ Message time is    3709.08600115310     
+ Total time of the program is    4814.41679270379     
+ Message time is    3416.04799387464     
+ Total time of the program is    5098.32973204402     
+ Message time is    710.298032282968     
+ Total time of the program is    4311.50365291117     
+ Message time is    488.953533747001     
+ Total time of the program is    4231.52706871787     
+ Message time is    574.930751733016     
+ Total time of the program is    4267.56190957688     
+ Message time is    452.594486355782     
+ Total time of the program is    5640.86475398601     
+ Message time is    806.403991558996     
+ Total time of the program is    6718.60350260790     
+ Message time is    4952.56805823371     
+ Total time of the program is    6531.07397511695     
+ Message time is    4765.76565578999     
+ Total time of the program is    6990.18258567899     
+ Message time is    5183.51848741388     
+ Total time of the program is    6126.03530448000     
+ Message time is    4531.89397241800     
+ Total time of the program is    4924.82858778498     
+ Message time is    3495.11459414699     
+ Total time of the program is    6950.69591686199     
+ Message time is    4832.79191761790     
+ Total time of the program is    5463.45589164109     
+ Message time is    483.137585506076     
+ Total time of the program is    5120.65178586496     
+ Message time is    595.241802028148     
+ Total time of the program is    4765.83431041241     
+ Message time is    512.900712572038     
+ Total time of the program is    4933.32064920291     
+ Message time is    182.848638157360     
+ Total time of the program is    4920.29752369295     
+ Message time is    392.025247228798     
+ Total time of the program is    6881.70581967616     
+ Message time is    4963.45721050398     
+ Total time of the program is    5455.52106310218     
+ Message time is    3911.78146235202     
+ Total time of the program is    5800.66460696282     
+ Message time is    4097.43049463793     
+ Total time of the program is    4299.86626995495     
+ Message time is    144.944586683065     
+ Total time of the program is    4929.37531127199     
+ Message time is    195.203108313028     
+ Total time of the program is    4907.45096124499     
+ Message time is    494.672761656810     
+ Total time of the program is    6212.91132674203     
+ Message time is    805.092335121939     
+ Total time of the program is    5817.40357094805     
+ Message time is    4216.90313765500     
+ Total time of the program is    5392.24511801731     
+ Message time is    3904.29776510037     
+ Total time of the program is    5473.37002771301     
+ Message time is    602.222640966997     
+ Total time of the program is    4955.39567333995     
+ Message time is    364.941934206989     
+ Total time of the program is    5345.48332934303     
+ Message time is    667.859045980964     
+ Total time of the program is    6439.50502176117     
+ Message time is    4708.03816679027     
+ Total time of the program is    5415.04435571097     
+ Message time is    4052.16720741894     
+ Total time of the program is    6296.69666897200     
+ Message time is    4698.70981940300     
+ Total time of the program is    6602.37338785900     
+ Message time is    4816.39841570200     
+ Total time of the program is    5557.74479208000     
+ Message time is    366.105867172002     
+ Total time of the program is    5122.90164817900     
+ Message time is    454.049869938000     
+ Total time of the program is    4838.10549430800     
+ Message time is    270.163439205000     
+ Total time of the program is    4891.32614073250     
+ Message time is    366.366078454070     
+ Total time of the program is    5568.35202881042     
+ Message time is    662.175128614064     
+ Total time of the program is    5413.76345494203     
+ Message time is    3901.81681209779     
+ Total time of the program is    5894.25241481300     
+ Message time is    4348.60431493200     
+ Total time of the program is    6215.46320642200     
+ Message time is    4449.87595417100     
+ Total time of the program is    5344.36572779701     
+ Message time is    566.575163677990     
+ Total time of the program is    4879.46348749008     
+ Message time is    682.896680574864     
+ Total time of the program is    6554.83099155599     
+ Message time is    4800.70485215199     
+ Total time of the program is    5540.21645296505     
+ Message time is    4195.91875970876     
+ Total time of the program is    5242.22046678327     
+ Message time is    3690.84085050132     
+ Total time of the program is    4623.42081603175     
+ Message time is    70.1979984100908     
+ Total time of the program is    4765.96248018200     
+ Message time is    164.702727381999     
+ Total time of the program is    4866.07819374799     
+ Message time is    523.830964139997     
+ Total time of the program is    5032.67015891601     
+ Message time is    868.027057693995     
+ Total time of the program is    6273.43176192200     
+ Message time is    699.777309919000     
+ Total time of the program is    6973.64249200799     
+ Message time is    5017.83706395101     
+ Total time of the program is    6488.29597155098     
+ Message time is    4729.92196048889     
+ Total time of the program is    5743.27450621501     
+ Message time is    4219.41787582403     
+ Total time of the program is    5866.37288622899     
+ Message time is    4270.38948510701     
+ Total time of the program is    6428.77293106200     
+ Message time is    4725.93974574300     
+ Total time of the program is    4997.82695956300     
+ Message time is    193.690593856998     
+ Total time of the program is    4195.64518261887     
+ Message time is    262.395415924489     
+ Total time of the program is    4231.57476543728     
+ Message time is    313.036246090196     
+ Total time of the program is    4365.50995996199     
+ Message time is    558.615066427039     
+ Total time of the program is    6975.68990663299     
+ Message time is    5056.23462009896     
+ Total time of the program is    6749.36095543500     
+ Message time is    4997.24062812701     
+ Total time of the program is    5662.40526923281     
+ Message time is    4128.16350737098     
+ Total time of the program is    5634.82810472790     
+ Message time is    4143.89418199589     
+ Total time of the program is    4501.20797207300     
+ Message time is    3098.82643249631     
+ Total time of the program is    4927.93406453263     
+ Message time is    500.284783264622     
+ Total time of the program is    5111.31161560398     
+ Message time is    599.268960469053     
+ Total time of the program is    4258.50525295176     
+ Message time is    405.700988055207     
+ Total time of the program is    5549.00793610513     
+ Message time is    4076.50461387448     
+ Total time of the program is    5754.87602327485     
+ Message time is    4253.09936136659     
+ Total time of the program is    4637.03677707445     
+ Message time is    3225.44171041809     
+ Total time of the program is    5223.45392417070     
+ Message time is    3722.07825377863     
+ Total time of the program is    4816.87102822959     
+ Message time is    431.375887045637     
+ Total time of the program is    4500.90694594523     
+ Message time is    416.924003873952     
+ Total time of the program is    4657.03971207500     
+ Message time is    349.124428924000     
+ Total time of the program is    4292.98433462996     
+ Message time is    518.026097979397     
+ Total time of the program is    6486.22881305100     
+ Message time is    4615.61212829300     
+ Total time of the program is    5413.30251118600     
+ Message time is    3909.60553026300     
+ Total time of the program is    5346.38910789974     
+ Message time is    3860.54327820521     
+ Total time of the program is    5216.65859184600     
+ Message time is    3682.26036729105     
+ Total time of the program is    46.2336435970064     
+ Message time is    14.8333945159975     
+ Total time of the program is    46.2427880969917     
+ Message time is    13.0987365249894     
+ Total time of the program is    4008.23533718591     
+ Message time is    404.894353280077     
+ Total time of the program is    4911.07622177902     
+ Message time is    637.414364684984     
+ Total time of the program is    4841.45876821922     
+ Message time is    342.921541245887     
+ Total time of the program is    3942.66075673200     
+ Message time is    415.529621832000     
+ Total time of the program is    5797.02999243600     
+ Message time is    4252.56449105799     
+ Total time of the program is    6036.51723363902     
+ Message time is    4465.19329514494     
+ Total time of the program is    5603.51964280102     
+ Message time is    4072.49692663411     
+ Total time of the program is    5314.32701630890     
+ Message time is    3955.84525676724     
+ Total time of the program is    5592.08386882598     
+ Message time is    3904.93863505399     
+ Total time of the program is    5042.59573464375     
+ Message time is    363.343537481967     
+ Total time of the program is    3873.83369398094     
+ Message time is    138.525138810975     
+ Total time of the program is    4782.80003414396     
+ Message time is    616.858768173028     
+ Total time of the program is    6147.00198607938     
+ Message time is    725.911165952217     
+ Total time of the program is    6764.22663809499     
+ Message time is    4869.79757549707     
+ Total time of the program is    5568.31481946004     
+ Message time is    4150.27145314903     
+ Total time of the program is    5598.31285440922     
+ Message time is    4013.37614584342     
+ Total time of the program is    5616.98542752420     
+ Message time is    4173.21991592809     
+ Total time of the program is    4504.78887076300     
+ Message time is    3171.21858980300     
+ Total time of the program is    5154.21225442400     
+ Message time is    3633.67323656299     
+ Total time of the program is    4200.37149282801     
+ Message time is    357.117013407056     
+ Total time of the program is    4212.42847135104     
+ Message time is    427.013242159039     
+ Total time of the program is    3943.42850225302     
+ Message time is    455.448965489166     
+ Total time of the program is    6174.18119363900     
+ Message time is    4482.84465303199     
+ Total time of the program is    5333.62471410888     
+ Message time is    727.710045251064     
+ Total time of the program is    5559.83550805398     
+ Message time is    4102.07058776802     
+ Total time of the program is    4708.89479306000     
+ Message time is    3489.44704843999     
+ Total time of the program is    4151.75591194800     
+ Message time is    2896.14616639700     
+ Total time of the program is    4382.25514407201     
+ Message time is    330.289423768998     
+ Total time of the program is    4041.23847574554     
+ Message time is    398.200299830176     
+ Total time of the program is    3886.88784172700     
+ Message time is    344.532199703972     
+ Total time of the program is    5396.60483084060     
+ Message time is    829.127725534141     
+ Total time of the program is    5750.19847677741     
+ Message time is    4210.56975792628     
+ Total time of the program is    5677.24510484000     
+ Message time is    4247.08607841200     
+ Total time of the program is    4706.87277593200     
+ Message time is    3465.72771900200     
+ Total time of the program is    4726.32345997999     
+ Message time is    3468.85789434300     
+ Total time of the program is    4820.10563759785     
+ Message time is    3376.98266365938     
+ Total time of the program is    4414.51696298001     
+ Message time is    369.131583401992     
+ Total time of the program is    3952.23361952900     
+ Message time is    317.836384405993     
+ Total time of the program is    4399.75148001104     
+ Message time is    619.986037594965     
+ Total time of the program is    6488.50318984897     
+ Message time is    4793.65190069401     
+ Total time of the program is    5165.81981395300     
+ Message time is    3757.43522005700     
+ Total time of the program is    5601.32441037288     
+ Message time is    4242.66157508316     
+ Total time of the program is    4862.46422080882     
+ Message time is    3523.32214525994     
+ Total time of the program is    5059.60920978400     
+ Message time is    3544.50292887100     
+ Total time of the program is    4741.85236118400     
+ Message time is    457.726815935001     
+ Total time of the program is    4546.20669016149     
+ Message time is    624.656437036581     
+ Total time of the program is    4782.46654249867     
+ Message time is    577.330184741877     
+ Total time of the program is    4701.05004668608     
+ Message time is    297.385376064107     
+ Total time of the program is    5639.31214703806     
+ Message time is    4099.58722915314     
+ Total time of the program is    46.3261420587078     
+ Message time is    15.3568559903651     
+ Total time of the program is    5259.03361387001     
+ Message time is    3841.49076056300     
+ Total time of the program is    4446.81184285693     
+ Message time is    603.770655727945     
+ Total time of the program is    5054.83350091521     
+ Message time is    3713.32613829011     
+ Total time of the program is    4854.29835046316     
+ Message time is    3471.91167023499     
+ Total time of the program is    5165.75040046999     
+ Message time is    3643.77440749801     
+ Total time of the program is    4890.02621272500     
+ Message time is    541.412457118000     
+ Total time of the program is    4490.39363991201     
+ Message time is    224.451703924977     
+ Total time of the program is    4265.74270794700     
+ Message time is    336.455009429003     
+ Total time of the program is    4267.11329311226     
+ Message time is    528.676922951825     
+ Total time of the program is    5327.79917888899     
+ Message time is    827.221643953002     
+ Total time of the program is    5992.55135289300     
+ Message time is    4295.17603184600     
+ Total time of the program is    5999.65799416001     
+ Message time is    4350.13039993899     
+ Total time of the program is    5337.74184595700     
+ Message time is    3934.17840400105     
+ Total time of the program is    5260.23510639230     
+ Message time is    3903.76406801492     
+ Total time of the program is    5475.94454686500     
+ Message time is    4047.35292991300     
+ Total time of the program is    5336.24412946403     
+ Message time is    3794.33076213207     
+ Total time of the program is    4822.47237304000     
+ Message time is    89.7790228150043     
+ Total time of the program is    4360.12667103484     
+ Message time is    473.004273998551     
+ Total time of the program is    4339.63275952800     
+ Message time is    600.880851930997     
+ Total time of the program is    4968.63805995416     
+ Message time is    663.231761155650     
+ Total time of the program is    5856.18122004531     
+ Message time is    1216.73684604606     
+ Total time of the program is    6429.75047420700     
+ Message time is    4689.83848619600     
+ Total time of the program is    6066.75118387601     
+ Message time is    4480.73533662403     
+ Total time of the program is    5098.39766717100     
+ Message time is    3733.04521378799     
+ Total time of the program is    4495.56598117109     
+ Message time is    3115.67927064793     
+ Total time of the program is    5212.86482478201     
+ Message time is    3657.54335999902     
+ Total time of the program is    5322.36072287709     
+ Message time is    552.837346889079     
+ Total time of the program is    5059.84647899005     
+ Message time is    665.667086901842     
+ Total time of the program is    4669.51451225788     
+ Message time is    432.984786864137     
+ Total time of the program is    4834.06534976000     
+ Message time is    3431.23467287899     
+ Total time of the program is    6160.08699323214     
+ Message time is    775.674483199138     
+ Total time of the program is    5546.85629350133     
+ Message time is    4087.61257620482     
+ Total time of the program is    4382.22478227597     
+ Message time is    3089.74977142503     
+ Total time of the program is    4538.57499135903     
+ Message time is    435.211901530973     
+ Total time of the program is    3817.31795673404     
+ Message time is    214.649949526996     
+ Total time of the program is    6600.16650067700     
+ Message time is    4808.36216783500     
+ Total time of the program is    7155.36889199633     
+ Message time is    5207.86592002818     
+ Total time of the program is    6107.18372202300     
+ Message time is    4424.45943731400     
+ Total time of the program is    6066.66426228266     
+ Message time is    4424.42976718117     
+ Total time of the program is    5344.63182434347     
+ Message time is    3898.27021380141     
+ Total time of the program is    4934.63457536697     
+ Message time is    386.113312832080     
+ Total time of the program is    4484.05025628698     
+ Message time is    142.805979741970     
+ Total time of the program is    4253.01356837712     
+ Message time is    160.202320725657     
+ Total time of the program is    4339.81155285146     
+ Message time is    415.825154831633     
+ Total time of the program is    5152.37914683600     
+ Message time is    680.802795070922     
+ Total time of the program is    6291.58747110888     
+ Message time is    4514.89079059381     
+ Total time of the program is    5882.20655919705     
+ Message time is    4413.76013025898     
+ Total time of the program is    6426.86687025428     
+ Message time is    4668.82235873491     
+ Total time of the program is    4459.71125519101     
+ Message time is    479.808028040978     
+ Total time of the program is    4259.99828008562     
+ Message time is    379.310268434696     
+ Total time of the program is    6033.59868953703     
+ Message time is    4339.87639361294     
+ Total time of the program is    6126.64305085700     
+ Message time is    4536.15644683200     
+ Total time of the program is    5810.79032779194     
+ Message time is    392.583066246007     
+ Total time of the program is    4769.70750280900     
+ Message time is    496.872177580022     
+ Total time of the program is    4968.58289273735     
+ Message time is    424.869479190093     
+ Total time of the program is    4272.33366558049     
+ Message time is    371.350168612786     
+ Total time of the program is    6636.84821414202     
+ Message time is    4846.51433686004     
+ Total time of the program is    5985.17326615303     
+ Message time is    4524.06234765900     
+ Total time of the program is    6523.92960982100     
+ Message time is    4817.04946720600     
+ Total time of the program is    4589.78185466002     
+ Message time is    673.878012500005     
+ Total time of the program is    4530.59011500500     
+ Message time is    263.650554112013     
+ Total time of the program is    6294.07641176498     
+ Message time is    4590.47662301702     
+ Total time of the program is    6242.02730933300     
+ Message time is    4673.29944239400     
+ Total time of the program is    4890.06305002596     
+ Message time is    432.618196994998     
+ Total time of the program is    6078.08107725403     
+ Message time is    1140.64284640492     
+ Total time of the program is    5917.37339402598     
+ Message time is    4416.56047266000     
+ Total time of the program is    5789.28014051297     
+ Message time is    4219.63917294994     
+ Total time of the program is    5487.69646805100     
+ Message time is    538.978345113021     
+ Total time of the program is    4431.71655123401     
+ Message time is    145.398460779979     
+ Total time of the program is    4483.90561786998     
+ Message time is    317.948322695971     
+ Total time of the program is    7134.56229533401     
+ Message time is    5187.29114184296     
+ Total time of the program is    7237.00293943100     
+ Message time is    5276.52240788104     
+ Total time of the program is    5213.64681202898     
+ Message time is    230.482073460007     
+ Total time of the program is    5013.29683589200     
+ Message time is    293.438825563000     
+ Total time of the program is    6055.32684243300     
+ Message time is    4383.55022498100     
+ Total time of the program is    6191.12792167801     
+ Message time is    4541.16688752198     
+ Total time of the program is    5606.12450069655     
+ Message time is    4129.13716265000     
+ Total time of the program is    4546.61174387392     
+ Message time is    216.919789987616     
+ Total time of the program is    4393.46310464386     
+ Message time is    592.163802057505     
+ Total time of the program is    4683.02114210092     
+ Message time is    639.098202755908     
+ Total time of the program is    6131.59174377401     
+ Message time is    4422.49451673601     
+ Total time of the program is    6430.38583614500     
+ Message time is    4772.78166502700     
+ Total time of the program is    6043.96572989500     
+ Message time is    4464.85641686700     
+ Total time of the program is    5195.48612551810     
+ Message time is    3799.83910922986     
+ Total time of the program is    5910.72792616393     
+ Message time is    4333.79265420500     
+ Total time of the program is    5224.43959290000     
+ Message time is    484.836111627003     
+ Total time of the program is    4484.06045501109     
+ Message time is    466.100940522971     
+ Total time of the program is    4368.75141476328     
+ Message time is    289.611540010665     
+ Total time of the program is    5635.56455039300     
+ Message time is    743.325578449003     
+ Total time of the program is    5938.25376229100     
+ Message time is    4278.42551100100     
+ Total time of the program is    5149.57353300601     
+ Message time is    3685.25600321894     
+ Total time of the program is    5742.19325032295     
+ Message time is    4190.18786518113     
+ Total time of the program is    6567.86516805400     
+ Message time is    4829.93207528400     
+ Total time of the program is    4883.86328115700     
+ Message time is    80.5967594730009     
+ Total time of the program is    4487.63426072898     
+ Message time is    337.728910623002     
+ Total time of the program is    6640.20902942808     
+ Message time is    905.103774296003     
+ Total time of the program is    7109.38180393004     
+ Message time is    5250.47360716201     
+ Total time of the program is    5691.62761964300     
+ Message time is    4220.93851601705     
+ Total time of the program is    6679.67155965907     
+ Message time is    4962.50182560598     
+ Total time of the program is    4204.56628269493     
+ Message time is    501.684624491027     
+ Total time of the program is    4959.23529414495     
+ Message time is    439.818099978031     
+ Total time of the program is    6467.84275338601     
+ Message time is    4674.96491625009     
+ Total time of the program is    6349.69520233595     
+ Message time is    4641.87694542401     
+ Total time of the program is    5207.33263522107     
+ Message time is    631.315374279977     
+ Total time of the program is    4597.53416633204     
+ Message time is    223.953605951974     
+ Total time of the program is    5898.50394330302     
+ Message time is    4269.10004370799     
+ Total time of the program is    6886.64135412499     
+ Message time is    4963.17741039500     
+ Total time of the program is    5419.11555294413     
+ Message time is    675.313252475113     
+ Total time of the program is    4954.62510699898     
+ Message time is    350.692060205009     
+ Total time of the program is    6627.01912567302     
+ Message time is    4803.43457321599     
+ Total time of the program is    5971.92245858000     
+ Message time is    4339.08244996899     
+ Total time of the program is    5793.98370526399     
+ Message time is    7.17445144001977     
+ Total time of the program is    5033.13910800501     
+ Message time is    644.806562056998     
+ Total time of the program is    6711.19825192800     
+ Message time is    4867.88571715102     
+ Total time of the program is    5472.84858487302     
+ Message time is    4012.24789173299     
+ Total time of the program is    5193.83326399300     
+ Message time is    160.716087180015     
+                                                                                                  Total time of the program is    4345.79854230408     
+ Message time is    568.927945105941     
+ Total time of the program is    4438.23743588699     
+ Message time is    302.267889196984     
+ Total time of the program is    6800.50683882600     
+ Message time is    4991.50139151100     
+ Total time of the program is    5419.00095054699     
+ Message time is    3938.43926910398     
+ Total time of the program is    5270.28584769298     
+ Message time is    3888.37485404400     
+ Total time of the program is    6562.77961929000     
+ Message time is    4881.27255574602     
+ Total time of the program is    4958.82172815298     
+ Message time is    273.960576098005     
+ Total time of the program is    4538.96303790898     
+ Message time is    316.872086380026     
+ Total time of the program is    5898.83361969699     
+ Message time is    766.696813382005     
+ Total time of the program is    5895.32158010900     
+ Message time is    4167.99203402400     
+ Total time of the program is    5080.28980107100     
+ Message time is    3702.68641243400     
+ Total time of the program is    5874.34360704594     
+ Message time is    4287.63514553302     
+ Total time of the program is    5214.33521752400     
+ Message time is    446.371929260989     
+ Total time of the program is    4403.32590720302     
+ Message time is    338.760257367045     
+ Total time of the program is    6080.65526234312     
+ Message time is    740.102725206874     
+ Total time of the program is    8033.64773777709     
+ Message time is    5781.41535918391     
+ Total time of the program is    45.5977788069868     
+ Message time is    10.7014767090441     
+ Total time of the program is    46.2821356789209     
+ Message time is    15.0623548869044     

@@ -1,0 +1,1547 @@
+#include <misc.h>
+#include <params.h>
+
+subroutine radctl(lchnk   ,ncol    , in2o,ich4,if11,if12,       &
+                  lwup    ,emis    ,          &
+                  pmid    ,pint    ,pmln    ,piln    ,t       , &
+                  qm1     ,cld     ,cicewp  ,cliqwp  ,coszrs  , &
+                  asdir   ,asdif   ,aldir   ,aldif   ,pmxrgn  , &
+                  nmxrgn  ,fsns    ,fsnt    ,flns    ,flnt    , &
+                  qrs     ,qrl     ,flwds   ,rel     ,rei     , &
+                  sols    ,soll    ,solsd   ,solld   , &
+#ifndef OFFLINE
+                  landfrac,zm      ,state, fsds)
+#else
+                  build_ozone, state   ,aerosol ,calday  ,o3vmr   ,&
+                  flnsc   ,flntc   ,fsds    , &
+                  fsdsc   ,fsnsc   ,fsntc   ,solin   , &
+                  fln200  ,fln200c ,fsn200  ,fsn200c , &
+                  fln     ,fsn     ,sol_ann_mean, no_o2_abs, pbr,pnm,eccf,o3mmr, &
+		  esat, qsat, rh, latval,lonval,co2vmr, &
+                  wavelength_lres, radiance_lres_clr,radiance_lres_all,wavelength_hres, &
+                  radiance_hres_clr,radiance_hres_all,solar_flux,land_flag,ice_flag,brdf_param, &
+                  ocean_reflectance,snow_reflectance,phase_functions,phase_rhs, &
+                  phase_wvls,phase_angles,diffuse_flux_clr,diffuse_flux_all,solar_zenith,ipath_in,mcdate,aod, &
+                  latitude_index,my_longitude_start,my_longitude_end)
+#endif
+
+!----------------------------------------------------------------------- 
+! 
+! Purpose: 
+! Driver for radiation computation.
+! 
+! Method: 
+! Radiation uses cgs units, so conversions must be done from
+! model fields to radiation fields.
+!
+! Author: CCM1,  CMS Contact: J. Truesdale
+! 
+!-----------------------------------------------------------------------
+   use shr_kind_mod, only: r8 => shr_kind_r8
+   use ppgrid
+   use pspect
+   use commap
+   use history, only: outfld
+   use constituents, only: ppcnst, cnst_get_ind
+#ifndef OFFLINE
+   use prescribed_aerosols, only: get_aerosol, naer_all, aerosol_diagnostics, &
+      aerosol_indirect, get_rf_scales, get_int_scales, radforce, idxVOLC
+#else
+   use prescribed_aerosols, only: naer_all, radforce, idxVOLC
+#endif
+
+   use physics_types, only: physics_state
+   use wv_saturation, only: aqsat
+   use chemistry,    only: trace_gas
+   use physconst, only: cpair, epsilo
+   use aer_optics, only: idxVIS
+   use cloud_optics
+#ifndef OFFLINE
+   use aerosol_intr, only: set_aerosol_from_prognostics
+#endif
+   use aer_optics, only: nrh, ndstsz, ksul, wsul, gsul, &
+     ksslt, wsslt, gsslt, kcphil, wcphil, gcphil, kcphob, wcphob, gcphob, &
+     kcb, wcb, gcb, kdst, wdst, gdst, kbg, wbg, gbg, kvolc, wvolc, gvolc
+   use write_modtran_tp5
+
+
+
+
+   implicit none
+
+#include <ptrrgrid.h>
+#include <comctl.h>
+#include <comsol.h>
+!
+! Input arguments
+!
+   integer, intent(in) :: lchnk                 ! chunk identifier
+   integer, intent(in) :: ncol                  ! number of atmospheric columns
+   integer, intent(in) :: in2o, ich4, if11, if12 ! indexes of gases in constituent array DRF
+
+   integer nspint            ! Num of spctrl intervals across solar spectrum
+   integer naer_groups       ! Num of aerosol groups for optical diagnostics
+   parameter ( nspint = 19 )
+   parameter ( naer_groups = 7 )    ! current groupings are sul, sslt, all carbons, all dust, background, and all aerosols
+
+
+   real(r8), intent(in) :: lwup(pcols)          ! Longwave up flux at surface
+   real(r8), intent(in) :: emis(pcols,pver)     ! Cloud emissivity
+   real(r8), intent(in) :: pmid(pcols,pver)     ! Model level pressures
+   real(r8), intent(in) :: pint(pcols,pverp)    ! Model interface pressures
+   real(r8), intent(in) :: pmln(pcols,pver)     ! Natural log of pmid
+   real(r8), intent(in) :: rel(pcols,pver)      ! liquid effective drop size (microns)
+   real(r8), intent(in) :: rei(pcols,pver)      ! ice effective drop size (microns)
+   real(r8), intent(in) :: piln(pcols,pverp)    ! Natural log of pint
+   real(r8), intent(in) :: t(pcols,pver)        ! Model level temperatures
+   real(r8), intent(in) :: qm1(pcols,pver,ppcnst) ! Specific humidity and tracers
+   real(r8), intent(in) :: cld(pcols,pver)      ! Fractional cloud cover
+   real(r8), intent(in) :: cicewp(pcols,pver)   ! in-cloud cloud ice water path
+   real(r8), intent(in) :: cliqwp(pcols,pver)   ! in-cloud cloud liquid water path
+   real(r8), intent(in) :: coszrs(pcols)        ! Cosine solar zenith angle
+   real(r8), intent(in) :: asdir(pcols)         ! albedo shortwave direct
+   real(r8), intent(in) :: asdif(pcols)         ! albedo shortwave diffuse
+   real(r8), intent(in) :: aldir(pcols)         ! albedo longwave direct
+   real(r8), intent(in) :: aldif(pcols)         ! albedo longwave diffuse
+#ifndef OFFLINE
+   real(r8), intent(in) :: landfrac(pcols)      ! land fraction
+   real(r8), intent(in) :: zm(pcols,pver)       ! Height of midpoints (above surface)
+#else
+   real(r8), intent(in) :: calday               ! current calendar day
+   real(r8), intent(in) :: o3vmr(pcols,pverr)   ! Ozone volume mixing ratio
+   logical,  intent(in) :: build_ozone          ! Flag for reconstruction of O3
+   logical,  intent(in) :: sol_ann_mean         ! Flag for setting eccf = 1.0
+   logical,  intent(in) :: no_o2_abs            ! Flag to set O2 SW abs to 0
+#endif
+   real(r8), intent (in) ::  pbr(pcols,pverr)     ! Model mid-level pressures (dynes/cm2) (DRF)
+   real(r8), intent (in) ::  pnm(pcols,pverrp)    ! Model interface pressures (dynes/cm2) (DRF)
+   real(r8), intent (in) :: eccf                  ! Earth/sun distance factor (DRF)
+   real(r8), intent (in) :: o3mmr(pcols,pverr)   ! Ozone mass mixing ratio
+   real(r8), intent (in) ::  esat(pcols,pverr)    ! saturation vapor pressure (DRF)
+   real(r8), intent (in) ::  qsat(pcols,pverr)    ! saturation specific humidity (DRF)
+   real(r8), intent (in) ::  rh(pcols,pverr)      ! level relative humidity (fraction) (DRF)
+   real(r8), intent (in) :: latval                ! input latitude in degrees (DRF)
+   real(r8), intent (in) :: lonval(pcols)         ! input longitude in degrees (DRF)
+   real(r8), intent (in) :: co2vmr                ! input co2vmr (DRF)
+   logical, intent (in) :: land_flag(pcols)       ! input flag == true if land (DRF)
+   logical, intent (in) :: ice_flag(pcols)        ! input flag == true if snow/ice (DRF)
+   real(r8), intent (in) :: brdf_param(pcols,7,3)  ! input brdf properties (DRF)
+   real(r8), intent (in) :: ocean_reflectance(24,2) ! input reflectance of ocean (DRF)
+   real(r8), intent (in) :: snow_reflectance(969,4) ! input snow reflectance (DRF)
+   real(r8), intent (in) :: phase_functions(50,15,8,4) ! input modtran phase functions (DRF)
+   real(r8), intent (in) :: phase_rhs(8) !input relative humidity values for phase functions
+   real(r8), intent (in) :: phase_wvls(15) !phase function wavelengths (in um)
+   real(r8), intent (in) :: phase_angles(50) !phase function angles (in radians)
+   character, intent(in) :: ipath_in(120)        ! path to input data
+   integer, intent(in) :: mcdate   !date from input_file
+
+   type(physics_state), intent(in) :: state     
+   real(r8), intent(inout) :: pmxrgn(pcols,pverp) ! Maximum values of pmid for each
+!    maximally overlapped region.
+!    0->pmxrgn(i,1) is range of pmid for
+!    1st region, pmxrgn(i,1)->pmxrgn(i,2) for
+!    2nd region, etc
+   integer, intent(inout) :: nmxrgn(pcols)     ! Number of maximally overlapped regions
+   integer, intent(in)    :: latitude_index    ! The latitude index we are presently on in Main
+   integer, intent(in)    :: my_longitude_start    ! The latitude index we are presently on in Main
+   integer, intent(in)    :: my_longitude_end    ! The latitude index we are presently on in Main
+
+
+
+    !real(r8) :: full_atm(40,28)             !DRF 
+    real*4 :: full_atm(pver,28)             !DRF 
+    real(r8) :: dummy3(pver)         !DRF
+    real*4 aer_wavelen(42)              !DRF
+    integer cam_band_mapping(42)     !DRF
+    integer num_levs                 !DRF
+    integer aerosol_group_trans(12)  !DRF
+    real(r8) :: pmxrgnrf(pcols,pverp)             ! temporary copy of pmxrgn
+    integer  :: nmxrgnrf(pcols)     ! temporary copy of nmxrgn
+    integer dummy2 !DRF
+    integer brdf_len !DRF
+    integer num_ac_wvl !DRF
+    real(r8) :: kaerosol(12,nspint)  !DRF extinction matrix
+    real(r8) :: waerosol(12,nspint)   !DRF single-scattering albedo matrix
+    real(r8) :: gaerosol(12,nspint)   !DRF asymmetry matrix
+
+    real*4, allocatable :: brdf_wvl(:,:) !DRF
+    real*4, allocatable :: brdf_param2(:,:) !For entry into driver.f !DRF
+    real*4 :: pfs(50,15,4) !DRF phase functions at appropriate relative humidity
+    real(r8) :: max_rh(4) !DRF
+    real(r8) :: rh_vec(8) !DRF
+    integer :: max_rh_index !DRF
+    integer :: max_rh_index2(4) !DRF
+    integer :: max_sul_index
+    integer :: max_dust_index
+    integer :: max_soot_index
+    integer :: max_sslt_index
+    real*4 :: tau_aerosol_species(4) !DRF
+    character :: dummy_char !DRF
+    character(len=23) :: fname_spectrum ! path to write to netcdf file (DRF)
+    integer :: fname_index_first !DRF
+    integer :: fname_index_last !DRF
+    logical :: fname_flag !DRF
+    integer :: fname_length !DRF
+    integer :: mcdate_local !DRF
+    integer :: jday !DRF
+    real*4  :: latval_real                           ! input latitude in degrees (DRF)
+    real*4  :: lonval_real                           ! input longitude in degrees (DRF)
+    real*4 :: co2vmr_real                ! input co2vmr (DRF)
+    real*4 :: gndalt_real                ! ground altitude (for submission to driver) DRF
+    real*4 :: surftemp_real                ! surface temp (for submission to driver) DRF
+    real*4 :: gmt_real                ! gmt time (for submission to driver) DRF
+    real*4 :: v1_real                ! v1 in wavelength (for submission to driver) DRF
+    real*4 :: v2_real                ! v2 in wavelengt (for submission to driver) DRF
+    real*4 wvl_cld_real(24)
+    real*4 liq_ext_avg_real(24),liq_ssa_avg_real(24),liq_asym_avg_real(24)
+    real*4 ice_ext_avg_real(24),ice_ssa_avg_real(24),ice_asym_avg_real(24)
+    real*4 :: phase_wvls_real(15)        ! phase function wavelengths (for submission to driver) DRF
+    real*4 :: phase_angles_real(50)        ! phase function angles (degrees) (for submission to driver) DRF
+    real*4 :: z_cld_val_real(pver)        ! cloud altitude values (for submission to driver) DRF
+    real*4 :: dv_input_real               ! output spectral resolution (for submission to driver DRF
+!
+! Output solar arguments
+!
+   real(r8), intent(out) :: fsns(pcols)          ! Surface absorbed solar flux
+   real(r8), intent(out) :: fsnt(pcols)          ! Net column abs solar flux at model top
+   real(r8), intent(out) :: flns(pcols)          ! Srf longwave cooling (up-down) flux
+   real(r8), intent(out) :: flnt(pcols)          ! Net outgoing lw flux at model top
+   real(r8), intent(out) :: sols(pcols)          ! Downward solar rad onto surface (sw direct)
+   real(r8), intent(out) :: soll(pcols)          ! Downward solar rad onto surface (lw direct)
+   real(r8), intent(out) :: solsd(pcols)         ! Downward solar rad onto surface (sw diffuse)
+   real(r8), intent(out) :: solld(pcols)         ! Downward solar rad onto surface (lw diffuse)
+   real(r8), intent(out) :: qrs(pcols,pver)      ! Solar heating rate
+   real(r8), intent(out) :: fsds(pcols)          ! Flux Shortwave Downwelling Surface
+#ifdef OFFLINE
+   real(r8), intent(out) :: fln(pcols,pverp)     ! Net LW fluxes at interfaces
+   real(r8), intent(out) :: flnsc(pcols)         ! Clear sky lw flux at srf (up-down)
+   real(r8), intent(out) :: flntc(pcols)         ! Clear sky lw flux at model top!
+   real(r8), intent(out) :: fsdsc(pcols)         ! Clear sky surface downwelling solar flux
+   real(r8), intent(out) :: fsnsc(pcols)         ! Clear sky surface abs solar flux
+   real(r8), intent(out) :: fsn(pcols,pverp)     ! Net SW fluxes at interfaces
+   real(r8), intent(out) :: fsntc(pcols)         ! Clear sky total column abs solar flux
+   real(r8), intent(out) :: solin(pcols)         ! Solar incident flux!-WDC
+#endif
+!
+! Output longwave arguments
+!
+   real(r8), intent(out) :: qrl(pcols,pver)      ! Longwave cooling rate
+   real(r8), intent(out) :: flwds(pcols)         ! Surface down longwave flux
+   real*4, intent(out) :: wavelength_lres(wvlng2)  ! Wavelength from Modtran (DRF)
+   real*4, intent(out) :: wavelength_hres(wvlng_hres2)  ! Wavelength from Modtran (DRF)
+   real*4, intent(out) :: radiance_lres_clr(pcols,wvlng2)   ! Radiance from Modtran (DRF)
+   real*4, intent(out) :: radiance_lres_all(pcols,wvlng2)   ! Radiance from Modtran (DRF)
+   real*4, intent(out) :: radiance_hres_clr(pcols,wvlng_hres2)   ! Radiance from Modtran (DRF)
+   real*4, intent(out) :: radiance_hres_all(pcols,wvlng_hres2)   ! Radiance from Modtran (DRF)
+   real*4, intent(out) :: solar_flux(pcols,wvlng2)   ! TOA solar flux from Modtran (DRF)
+   real*4, intent(out) :: diffuse_flux_clr(pcols,wvlng2)   !SW diffuse flux from Modtran (DRF)
+   real*4, intent(out) :: diffuse_flux_all(pcols,wvlng2)   !SW diffuse flux from Modtran (DRF)
+   real*4, intent(out) :: solar_zenith(pcols)   !Solar zenith angle from Modtran (DRF)
+   real*4, intent(out) :: aod(pcols)   !Solar zenith angle from Modtran (DRF)
+
+
+!
+!---------------------------Local variables-----------------------------
+!
+   integer i, j, k, jj, kk              ! index
+   real*4 ii
+!   integer :: in2o, ich4, if11, if12 ! indexes of gases in constituent array
+
+#ifndef OFFLINE
+   real(r8) solin(pcols)         ! Solar incident flux
+!  real(r8) fsds(pcols)          ! Flux Shortwave Downwelling Surface
+#endif
+   real(r8) fsntoa(pcols)        ! Net solar flux at TOA
+   real(r8) fsntoac(pcols)       ! Clear sky net solar flux at TOA
+   real(r8) fsnirt(pcols)        ! Near-IR flux absorbed at toa
+   real(r8) fsnrtc(pcols)        ! Clear sky near-IR flux absorbed at toa
+   real(r8) fsnirtsq(pcols)      ! Near-IR flux absorbed at toa >= 0.7 microns
+#ifndef OFFLINE
+   real(r8) fsntc(pcols)         ! Clear sky total column abs solar flux
+   real(r8) fsnsc(pcols)         ! Clear sky surface abs solar flux
+   real(r8) fsdsc(pcols)         ! Clear sky surface downwelling solar flux
+#endif
+   real(r8) flut(pcols)          ! Upward flux at top of model
+   real(r8) lwcf(pcols)          ! longwave cloud forcing
+   real(r8) swcf(pcols)          ! shortwave cloud forcing
+   real(r8) flutc(pcols)         ! Upward Clear Sky flux at top of model
+#ifndef OFFLINE
+   real(r8) flntc(pcols)         ! Clear sky lw flux at model top
+   real(r8) flnsc(pcols)         ! Clear sky lw flux at srf (up-down)
+#endif
+   real(r8) ftem(pcols,pver)     ! temporary array for outfld
+   real(r8) fln200(pcols)        ! net longwave flux interpolated to 200 mb
+   real(r8) fln200c(pcols)       ! net clearsky longwave flux interpolated to 200 mb
+#ifndef OFFLINE
+   real(r8) fsn(pcols,pverp)     ! net shortwave flux
+#endif
+   real(r8) fsnc(pcols,pverp)    ! net clear-sky shortwave flux
+   real(r8) fsn200(pcols)        ! fns interpolated to 200 mb
+   real(r8) fsn200c(pcols)       ! fsnc interpolated to 200 mb
+#ifndef OFFLINE
+   real(r8) fln(pcols,pverp)     ! net longwave flux
+#endif
+   real(r8) flnc(pcols,pverp)    ! net clear-sky longwave flux
+
+!DRF   real(r8) pbr(pcols,pverr)     ! Model mid-level pressures (dynes/cm2)
+!DRF   real(r8) pnm(pcols,pverrp)    ! Model interface pressures (dynes/cm2)
+#ifndef OFFLINE
+   real(r8) o3vmr(pcols,pverr)   ! Ozone volume mixing ratio
+#endif
+!DRF   real(r8) o3mmr(pcols,pverr)   ! Ozone mass mixing ratio
+!DRF   real(r8) eccf                 ! Earth/sun distance factor
+   real(r8) n2o(pcols,pver)      ! nitrous oxide mass mixing ratio
+   real(r8) ch4(pcols,pver)      ! methane mass mixing ratio
+   real(r8) cfc11(pcols,pver)    ! cfc11 mass mixing ratio
+   real(r8) cfc12(pcols,pver)    ! cfc12 mass mixing ratio
+!DRF   real(r8) rh(pcols,pverr)      ! level relative humidity (fraction)
+   real(r8) lwupcgs(pcols)       ! Upward longwave flux in cgs units
+
+!DRF   real(r8) esat(pcols,pverr)    ! saturation vapor pressure
+!DRF   real(r8) qsat(pcols,pverr)    ! saturation specific humidity
+
+   real(r8) :: frc_day(pcols) ! = 1 for daylight, =0 for night colums
+   real(r8) :: aertau(pcols,nspint,naer_groups) ! Aerosol column optical depth
+   real(r8) :: aerssa(pcols,nspint,naer_groups) ! Aerosol column averaged single scattering albedo
+   real(r8) :: aerasm(pcols,nspint,naer_groups) ! Aerosol column averaged asymmetry parameter
+   real(r8) :: aerfwd(pcols,nspint,naer_groups) ! Aerosol column averaged forward scattering
+
+   real(r8) aerosol(pcols, pver, naer_all) ! aerosol mass mixing ratios
+   real(r8) scales(naer_all)               ! scaling factors for aerosols
+   integer time_array_0(8)
+   integer time_array_1(8)
+   integer rate,start_time,end_time
+
+   real*4 m_aerosol(pver,4)             !profile of total aerosol mass (in km^-1 per layer)
+   real*4 o_aerosol(42,12)           !absorption, extinction, ssa spectral data for aerosols
+   real(r8) :: m_cloud_liq(pver)              !profile of liquid water cloud DRF
+   real*4 :: m_cloud_liq_real(pver)              !profile of liquid water cloud DRF
+   real(r8) :: m_cloud_ice(pver)              !profile of ice water cloud
+   real*4 :: m_cloud_ice_real(pver)              !profile of liquid water cloud DRF
+   real(r8) flip_cldfrac(pver)             !profile of cloud fraction
+   logical a_flag,c_flag,brdf_flag,dummy_flag         !flags for aerosols and clouds
+   character(len=120) :: fname !to be sent to modtran
+   character* (1) fval_1  !DRF for modtran temp file naming
+   character* (2) fval_2  !ditto
+   character* (3) fval_3  !ditto
+   character* (1) filler_period !ditto
+   real tau_rayleigh   !DRF rayleigh scattering optical depth at 0.55 um
+   real(r8) aerosol_mult !DRF scaling for aerosols
+   real(r8), allocatable :: out_cldfrac(:,:,:) !DRF for cloud overlap scheme
+   real(r8), allocatable :: out_cldliqprof(:,:,:) !DRF for cloud overlap scheme
+   real(r8), allocatable :: out_cldiceprof(:,:,:) !DRF for cloud overlap scheme
+   
+   real, allocatable :: tmp_radiance_lres(:,:)  !Temporary arrays for cloud-overlap approximation averaging
+   real, allocatable :: tmp_radiance_hres(:,:)
+   real, allocatable :: tmp_diffuse_flux(:,:)
+
+   !Variables for cloud optical properties
+   real(r8) dummy_ext(24),dummy_ssa(24),dummy_asym(24)
+   real(r8) wvl_cld(24),ext_liq_cld(24,pver),ssa_liq_cld(24,pver),asym_liq_cld(24,pver)
+   real(r8) ext_ice_cld(24,pver),ssa_ice_cld(24,pver),asym_ice_cld(24,pver)
+   real(r8) liq_ext_avg(24),liq_ssa_avg(24),liq_asym_avg(24)
+   real(r8) ice_ext_avg(24),ice_ssa_avg(24),ice_asym_avg(24)
+
+   !for cloud overlap approximation
+   integer num_profs !DRF Number of times to call cloud overlap maximum-random overlap profile generator
+   integer :: iscloudy_matrix(16,pver) !0 if no cloud, 1 if cloud, set to num_profs
+   integer :: cloud_overlap_approx
+   integer :: changeSeed 
+   real(r8) :: press_levs(pver,pcols)
+   integer cloud_prof_id(16)  !array of values ranging from 1 to 2^16
+   integer weights(16,pcols) 
+   logical :: calc_or_nocalc(16,pcols)
+   integer :: num_modtran_calls_per_grid(pcols)
+
+
+
+
+!DRF
+   rh_vec = (/0.0, 0.5, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99/)
+   num_profs = 15
+   cloud_overlap_approx = 2  !maximum-random overlap in generate_stochastic clouds
+   changeSeed = 0
+!
+
+!
+! Solar radiation computation
+!
+
+!write(*,*) "PNM at start = ",pnm
+
+   if (dosw) then
+
+!
+! calculate heating with aerosols
+!
+
+
+      if (radforce) then
+
+         pmxrgnrf = pmxrgn
+         nmxrgnrf = nmxrgn
+
+#ifndef OFFLINE
+         call get_rf_scales(scales)
+
+         call get_aerosol(lchnk, pint, aerosol, scales)
+
+         ! overwrite with prognostics aerosols
+         call set_aerosol_from_prognostics (state, aerosol)
+
+         call aerosol_indirect(ncol,lchnk,landfrac,pmid,t,qm1,cld,zm,rel)
+#endif   
+         call t_startf('radcswmx_rf')
+
+
+!         call radcswmx(lchnk   ,ncol ,                            &
+!                    pnm     ,pbr     ,qm1     ,rh      ,o3mmr   , &
+!                    aerosol ,cld     ,cicewp  ,cliqwp  ,rel     , &
+!                    rei     ,eccf    ,coszrs  ,scon    ,solin   , &
+!                    asdir   ,asdif   ,aldir   ,aldif   ,nmxrgnrf, &
+!                    pmxrgnrf,qrs     ,fsnt    ,fsntc   ,fsntoa  , &
+!                    fsntoac ,fsnirt  ,fsnrtc  ,fsnirtsq,fsns    , &
+!                    fsnsc   ,fsdsc   ,fsds    ,sols    ,soll    , &
+!                    solsd   ,solld   ,frc_day ,                   &
+!                    aertau  ,aerssa  ,aerasm  ,aerfwd  ,fsn     , &
+!#ifndef OFFLINE
+!                    fsnc    )
+!#else
+!                    fsnc    ,no_o2_abs)
+!#endif
+
+         call t_stopf('radcswmx_rf')
+
+!
+! Convert units of shortwave fields needed by rest of model from CGS to MKS
+!
+
+            do i = 1, ncol
+            solin(i) = solin(i)*1.e-3
+            fsnt(i)  = fsnt(i) *1.e-3
+            fsns(i)  = fsns(i) *1.e-3
+            fsntc(i) = fsntc(i)*1.e-3
+            fsnsc(i) = fsnsc(i)*1.e-3
+         end do
+         ftem(:ncol,:pver) = qrs(:ncol,:pver)/cpair
+
+!
+! Dump shortwave radiation information to history tape buffer (diagnostics)
+!
+         call outfld('QRS_RF  ',ftem  ,pcols,lchnk)
+         call outfld('FSNT_RF ',fsnt  ,pcols,lchnk)
+         call outfld('FSNS_RF ',fsns  ,pcols,lchnk)
+         call outfld('FSNTC_RF',fsntc ,pcols,lchnk)
+         call outfld('FSNSC_RF',fsnsc ,pcols,lchnk)
+ 
+      endif ! if (radforce)
+
+#ifndef OFFLINE
+      call get_int_scales(scales)
+ 
+      call get_aerosol(lchnk, pint, aerosol, scales)
+
+      ! overwrite with prognostics aerosols
+      call set_aerosol_from_prognostics (state, aerosol)
+
+      call aerosol_indirect(ncol,lchnk,landfrac,pmid,t,qm1,cld,zm,rel)
+#endif
+
+      call t_startf('radcswmx')
+
+!DRF variables
+
+!      call radcswmx(lchnk   ,ncol    ,                            &
+!                    pnm     ,pbr     ,qm1     ,rh      ,o3mmr   , &
+!                    aerosol ,cld     ,cicewp  ,cliqwp  ,rel     , &
+!                    rei     ,eccf    ,coszrs  ,scon    ,solin   , &
+!                    asdir   ,asdif   ,aldir   ,aldif   ,nmxrgn  , &
+!                    pmxrgn  ,qrs     ,fsnt    ,fsntc   ,fsntoa  , &
+!                    fsntoac ,fsnirt  ,fsnrtc  ,fsnirtsq,fsns    , &
+!                    fsnsc   ,fsdsc   ,fsds    ,sols    ,soll    , &
+!                    solsd   ,solld   ,frc_day ,                   &
+!                    aertau  ,aerssa  ,aerasm  ,aerfwd  ,fsn     , &
+!#ifndef OFFLINE
+!                    fsnc    )
+!#else
+!                    fsnc    ,no_o2_abs)
+!#endif
+
+!DRF set qrs, and others to 0.0
+
+      do i=1,pcols
+        do  j=1,pver
+          qrs(i,j) = 0.0
+          qrl(i,j) = 0.0
+        end do
+        sols(i) = 0.0
+        solsd(i) = 0.0
+        soll(i) = 0.0
+        solld(i) = 0.0
+      end do
+
+
+!DRF
+
+      call t_stopf('radcswmx')
+
+
+! -- tls ---------------------------------------------------------------2
+
+!  Output net fluxes at 200 mb
+
+      call vertinterp(ncol, pcols, pverp, pint, 20000._r8, fsnc, fsn200c)
+      call vertinterp(ncol, pcols, pverp, pint, 20000._r8, fsn, fsn200)
+
+!
+! Convert units of shortwave fields needed by rest of model from CGS to MKS
+!
+      do i=1,ncol
+         solin(i) = solin(i)*1.e-3
+         fsds(i)  = fsds(i)*1.e-3
+         fsnirt(i)= fsnirt(i)*1.e-3
+         fsnrtc(i)= fsnrtc(i)*1.e-3
+         fsnirtsq(i)= fsnirtsq(i)*1.e-3
+         fsnt(i)  = fsnt(i) *1.e-3
+         fsns(i)  = fsns(i) *1.e-3
+         fsntc(i) = fsntc(i)*1.e-3
+         fsnsc(i) = fsnsc(i)*1.e-3
+         fsdsc(i) = fsdsc(i)*1.e-3
+         fsntoa(i)=fsntoa(i)*1.e-3
+         fsntoac(i)=fsntoac(i)*1.e-3
+         fsn200(i)  = fsn200(i)*1.e-3
+         fsn200c(i) = fsn200c(i)*1.e-3
+      end do
+      ftem(:ncol,:pver) = qrs(:ncol,:pver)/cpair
+!
+! Dump shortwave radiation information to history tape buffer (diagnostics)
+!
+
+      call outfld('frc_day ', frc_day, pcols, lchnk)
+      call outfld('SULOD_v ', aertau(:,idxVIS,1) ,pcols,lchnk)
+      call outfld('SSLTOD_v', aertau(:,idxVIS,2) ,pcols,lchnk)
+      call outfld('CAROD_v ', aertau(:,idxVIS,3) ,pcols,lchnk)
+      call outfld('DUSTOD_v', aertau(:,idxVIS,4) ,pcols,lchnk)
+      call outfld('BGOD_v  ', aertau(:,idxVIS,5) ,pcols,lchnk)
+      call outfld('VOLCOD_v', aertau(:,idxVIS,6) ,pcols,lchnk)
+      call outfld('AEROD_v ', aertau(:,idxVIS,7) ,pcols,lchnk)
+      call outfld('AERSSA_v', aerssa(:,idxVIS,7) ,pcols,lchnk)
+      call outfld('AERASM_v', aerasm(:,idxVIS,7) ,pcols,lchnk)
+      call outfld('AERFWD_v', aerfwd(:,idxVIS,7) ,pcols,lchnk)
+#ifndef OFFLINE
+      call aerosol_diagnostics (state, aerosol)
+#endif
+
+      call outfld('QRS     ',ftem  ,pcols,lchnk)
+      call outfld('SOLIN   ',solin ,pcols,lchnk)
+      call outfld('FSDS    ',fsds  ,pcols,lchnk)
+      call outfld('FSNIRTOA',fsnirt,pcols,lchnk)
+      call outfld('FSNRTOAC',fsnrtc,pcols,lchnk)
+      call outfld('FSNRTOAS',fsnirtsq,pcols,lchnk)
+      call outfld('FSNT    ',fsnt  ,pcols,lchnk)
+      call outfld('FSNS    ',fsns  ,pcols,lchnk)
+      call outfld('FSNTC   ',fsntc ,pcols,lchnk)
+      call outfld('FSNSC   ',fsnsc ,pcols,lchnk)
+      call outfld('FSDSC   ',fsdsc ,pcols,lchnk)
+      call outfld('FSNTOA  ',fsntoa,pcols,lchnk)
+      call outfld('FSNTOAC ',fsntoac,pcols,lchnk)
+      call outfld('SOLS    ',sols  ,pcols,lchnk)
+      call outfld('SOLL    ',soll  ,pcols,lchnk)
+      call outfld('SOLSD   ',solsd ,pcols,lchnk)
+      call outfld('SOLLD   ',solld ,pcols,lchnk)
+      call outfld('FSN200  ',fsn200,pcols,lchnk)
+      call outfld('FSN200C ',fsn200c,pcols,lchnk)
+
+   end if !dosw
+!
+! Longwave radiation computation
+!
+   if (dolw) then
+!
+! Convert upward longwave flux units to CGS
+!
+      do i=1,ncol
+         lwupcgs(i) = lwup(i)*1000.
+      end do
+!
+! Do longwave computation. If not implementing greenhouse gas code then
+! first specify trace gas mixing ratios. If greenhouse gas code then:
+!  o ixtrcg   => indx of advected n2o tracer
+!  o ixtrcg+1 => indx of advected ch4 tracer
+!  o ixtrcg+2 => indx of advected cfc11 tracer
+!  o ixtrcg+3 => indx of advected cfc12 tracer
+!
+      if (trace_gas) then
+
+         ii = 1.0
+         num_levs = pverr
+!         call radclwmx(lchnk   ,ncol    ,                            &
+!                       lwupcgs ,t       ,qm1(1,1,1)       ,o3vmr ,   &
+!                       pbr     ,pnm     ,pmln    ,piln    ,          &
+!                       qm1(1,1,in2o)    ,qm1(1,1,ich4)    ,          &
+!                       qm1(1,1,if11)    ,qm1(1,1,if12)    ,          &
+!                       cld     ,emis    ,pmxrgn  ,nmxrgn  ,qrl     , &
+!                       flns    ,flnt    ,flnsc   ,flntc   ,flwds   , &
+!                       flut    ,flutc   ,                            &
+!                       aerosol(:,:,idxVOLC)      ,fln     , flnc   )
+
+         call t_stopf("radclwmx")
+      else
+#ifndef OFFLINE
+         call trcmix(lchnk   ,ncol    , &
+                     pmid    ,n2o     ,ch4     ,                     &
+                     cfc11   ,cfc12   )
+
+         call t_startf("radclwmx")
+!         call radclwmx(lchnk     ,ncol    ,                            &
+!                       lwupcgs   ,t       ,qm1(1,1,1)       ,o3vmr ,   &
+!                       pbr       ,pnm     ,pmln    ,piln    ,          &
+!                       n2o       ,ch4     ,cfc11   ,cfc12   ,          &
+!                       cld       ,emis    ,pmxrgn  ,nmxrgn  ,qrl     , &
+!                       flns      ,flnt    ,flnsc   ,flntc   ,flwds   , &
+!                       flut      ,flutc   ,                            &
+!                       aerosol(:,:,idxVOLC)        ,fln     ,flnc    )
+         call t_stopf("radclwmx")
+#endif
+      endif
+      
+      !For cloud-overlap approximation purposes
+      allocate(out_cldfrac(num_profs,num_levs,pcols))
+      allocate(out_cldliqprof(num_profs,num_levs,pcols))
+      allocate(out_cldiceprof(num_profs,num_levs,pcols))
+ 
+      do j=1,pcols
+
+          num_modtran_calls_per_grid(j) = 0
+
+         !First determine if clouds are present
+          if (maxval(cld(j,:),1).gt.1.0e-2) then 
+             c_flag = .true.
+          else
+             c_flag = .false.
+          endif
+
+          if (c_flag) then
+
+             do i=1,pver
+               press_levs(i,j) = (pbr(j,pver+1-i)*1.0e-3)
+             end do
+          
+             !Flip cloud-fraction so that it refers to layers of descending pressure
+             do jj=1,pver
+               flip_cldfrac(jj) = cld(j,1+pver-jj)
+             end do
+
+             !Convert cloud liquid and ice water path profiles to g/m^3
+             !if (maxval(cicewp(j,:),1).gt.0.0 .or. maxval(cliqwp(j,:),1).gt.0.0) then
+             !Reverse direction, lowest indices start on the lowest height
+!             do i=1,pver-1
+!                m_cloud_liq(i) = cliqwp(j,pver+1-i)/(1000.*(full_atm(i+1,1)-full_atm(i,1))) !no in g/m^3
+!                m_cloud_ice(i) = cicewp(j,pver+1-i)/(1000.*(full_atm(i+1,1)-full_atm(i,1))) !no in g/m^3
+!                m_cloud_ice_real(i) = real(m_cloud_ice(i))
+!             end do
+!             m_cloud_liq(pver) = 0.
+!             m_cloud_liq_real(pver) = 0.
+!             m_cloud_ice(pver) = 0.
+!             m_cloud_ice_real(pver) = 0.
+
+             do i=1,pver-1
+                m_cloud_liq(i) = cliqwp(j,pver+1-i)/(1000.*7.0*log(pbr(j,pver+1-i)/pbr(j,pver-i))/1.013*1.0e6) !now in g/m^3
+                m_cloud_ice(i) = cicewp(j,pver+1-i)/(1000.*7.0*log(pbr(j,pver+1-i)/pbr(j,pver-i))/1.013*1.0e6) !now in g/m^3
+             end do
+             m_cloud_liq(pver) = 0.
+             m_cloud_ice(pver) = 0.
+
+
+
+             call generate_stochastic_clouds(num_levs,cloud_overlap_approx,changeSeed,press_levs(:,j),flip_cldfrac, &
+                       m_cloud_liq,m_cloud_ice,num_profs, &
+                       out_cldfrac(:,:,j),out_cldliqprof(:,:,j),out_cldiceprof(:,:,j),iscloudy_matrix )
+
+             !Short cuts for not necessarily doing all of the cloud calculations, important to see if calculation has already been done
+
+             !First reset values
+             do jj=1,num_profs
+                cloud_prof_id(jj) = 0
+                weights(jj,j) = 0
+                calc_or_nocalc(jj,j) = .false.
+             end do          
+
+             do jj=1,num_profs
+                !calculate cloud id for each profile
+                do kk=1,num_levs
+                   if (iscloudy_matrix(jj,kk)) then
+                      cloud_prof_id(jj) = cloud_prof_id(jj) + 2**kk
+                   endif     
+                end do  
+
+                !check the array to see if more than one of each cloud id exists
+                calc_or_nocalc(jj,j) = .true.
+                do kk=1,jj
+                   if (cloud_prof_id(kk).eq.cloud_prof_id(jj)) then
+                      calc_or_nocalc(jj,j) = .false.
+                      weights(kk,j) = weights(kk,j)+1
+                   endif
+                end do
+                if (calc_or_nocalc(jj,j)) then
+                   weights(jj,j) = 1
+                   num_modtran_calls_per_grid(j) = num_modtran_calls_per_grid(j)+1               
+                endif
+             end do   
+
+             !1 calculation needed for clear-sky
+             num_modtran_calls_per_grid(j) = num_modtran_calls_per_grid(j) + 1
+          else
+             num_modtran_calls_per_grid(j) = 1
+          endif
+
+      end do
+   
+      !loop through the Modtran calls
+      do j= my_longitude_start, my_longitude_end !pcols
+         ii = 6.0 + real(jj)*12.0/99.0
+         !write(*,*) "pver = ",pbr(j,pver)
+         do i=1,pver
+            full_atm(i,1) = -7.0*log(real(pbr(j,pver+1-i))/(1.013*1.0e6)) !pbr(j,pver))
+            if (full_atm(i,1).lt.0.0) then
+               full_atm(i,1) = 0.0
+            end if
+            full_atm(i,2) = real(pbr(j,pver+1-i)*1.0e-3)
+            full_atm(i,3) = real(t(j,pver+1-i))
+            full_atm(i,4) = real(qm1(j,pver+1-i,1)*28.0/18.0*1.0e6)
+            full_atm(i,5) = real(co2vmr*1.0e6)
+            full_atm(i,6) = real(o3vmr(j,pver+1-i)*1.0e6)
+            full_atm(i,7) = real(qm1(j,pver+1-i,in2o)*28.0/44.0*1.0e6)
+            full_atm(i,8) = 0. !CO
+            full_atm(i,9) = real(qm1(j,pver+1-i,ich4)*28.0/16.0*1.0e6)
+            full_atm(i,10) = 0. 
+            full_atm(i,11) = 0.
+            full_atm(i,12) = 0. 
+            full_atm(i,13) = 0. 
+            full_atm(i,14) = 0.
+            full_atm(i,15) = 0.
+            full_atm(i,16) = real(qm1(j,pver+1-i,if11)*28.0/137.0*1.0e6)
+            full_atm(i,17) = real(qm1(j,pver+1-i,if12)*28.0/121.0*1.0e6)
+            full_atm(i,18) = 0.
+            full_atm(i,19) = 0.
+            full_atm(i,20) = 0.
+            full_atm(i,21) = 0.
+            full_atm(i,22) = 0.
+            full_atm(i,23) = 0.
+            full_atm(i,24) = 0.
+            full_atm(i,25) = 0.
+            full_atm(i,26) = 0.
+            full_atm(i,27) = 0.
+            full_atm(i,28) = 0.
+         end do
+         
+         !Do aerosols too
+         
+         !First 9 entries are read straight from AerosolOptics file
+         aer_wavelen(1) = 0.2225
+         aer_wavelen(2) = 0.255
+         aer_wavelen(3) = 0.27
+         aer_wavelen(4) = 0.28
+         aer_wavelen(5) = 0.29
+         aer_wavelen(6) = 0.3
+         aer_wavelen(7) = 0.3275
+         aer_wavelen(8) = 0.495
+         aer_wavelen(9) = 0.67
+         
+         !Now map between pseudo bands and real bands
+         aer_wavelen(10) = 0.701
+         aer_wavelen(11) = 0.7095
+         aer_wavelen(12) = 0.7245
+         aer_wavelen(13) = 0.7725
+         aer_wavelen(14) = 0.8210
+         aer_wavelen(15) = 0.8615
+         aer_wavelen(16) = 0.9110
+         aer_wavelen(17) = 0.9445
+         aer_wavelen(18) = 0.9725
+         aer_wavelen(19) = 1.0380
+         aer_wavelen(20) = 1.1010
+         aer_wavelen(21) = 1.1345
+         aer_wavelen(22) = 1.1830
+         aer_wavelen(23) = 1.2515
+         aer_wavelen(24) = 1.3100
+         aer_wavelen(25) = 1.3320
+         aer_wavelen(26) = 1.3510
+         aer_wavelen(27) = 1.3860
+         aer_wavelen(28) = 1.4325
+         aer_wavelen(29) = 1.4740
+         aer_wavelen(30) = 1.5090
+         aer_wavelen(31) = 1.6260
+         aer_wavelen(32) = 1.7475
+         aer_wavelen(33) = 1.7820
+         aer_wavelen(34) = 1.8120
+         aer_wavelen(35) = 1.8710
+         aer_wavelen(36) = 1.9345
+         aer_wavelen(37) = 1.9720
+         aer_wavelen(38) = 2.0180
+         aer_wavelen(39) = 2.1835
+         aer_wavelen(40) = 2.3620
+         aer_wavelen(41) = 2.4330
+         aer_wavelen(42) = 2.4860
+         
+         cam_band_mapping(10) = 11
+         cam_band_mapping(11) = 10
+         cam_band_mapping(12) = 11
+         cam_band_mapping(13) = 10
+         cam_band_mapping(14) = 11
+         cam_band_mapping(15) = 10
+         cam_band_mapping(16) = 11
+         cam_band_mapping(17) = 12
+         cam_band_mapping(18) = 11
+         cam_band_mapping(19) = 10
+         cam_band_mapping(20) = 11
+         cam_band_mapping(21) = 12
+         cam_band_mapping(22) = 11
+         cam_band_mapping(23) = 10
+         cam_band_mapping(24) = 11
+         cam_band_mapping(25) = 12
+         cam_band_mapping(26) = 13
+         cam_band_mapping(27) = 14
+         cam_band_mapping(28) = 13
+         cam_band_mapping(29) = 12
+         cam_band_mapping(30) = 11
+         cam_band_mapping(31) = 10
+         cam_band_mapping(32) = 11
+         cam_band_mapping(33) = 12
+         cam_band_mapping(34) = 13
+         cam_band_mapping(35) = 14
+         cam_band_mapping(36) = 13
+         cam_band_mapping(37) = 12
+         cam_band_mapping(38) = 11
+         cam_band_mapping(39) = 10
+         cam_band_mapping(40) = 11
+         cam_band_mapping(41) = 12
+         cam_band_mapping(42) = 13
+         
+         !Test out different aerosols            
+         ! 1. MBCPHI_V
+         ! 2. MBCPHO_V
+         ! 3. MBG_V
+         ! 4. MDUST1_V
+         ! 5. MDUST2_V
+         ! 6. MDUST3_V
+         ! 7. MDUST4_V
+         ! 8. MOCPHI_V
+         ! 9. MOCPHO_V
+         ! 10. MSSLT_V
+         ! 11. MSU_V
+         ! 12. MVOLC
+         ! Modtran species: sulfate, dust, soot, sea-salt
+         
+         do kk=1,pver
+           m_aerosol(kk,1) = 0.0
+           m_aerosol(kk,2) = 0.0
+           m_aerosol(kk,3) = 0.0
+           m_aerosol(kk,4) = 0.0
+         end do
+         do jj=1,42
+           do kk=1,12
+              o_aerosol(jj,kk) = 0.0
+           end do
+         end do
+
+         aerosol_mult = 1.0e6
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         !Sulfate (aerosol index 1), converted to units of g/m^3 from mass below level
+         ! units of aerosol are kg aerosol / kg air, k_ext units are m^2/g, need km^-1
+         ! m_aerosol = ksul * aerosol * density, where density = p/R/T
+         do kk=1,pver
+               m_aerosol(kk,1) = real(ksul(1,8)*aerosol_mult*(aerosol(j,pver-kk+1,1)))* &
+                    full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+         end do
+         max_sul_index = maxloc(m_aerosol(:,1),1)
+         max_rh_index = minloc(abs(rh_vec - rh(j,pver-max_sul_index+1)),1)
+         max_rh_index2(1) = max_rh_index
+         do kk=1,pver
+            m_aerosol(kk,1) = real(ksul(max_rh_index,8)*aerosol_mult*(aerosol(j,pver-kk+1,1)))* &
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+         end do
+
+         do kk=1,9
+            o_aerosol(kk,1) = real(ksul(max_rh_index,kk)/ksul(max_rh_index,8))
+            o_aerosol(kk,2) = real(ksul(max_rh_index,kk)*(1-wsul(max_rh_index,kk))/ksul(max_rh_index,8))
+            o_aerosol(kk,3) = real(gsul(max_rh_index,kk))
+         end do
+         do kk=10,42
+            o_aerosol(kk,1) = real(ksul(max_rh_index,cam_band_mapping(kk))/ksul(max_rh_index,8))
+            o_aerosol(kk,2) = real(ksul(max_rh_index,cam_band_mapping(kk))* &
+                 (1-wsul(max_rh_index,cam_band_mapping(kk)))/ksul(max_rh_index,8))
+            o_aerosol(kk,3) = real(gsul(max_rh_index,cam_band_mapping(kk)))
+         end do
+         tau_aerosol_species(1) = 0.0
+         do kk=1,pver-1
+            tau_aerosol_species(1) = tau_aerosol_species(1) + & 
+                (m_aerosol(kk,1)+m_aerosol(kk+1,1))/2.0*(full_atm(kk+1,1)-full_atm(kk,1))
+         end do
+         write(*,*) "tau_sulfate = ",tau_aerosol_species(1)
+         
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!!!!!!!!!!!!!!!
+!Calculate Rayleigh optical depth at 0.55 um
+         tau_rayleigh = 0.0956* full_atm(1,2)/1013.5
+         write(*,*) "tau_rayleigh = ",tau_rayleigh
+
+!!!!!!!!!!!!!!!!!!!!!!
+         do kk=1,pver
+            m_aerosol(kk,2) = 0.0
+            o_aerosol(kk,4) = 0.0
+            o_aerosol(kk,5) = 0.0
+            o_aerosol(kk,6) = 0.0
+         end do
+
+         !Dust (aerosol indices 3-6) converted to units of g/m^3
+         do kk=1,pver
+               !Create effective dust profiles in units of km^-1
+            !   m_aerosol(kk,2) = m_aerosol(kk,2) + &
+            !        real(kdst(1,8)*aerosol_mult*(aerosol(j,pver-kk,3)-aerosol(j,pver-kk+1,3)))/ &
+            !        (full_atm(kk+1,1)-full_atm(kk,1))
+            m_aerosol(kk,2) = m_aerosol(kk,2) + & 
+                real(kdst(1,8)*aerosol_mult*(aerosol(j,pver-kk+1,3)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,2) = m_aerosol(kk,2) + & 
+                real(kdst(2,8)*aerosol_mult*(aerosol(j,pver-kk+1,4)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,2) = m_aerosol(kk,2) + & 
+                real(kdst(3,8)*aerosol_mult*(aerosol(j,pver-kk+1,5)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,2) = m_aerosol(kk,2) + & 
+                real(kdst(4,8)*aerosol_mult*(aerosol(j,pver-kk+1,6)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+         end do
+         max_dust_index = maxloc(m_aerosol(:,2),1)
+         max_rh_index2(2) = 1
+
+         tau_aerosol_species(2) = 0.0
+         do kk=1,pver-1
+            tau_aerosol_species(2) = tau_aerosol_species(2) + & 
+                (m_aerosol(kk,2)+m_aerosol(kk+1,2))/2.0*(full_atm(kk+1,1)-full_atm(kk,1))
+         end do
+         write(*,*) "tau_dust = ",tau_aerosol_species(2)
+
+         if (tau_aerosol_species(2).gt.0.001*tau_rayleigh) then
+            do kk=1,9
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(1,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,3)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(2,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,4)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(3,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,5)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(4,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,6)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4)/m_aerosol(max_dust_index,2)
+
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(1,kk))*kdst(1,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,3)))* & 
+                  full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(2,kk))*kdst(2,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,4)))* & 
+                  full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(3,kk))*kdst(3,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,5)))* & 
+                  full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(4,kk))*kdst(4,kk)*aerosol_mult*(aerosol(j,pver-max_dust_index+1,6)))* & 
+                  full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5)/m_aerosol(max_dust_index,2)
+               o_aerosol(kk,6) = real((gdst(1,kk)+gdst(2,kk)+gdst(3,kk)+gdst(4,kk))/4.0) !g is not as important
+            end do
+            do kk=10,42  
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(1,cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_dust_index+1,3)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(2,cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_dust_index+1,4)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(3,cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_dust_index+1,5)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4) + & 
+                  real(kdst(4,cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_dust_index+1,6)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,4) = o_aerosol(kk,4)/m_aerosol(max_dust_index,2)
+
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(1,cam_band_mapping(kk)))*kdst(1,cam_band_mapping(kk))* &
+                  aerosol_mult*(aerosol(j,pver-max_dust_index+1,3)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(2,cam_band_mapping(kk)))*kdst(2,cam_band_mapping(kk))* &
+                  aerosol_mult*(aerosol(j,pver-max_dust_index+1,4)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(3,cam_band_mapping(kk)))*kdst(3,cam_band_mapping(kk))* &
+                  aerosol_mult*(aerosol(j,pver-max_dust_index+1,5)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5) + & 
+                  real((1-wdst(4,cam_band_mapping(kk)))*kdst(4,cam_band_mapping(kk))* &
+                  aerosol_mult*(aerosol(j,pver-max_dust_index+1,6)))* & 
+                  full_atm(max_dust_index,2)*100.0/287.05/full_atm(max_dust_index,3)
+               o_aerosol(kk,5) = o_aerosol(kk,5)/m_aerosol(max_dust_index,2)
+               o_aerosol(kk,6) = real((gdst(1,cam_band_mapping(kk))+gdst(2,cam_band_mapping(kk))+ &
+                   gdst(3,cam_band_mapping(kk))+gdst(4,cam_band_mapping(kk))))/4.0 !g is not as important
+
+            end do
+         endif
+         
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         !Soot (aerosol indices 7-10) converted to units of g/m^3
+         
+         do kk=1,pver
+            m_aerosol(kk,3) = 0.0
+            o_aerosol(kk,7) = 0.0
+            o_aerosol(kk,8) = 0.0
+            o_aerosol(kk,9) = 0.0
+         end do 
+         !Get RH max first
+         do kk=1,pver
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcphob(8)*aerosol_mult*(aerosol(j,pver-kk+1,7)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcb(8)*aerosol_mult*(aerosol(j,pver-kk+1,8)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcphil(3,8)*aerosol_mult*(aerosol(j,pver-kk+1,9)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcb(8)*aerosol_mult*(aerosol(j,pver-kk+1,10)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            !m_aerosol(kk,3) = 0.0 !DRF for testing purposes
+         end do
+         max_soot_index = maxloc(m_aerosol(:,3),1)
+         max_rh_index = minloc(abs(rh_vec - rh(j,pver-max_soot_index+1)),1)
+         max_rh_index2(3) = max_rh_index
+
+         do kk=1,pver
+            m_aerosol(kk,3) = 0.0
+         end do
+         do kk=1,pver
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcphob(8)*aerosol_mult*(aerosol(j,pver-kk+1,7)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcb(8)*aerosol_mult*(aerosol(j,pver-kk+1,8)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcphil(max_rh_index,8)*aerosol_mult*(aerosol(j,pver-kk+1,9)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+            m_aerosol(kk,3) = m_aerosol(kk,3) + & 
+                real(kcb(8)*aerosol_mult*(aerosol(j,pver-kk+1,10)))* & 
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+         end do
+
+         tau_aerosol_species(3) = 0.0
+         do kk=1,pver-1
+            tau_aerosol_species(3) = tau_aerosol_species(3) + & 
+                (m_aerosol(kk+1,3)+m_aerosol(kk,3))/2.0*(full_atm(kk+1,1)-full_atm(kk,1))
+         end do
+         write(*,*) "tau_soot = ",tau_aerosol_species(3)
+         
+         if (tau_aerosol_species(3).gt.0.001*tau_rayleigh) then
+            do kk=1,9
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcphob(kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,7)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcb(kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,8)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcphil(max_rh_index,kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,9)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcb(kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,10)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7)/m_aerosol(max_soot_index,3)
+               
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcphob(kk))*kcphob(kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,7)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcb(kk))*kcb(kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,8)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcphil(max_rh_index,kk))*kcphil(max_rh_index,kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,9)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcb(kk))*kcb(kk)*aerosol_mult*(aerosol(j,pver-max_soot_index+1,10)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8)/m_aerosol(max_soot_index,3)
+               o_aerosol(kk,9) = real((gcphob(kk)+gcb(kk)+gcphil(max_rh_index,kk)+gcb(kk))/4.0) !g is not as important
+               
+            end do
+            
+            do kk=10,42
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcphob(cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_soot_index+1,7)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcb(cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_soot_index+1,8)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcphil(max_rh_index,cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_soot_index+1,9)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7) + & 
+                  real(kcb(cam_band_mapping(kk))*aerosol_mult*(aerosol(j,pver-max_soot_index+1,10)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,7) = o_aerosol(kk,7)/m_aerosol(max_soot_index,3)
+
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcphob(cam_band_mapping(kk)))*kcphob(cam_band_mapping(kk))* &
+                  aerosol_mult*(aerosol(j,pver-max_soot_index+1,7)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcb(cam_band_mapping(kk)))*kcb(cam_band_mapping(kk))* &
+                  aerosol_mult*(aerosol(j,pver-max_soot_index+1,8)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcphil(max_rh_index,cam_band_mapping(kk)))* &
+                 kcphil(max_rh_index,cam_band_mapping(kk))* &
+                 aerosol_mult*(aerosol(j,pver-max_soot_index+1,9)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8) + & 
+                  real((1-wcb(cam_band_mapping(kk)))*kcb(cam_band_mapping(kk))* &
+                  aerosol_mult*(aerosol(j,pver-max_soot_index+1,10)))* & 
+                  full_atm(max_soot_index,2)*100.0/287.05/full_atm(max_soot_index,3)
+               o_aerosol(kk,8) = o_aerosol(kk,8)/m_aerosol(max_soot_index,3)
+               o_aerosol(kk,9) = real((gcphob(cam_band_mapping(kk))+ &
+                     gcb(cam_band_mapping(kk))+gcphil(max_rh_index,cam_band_mapping(kk))+ &
+                     gcb(cam_band_mapping(kk)))/4.0) !g is not as important
+            end do
+         endif
+ 
+!!!!!!!!!!!!!!!!!!!!!!!!
+!Sea-salt
+
+         !Sea-salt (aerosol index 2), converted to units of g/m^3 from mass below level
+
+         do kk=1,pver
+               m_aerosol(kk,4) = real(ksslt(1,8)*aerosol_mult*(aerosol(j,pver-kk+1,2)))* &
+                    full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+         end do
+         max_sslt_index = maxloc(m_aerosol(:,4),1)
+         max_rh_index = minloc(abs(rh_vec - rh(j,pver-max_sslt_index+1)),1)
+         max_rh_index2(4) = max_rh_index
+         do kk=1,pver
+            m_aerosol(kk,4) = real(ksslt(max_rh_index,8)*aerosol_mult*(aerosol(j,pver-kk+1,2)))* &
+                full_atm(kk,2)*100.0/287.05/full_atm(kk,3)
+         end do
+
+         do kk=1,9
+            o_aerosol(kk,10) = real(ksslt(max_rh_index,kk)/ksslt(max_rh_index,8))
+            o_aerosol(kk,11) = real(ksslt(max_rh_index,kk)*(1-wsslt(max_rh_index,kk))/ksslt(max_rh_index,8))
+            o_aerosol(kk,12) = real(gsslt(max_rh_index,kk))
+         end do
+         do kk=10,42
+            o_aerosol(kk,10) = real(ksslt(max_rh_index,cam_band_mapping(kk))/ksslt(max_rh_index,8))
+            o_aerosol(kk,11) = real(ksslt(max_rh_index,cam_band_mapping(kk))* &
+                 (1-wsslt(max_rh_index,cam_band_mapping(kk)))/ksslt(max_rh_index,8))
+            o_aerosol(kk,12) = real(gsslt(max_rh_index,cam_band_mapping(kk)))
+         end do
+
+         tau_aerosol_species(4) = 0.0
+         do kk=1,pver-1
+            tau_aerosol_species(4) = tau_aerosol_species(4) + & 
+                (m_aerosol(kk+1,4)+m_aerosol(kk,4))/2.0*(full_atm(kk+1,1)-full_atm(kk,1))
+         end do
+         write(*,*) "tau_sslt = ",tau_aerosol_species(4)
+         !write(*,*) "tau_total = ",tau_aerosol_species(1)+tau_aerosol_species(2)+tau_aerosol_species(3)+tau_aerosol_species(4)         
+         aod(j) = tau_aerosol_species(1)+tau_aerosol_species(2)+tau_aerosol_species(3)+tau_aerosol_species(4)         
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            !Get data from phase_functions netcdf file, tranlate to matrix(50,15,4)
+
+            do i=1,50
+               do k=1,15
+                  do kk=1,4 !!!!
+                     pfs(i,k,kk) = real(phase_functions(i,k,max_rh_index2(kk),kk))
+                  end do
+               end do
+            end do
+            !write(*,*) "pfs = ",pfs
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            !Get cloud optical properties
+            do i=1,pver
+               call get_ext_ssa_asym_liq(rel(j,pver+1-i),wvl_cld(:),ext_liq_cld(:,i),ssa_liq_cld(:,i),asym_liq_cld(:,i))
+               call get_ext_ssa_asym_ice(rei(j,pver+1-i),wvl_cld,ext_ice_cld(:,i),ssa_ice_cld(:,i),asym_ice_cld(:,i))
+            end do
+
+            !Weight the cloud optical properties by extinction
+            do i=1,24 !reset vals by wavelength to 0
+              dummy_ext(i) = 0.
+              dummy_ssa(i) = 0.
+              dummy_asym(i) = 0.
+            end do
+            do i=1,pver
+               dummy_ext = dummy_ext+ext_liq_cld(:,i)*cliqwp(j,pver+1-i)
+               dummy_ssa = dummy_ssa+ssa_liq_cld(:,i)*cliqwp(j,pver+1-i)
+               dummy_asym = dummy_asym+asym_liq_cld(:,i)*cliqwp(j,pver+1-i)
+            end do
+            do i=1,24
+              wvl_cld_real(i) = real(wvl_cld(i))
+              liq_ext_avg(i) = dummy_ext(i)/sum(cliqwp(j,:))
+              liq_ext_avg_real(i) = real(liq_ext_avg(i))
+              liq_ssa_avg(i) = dummy_ssa(i)/sum(cliqwp(j,:))
+              liq_ssa_avg_real(i) = real(liq_ssa_avg(i))
+              liq_asym_avg(i) = dummy_asym(i)/sum(cliqwp(j,:))
+              liq_asym_avg_real(i) = real(liq_asym_avg(i))
+            end do
+            do i=1,24 !reset vals by wavelength to 0
+              dummy_ext(i) = 0.
+              dummy_ssa(i) = 0.
+              dummy_asym(i) = 0.
+            end do
+            do i=1,pver
+               dummy_ext = dummy_ext+ext_ice_cld(:,i)*cicewp(j,pver+1-i)
+               dummy_ssa = dummy_ssa+ssa_ice_cld(:,i)*cicewp(j,pver+1-i)
+               dummy_asym = dummy_asym+asym_ice_cld(:,i)*cicewp(j,pver+1-i)
+            end do
+            do i=1,24
+              ice_ext_avg(i) = dummy_ext(i)/sum(cicewp(j,:))
+              ice_ext_avg_real(i) = real(ice_ext_avg(i))
+              ice_ssa_avg(i) = dummy_ssa(i)/sum(cicewp(j,:))
+              ice_ssa_avg_real(i) = real(ice_ssa_avg(i))
+              ice_asym_avg(i) = dummy_asym(i)/sum(cicewp(j,:))
+              ice_asym_avg_real(i) = real(ice_asym_avg(i))
+            end do
+
+            
+            ! Get BRDF parameters
+            
+            !modis channels
+            !aer_wavelen(1) = 0.645
+            !aer_wavelen(2) = 0.8585
+            !aer_wavelen(3) = 0.469
+            !aer_wavelen(4) = 0.555
+            !aer_wavelen(5) = 1.240
+            !aer_wavelen(6) = 1.640
+            !aer_wavelen(7) = 2.130            
+            
+            !if (maxval(maxval(m_aerosol,2),1).gt.0.0) then
+               a_flag = .true.
+            !else
+            !  a_flag = .false.
+            !endif
+
+            if (maxval(cld(j,:),1).gt.1.0e-2) then 
+               c_flag = .true.
+            else
+               c_flag = .false.
+            endif
+ 
+
+            
+!!! Aerosol mapping of spectral bands
+            num_levs = pverr
+            jj = 0
+
+            !Modtran temporary file name
+            fname_index_last = 120 
+            do jj=120,1,-1
+              dummy_char = ipath_in(jj)
+              if (dummy_char .eq. ' ') then 
+                fname_index_last = fname_index_last - 1
+              endif
+            end do
+            fname_index_first = 120
+            fname_flag  = .true.
+            do jj=120,1,-1
+              dummy_char = ipath_in(jj)
+              if (dummy_char .ne. '/' .and. fname_flag) then 
+                fname_index_first = fname_index_first - 1
+              else
+                fname_flag = .false.
+              endif
+            end do
+            fname_index_first = fname_index_first + 1
+            fname = 'modtran_out_' 
+            do jj=fname_index_first,fname_index_last-2
+              dummy_char = ipath_in(jj)
+              fname =  fname(1:12+jj-fname_index_first) // dummy_char 
+            end do
+
+            if (lchnk.lt.10) then
+               write(fval_1,fmt='(i1)') lchnk
+               fname = fname(1:12-fname_index_first+fname_index_last-1)// fval_1
+               fname_length = 12 - fname_index_first + fname_index_last
+            elseif (lchnk.ge.10 .and. lchnk.lt.100) then
+               write(fval_2,fmt='(i2)') lchnk
+               fname = fname(1:12-fname_index_first+fname_index_last-1) // fval_2
+               fname_length = 12 - fname_index_first + fname_index_last+1 
+            else
+               write(fval_3,fmt='(i3)') lchnk
+               fname = fname(1:12-fname_index_first+fname_index_last-1) // fval_3
+               fname_length = 12 - fname_index_first + fname_index_last+2
+            endif
+
+            filler_period = '.'
+            fname = fname(1:fname_length) // filler_period
+            fname_length = fname_length + 1
+
+            if (j.lt.10) then
+               write(fval_1,fmt='(i1)') j
+               fname = fname(1:fname_length)// fval_1
+               fname_length = fname_length + 1
+            elseif (j.ge.10 .and. j.lt.100) then
+               write(fval_2,fmt='(i2)') j
+               fname = fname(1:fname_length)// fval_2
+               fname_length = fname_length + 2
+            else
+               write(fval_3,fmt='(i3)') j
+               fname = fname(1:fname_length)// fval_3
+               fname_length = fname_length + 3
+            endif
+            !fname_length = 12 - fname_index_first + fname_index_last-2
+            write(*,*) "fname = ",fname(1:fname_length)
+            write(*,*) "j = ",j
+            write(*,*) "lchnk = ",lchnk
+            
+            dummy2 = 0
+            
+            !Define brdf_param2,brdf_len,brdf_wvl
+            if (land_flag(j) .and. .not.ice_flag(j)) then !land
+               allocate(brdf_param2(7,3))
+               allocate(brdf_wvl(7,1))
+               brdf_wvl(1,1) = 0.47
+               brdf_wvl(2,1) = 0.56
+               brdf_wvl(3,1) = 0.64
+               brdf_wvl(4,1) = 0.86
+               brdf_wvl(5,1) = 1.24
+               brdf_wvl(6,1) = 1.64
+               brdf_wvl(7,1) = 2.13
+               do jj=1,7
+                  do kk=1,3
+                     brdf_param2(jj,kk) = real(brdf_param(j,jj,kk)/1000.0)
+                  end do
+               end do
+               brdf_len = 7
+            elseif (ice_flag(j)) then
+               allocate(brdf_param2(150,1))
+               allocate(brdf_wvl(150,1))
+               do jj=1,150
+                  brdf_wvl(jj,1) = real(snow_reflectance(jj,1))
+                  brdf_param2(jj,1) = real(snow_reflectance(jj,2))
+               end do
+               brdf_len = 150
+            else
+               allocate(brdf_param2(24,1))
+               allocate(brdf_wvl(24,1))
+               do jj=1,24
+                  brdf_wvl(jj,1) = real(ocean_reflectance(jj,1))
+                  brdf_param2(jj,1) = real(ocean_reflectance(jj,2))
+               end do
+               brdf_len = 24
+            endif
+
+            num_ac_wvl = 42
+            write(*,*) "mcdate = ",mcdate
+            mcdate_local = mcdate - 1e4*floor(mcdate/1e4)
+            jday = 30*(mcdate_local/100 -1)+1
+            write(*,*) "jday = ",jday
+            
+            !Write output to tape5 for debugging
+            latval_real = real(latval)
+            lonval_real = 0.0
+            co2vmr_real = real(1.0e6*co2vmr)
+            gndalt_real = full_atm(1,1)
+            surftemp_real = full_atm(1,3)
+            gmt_real = 15.3
+            v1_real = 300
+            v2_real = 2500
+            do jj=1,15
+               phase_wvls_real(jj) = real(phase_wvls(jj))
+            end do
+            do jj=1,50
+               phase_angles_real(jj) = real(phase_angles(jj))
+            end do
+            do jj=1,pver
+               z_cld_val_real(jj) = real(full_atm(jj,1))
+            end do
+            dv_input_real = 5.0
+
+            !write(*,*) "co2vmr = ",co2vmr_real
+
+            !call modtran_debug(surftemp_real,co2vmr_real,gndalt_real,jday,latval_real,lonval_real,gmt_real,a_flag,  &
+            !                 full_atm,v1_real,v2_real,land_flag(j),brdf_len,brdf_wvl,brdf_param2,    &
+            !                 brdf_flag,c_flag,num_levs,m_aerosol,o_aerosol,m_cloud_liq_real, &
+            !                 m_cloud_ice_real,wvl_cld_real,liq_ext_avg_real,liq_ssa_avg_real,liq_asym_avg_real, &
+            !                 ice_ext_avg_real,ice_ssa_avg_real,ice_asym_avg_real,z_cld_val_real,aer_wavelen, &
+            !                 fname,fname_length,pfs,phase_wvls_real,phase_angles_real,dv_input_real)
+
+            write(*,*) "land_flag = ",land_flag(j)
+            write(*,*) "ice_flag = ",ice_flag(j)
+            write(*,*) "c_flag = ",c_flag
+            !write(*,*) "o_aerosol = ",o_aerosol(:,4)
+            !write(*,*) "full_atm(1,3) = ",full_atm(1,3)
+            !write(*,*) "latval = ",real(latval)
+            !write(*,*) "lonval = ",lonval(1)
+            !write(*,*) "a_flag = ",a_flag
+            !write(*,*) "full_atm = ",full_atm(:,1)
+            !write(*,*) "phase_wvls = ",phase_wvls
+            !write(*,*) "land_flag = ",land_flag(j)
+            !write(*,*) "brdf_len = ",brdf_len
+            !write(*,*) "brdf_wvl = ",brdf_wvl
+            !write(*,*) "brdf_param2 = ",brdf_param2
+            !write(*,*) "pfs = ",pfs
+            !write(*,*) "phase_wvls = ",real(phase_wvls)
+            !write(*,*) "phase_angs = ",real(phase_angles)
+            !write(*,*) "wvl = ",o_aerosol(:,4)
+
+            !For all-sky calculations, perform multiple calculations and average per
+            !the maximum/random cloud overlap approximation
+            if (c_flag) then
+
+               !allocate output variables
+               allocate(tmp_radiance_lres(num_profs,wvlng2))
+               allocate(tmp_radiance_hres(num_profs,wvlng_hres2))
+               allocate(tmp_diffuse_flux(num_profs,wvlng2))
+        
+               do jj=1,num_profs
+                 if (calc_or_nocalc(jj,j)) then
+                   do i=1,pver
+                      m_cloud_liq_real(i) = real(out_cldliqprof(jj,i,j))
+                      m_cloud_ice_real(i) = real(out_cldiceprof(jj,i,j))
+                   end do
+  
+                   call driver(surftemp_real,co2vmr_real,gndalt_real,jday,latval_real,lonval_real,gmt_real,a_flag,&
+                        full_atm,v1_real,v2_real,land_flag(j),brdf_len,brdf_wvl,    & 
+                        brdf_param2,brdf_flag,c_flag,&
+                        num_levs, m_aerosol,o_aerosol,m_cloud_liq_real,   &
+                        m_cloud_ice_real,wvl_cld_real,liq_ext_avg_real,liq_ssa_avg_real,liq_asym_avg_real, &
+                        ice_ext_avg_real,ice_ssa_avg_real,ice_asym_avg_real,z_cld_val_real, &
+                        aer_wavelen,fname,wavelength_lres,&
+                        tmp_radiance_lres(jj,:),wavelength_hres,tmp_radiance_hres(jj,:),   &
+                        wvlng2, wvlng_hres2,num_ac_wvl,solar_flux(j,:),ice_flag(j), &
+                        pfs,phase_wvls_real,phase_angles_real,tmp_diffuse_flux(jj,:),  &
+                        solar_zenith(j),fname_length,dv_input_real)
+                 endif
+               end do
+
+               !Average results of multiple calls
+               do jj=1,wvlng2
+                  radiance_lres_all(j,jj) = sum(weights(jj,j)*tmp_radiance_lres(:,jj))/num_profs
+                  diffuse_flux_all(j,jj) = sum(weights(jj,j)*tmp_diffuse_flux(:,jj))/num_profs
+               end do
+               do jj=1,wvlng_hres2
+                  radiance_hres_all(j,jj) = sum(weights(jj,j)*tmp_radiance_hres(:,jj))/num_profs
+               end do
+
+               !Deallocate arrays
+
+               deallocate(tmp_radiance_lres)
+               deallocate(tmp_radiance_hres)
+               deallocate(tmp_diffuse_flux)
+
+               !Also do clear-sky calculations
+               c_flag = .false.
+
+               call driver(surftemp_real,co2vmr_real,gndalt_real,jday,latval_real,lonval_real,gmt_real,a_flag,&
+                    full_atm,v1_real,v2_real,land_flag(j),brdf_len,brdf_wvl,    & 
+                    brdf_param2,brdf_flag,c_flag,&
+                    num_levs, m_aerosol,o_aerosol,m_cloud_liq_real,   &
+                    m_cloud_ice_real,wvl_cld_real,liq_ext_avg_real,liq_ssa_avg_real,liq_asym_avg_real, &
+                    ice_ext_avg_real,ice_ssa_avg_real,ice_asym_avg_real,z_cld_val_real, &
+                    aer_wavelen,fname,wavelength_lres,&
+                    radiance_lres_clr(j,:),wavelength_hres,radiance_hres_clr(j,:),   &
+                    wvlng2, wvlng_hres2,num_ac_wvl,solar_flux(j,:),ice_flag(j), &
+                    pfs,phase_wvls_real,phase_angles_real,diffuse_flux_clr(j,:),  &
+                    solar_zenith(j),fname_length,dv_input_real)
+
+            else
+
+               !Cloud-free case
+               call driver(surftemp_real,co2vmr_real,gndalt_real,jday,latval_real,lonval_real,gmt_real,a_flag,&
+                    full_atm,v1_real,v2_real,land_flag(j),brdf_len,brdf_wvl,    & 
+                    brdf_param2,brdf_flag,c_flag,&
+                    num_levs, m_aerosol,o_aerosol,m_cloud_liq_real,   &
+                    m_cloud_ice_real,wvl_cld_real,liq_ext_avg_real,liq_ssa_avg_real,liq_asym_avg_real, &
+                    ice_ext_avg_real,ice_ssa_avg_real,ice_asym_avg_real,z_cld_val_real, &
+                    aer_wavelen,fname,wavelength_lres,&
+                    radiance_lres_clr(j,:),wavelength_hres,radiance_hres_clr(j,:),   &
+                    wvlng2, wvlng_hres2,num_ac_wvl,solar_flux(j,:),ice_flag(j), &
+                    pfs,phase_wvls_real,phase_angles_real,diffuse_flux_clr(j,:),  &
+                    solar_zenith(j),fname_length,dv_input_real)
+ 
+               !Assign clear-sky values to all-sky values
+               radiance_lres_all(j,:) = radiance_lres_clr(j,:)
+               radiance_hres_all(j,:) = radiance_hres_clr(j,:)
+               diffuse_flux_all(j,:) = diffuse_flux_clr(j,:)
+ 
+               !fname_spectrum = 'modtran_spectrum_out.nc' 
+               !call modtran_out_netcdf(wavelength_lres,wavelength_hres,radiance_lres(j,:),radiance_hres(j,:), &
+               !               solar_flux(j,:),diffuse_flux(j,:),solar_zenith(j),aod(j),fname_spectrum)
+
+               !write(*,*) "rad = ",radiance_lres_clr(j,:)
+!              stop 'end of modtran call'   
+            endif
+         
+            deallocate(brdf_param2)
+            deallocate(brdf_wvl)
+            write(*,*) "latval = ",latval
+            write(*,*) "lonval = ",lonval(j)
+            write(*,*) "solar_flux = ",solar_zenith(j)
+
+
+            
+
+
+         end do
+         !endif
+
+         !Deallocate cloud arrays
+         deallocate(out_cldfrac)
+         deallocate(out_cldliqprof)
+         deallocate(out_cldiceprof)
+ 
+         !
+         !  Output fluxes at 200 mb
+         !
+         call vertinterp(ncol, pcols, pverp, pint, 20000._r8, fln, fln200)
+         call vertinterp(ncol, pcols, pverp, pint, 20000._r8, flnc, fln200c)
+         !
+         ! Convert units of longwave fields needed by rest of model from CGS to MKS
+         !
+         do i=1,ncol
+            flnt(i)  = flnt(i)*1.e-3
+            flut(i)  = flut(i)*1.e-3
+            flutc(i) = flutc(i)*1.e-3
+            flns(i)  = flns(i)*1.e-3
+            flntc(i) = flntc(i)*1.e-3
+            fln200(i)  = fln200(i)*1.e-3
+            fln200c(i) = fln200c(i)*1.e-3
+            flnsc(i) = flnsc(i)*1.e-3
+            flwds(i) = flwds(i)*1.e-3
+            lwcf(i)=flutc(i) - flut(i)
+            swcf(i)=fsntoa(i) - fsntoac(i)
+         end do
+         !
+         ! Dump longwave radiation information to history tape buffer (diagnostics)
+         !
+         call outfld('QRL     ',qrl(:ncol,:)/cpair,ncol,lchnk)
+         call outfld('FLNT    ',flnt  ,pcols,lchnk)
+         call outfld('FLUT    ',flut  ,pcols,lchnk)
+         call outfld('FLUTC   ',flutc ,pcols,lchnk)
+         call outfld('FLNTC   ',flntc ,pcols,lchnk)
+         call outfld('FLNS    ',flns  ,pcols,lchnk)
+         call outfld('FLNSC   ',flnsc ,pcols,lchnk)
+         call outfld('LWCF    ',lwcf  ,pcols,lchnk)
+         call outfld('SWCF    ',swcf  ,pcols,lchnk)
+         call outfld('FLN200  ',fln200,pcols,lchnk)
+         call outfld('FLN200C ',fln200c,pcols,lchnk)
+         !DRF
+         !      call outfld('WVLNGTH ',wvlngth,pcols,lchnk)
+         !      call outfld('RADIANCE',rad,pcols,lchnk)
+      end if
+      !   
+      return
+    end subroutine radctl
+    

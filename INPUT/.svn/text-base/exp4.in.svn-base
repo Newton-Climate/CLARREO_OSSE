@@ -1,0 +1,118 @@
+ CRM 2.0 CCM 3.6 Column Radiation Model (CRM) Input File -*-text-*-
+ Mid-latitude summer profile, clear sky
+ CRM homepage URL is http://www.cgd.ucar.edu/cms/crm
+   83.352333    Julian day of year at Greenwich (1.5 = Noon, Jan 1 GMT)
+   0.0          Latitude (degrees North, from -90.0 to +90.0)
+  Level  p [mb]    T [K]    H2O mmr    O3 mmr     Cld frc.  Cld LWP
+     1     0.1E-5   215.197  0.4800E-05  0.7827E-06  0.0000E+00  0.0000E+00
+     2     0.040   217.063  0.4800E-05  0.8319E-06  0.0000E+00  0.0000E+00
+     3     0.060   219.584  0.4800E-05  0.9804E-06  0.0000E+00  0.0000E+00
+     4     0.141   233.719  0.4800E-05  0.2051E-05  0.0000E+00  0.0000E+00
+     5     0.212   242.192  0.4800E-05  0.2502E-05  0.0000E+00  0.0000E+00
+     6     0.359   254.269  0.4800E-05  0.2996E-05  0.0000E+00  0.0000E+00
+     7     0.516   262.493  0.4800E-05  0.3240E-05  0.0000E+00  0.0000E+00
+     8     0.772   272.065  0.4800E-05  0.3483E-05  0.0000E+00  0.0000E+00
+     9     1.070   275.354  0.4800E-05  0.4160E-05  0.0000E+00  0.0000E+00
+    10     1.514   271.989  0.4800E-05  0.5298E-05  0.0000E+00  0.0000E+00
+    11     2.062   266.520  0.4800E-05  0.6777E-05  0.0000E+00  0.0000E+00
+    12     2.838   260.381  0.4800E-05  0.8413E-05  0.0000E+00  0.0000E+00
+    13     3.824   254.718  0.4800E-05  0.9292E-05  0.0000E+00  0.0000E+00
+    14     5.174   249.128  0.4800E-05  0.9717E-05  0.0000E+00  0.0000E+00
+    15     6.908   244.250  0.4800E-05  0.9958E-05  0.0000E+00  0.0000E+00
+    16     9.231   239.650  0.4800E-05  0.1011E-04  0.0000E+00  0.0000E+00
+    17    12.232   235.305  0.4800E-05  0.1012E-04  0.0000E+00  0.0000E+00
+    18    16.197   231.051  0.4800E-05  0.9058E-05  0.0000E+00  0.0000E+00
+    19    21.322   227.125  0.4800E-05  0.7870E-05  0.0000E+00  0.0000E+00
+    20    28.031   224.154  0.4800E-05  0.6899E-05  0.0000E+00  0.0000E+00
+    21    36.691   221.921  0.4800E-05  0.5870E-05  0.0000E+00  0.0000E+00
+    22    47.940   219.824  0.4800E-05  0.4741E-05  0.0000E+00  0.0000E+00
+    23    62.350   217.792  0.4800E-05  0.3396E-05  0.0000E+00  0.0000E+00
+    24    80.670   216.138  0.4800E-05  0.2212E-05  0.0000E+00  0.0000E+00
+    25   103.613   215.770  0.4800E-05  0.1372E-05  0.0000E+00  0.0000E+00
+    26   132.215   215.755  0.4800E-05  0.9093E-06  0.0000E+00  0.0000E+00
+    27   167.469   216.472  0.6128E-05  0.6119E-06  0.0000E+00  0.0000E+00
+    28   210.604   222.882  0.2839E-04  0.3808E-06  0.0000E+00  0.0000E+00
+    29   261.911   232.182  0.1255E-03  0.2573E-06  0.0000E+00  0.0000E+00
+    30   320.829   241.361  0.2975E-03  0.1871E-06  0.0000E+00  0.0000E+00
+    31   386.724   250.105  0.5591E-03  0.1456E-06  0.0000E+00  0.0000E+00
+    32   459.050   258.245  0.9541E-03  0.1163E-06  0.0000E+00  0.0000E+00
+    33   536.640   265.604  0.1528E-02  0.9520E-07  0.0000E+00  0.0000E+00
+    34   617.897   272.304  0.2668E-02  0.8146E-07  0.0000E+00  0.0000E+00
+    35   700.415   278.379  0.4424E-02  0.7111E-07  0.0000E+00  0.0000E+00
+    36   781.236   283.732  0.6566E-02  0.6314E-07  0.0000E+00  0.0000E+00
+    37   856.534   287.940  0.8845E-02  0.5794E-07  0.0000E+00  0.0000E+00
+    38   921.984   290.732  0.1096E-01  0.5433E-07  0.0000E+00  0.0000E+00
+    39   972.621   292.594  0.1264E-01  0.5183E-07  0.0000E+00  0.0000E+00
+    40  1003.438   293.672  0.1358E-01  0.5054E-07  0.0000E+00  0.0000E+00
+ 1013.000     Surface pressure [mb]
+  294.00      Surface air temperature [K]
+  294.00      Ground (skin) temperature [K]
+    1.0       Surface type flag (0=ocn, 1=lnd, 2=sea ice)
+    0.010     Surface aerodynamic roughness [m] (obsolete)
+    0.000     Snow cover liquid water equivalent [m]
+    0.100     Albedo (Vis, direct)
+    0.100     Albedo (Vis, diffuse)
+    0.100     Albedo (NIR, direct)
+    0.100     Albedo (NIR, diffuse)
+    0.0       Fraction strong zenith angle dep. sfc. (obsolete)
+    5.74e-4   CO2 volume mixing ratio
+    1.00e-50  N2O volume mixing ratio
+    1.00e-50  CH4 volume mixing ratio
+    0.0       CFC11 volume mixing ratio
+    0.0       CFC12 volume mixing ratio
+    0.0       Aerosol visible extinction optical depth*
+ 1360.0       Solar constant [W m-2]
+ 1950         Year AD (integer)
+    0.0       Longitude (degrees East, from 0.0 to 360.0)
+
+Notes on the input:
+
+The Julian day of year, also known as the calendar day (calday in the
+code), is always specified in Greenwich Mean Time (GMT).  For example,
+1.5 is Greenwich noon on January 1st, 2.0 is Greenwich midnight of
+January 2nd. 31.5 and 32.5 are GMT noontimes for January 31st and
+February 1st, respectively. Longitude is specified in degrees east of
+Greenwich.  The CRM uses the specified year, latitude, longitude and
+GMT to compute the correct Sun-Earth distance and solar zenith angle. 
+The CRM does not apply the equation of time, see the FAQ for details.
+
+Latitude runs from -90 to +90 degrees, Longitude from 0.0 to 360.0
+
+The total number of levels must be the same as the PLEV and PLEVR
+tokens in the file src/crm/params.h.
+ 
+Pressure data is on mid-levels, like temperature, moisture, and
+winds. The radiation code requires the interface pressures between
+layers. These are computed as simple averages of adjacent level
+pressures.
+
+Dimensional units of input data:
+Temperature is input in K
+Pressure is input in mb
+H2O and O3 are input as mass mixing ratios, 
+Cloud cover is input as a fraction from 0.0 to 1.0.
+Cloud cover of 1.0 is reset internally to 0.999, since cloud fractions
+of exactly 1.0 cause the longwave code to fail.
+Cloud liquid water path is input in g m-2 in each layer 
+Trace gases CO2, NO2, CH4, CFC11, and CFC12 are input as volume mixing
+ratios.
+
+Surface temperatures input are the air temperature in contact
+with the surface, and the actual skin temperature of the surface. 
+
+Surface type determines if the surface albedos specified are modified
+before use. Over ocean and sea-ice, the specified spectral/angular
+albedos are set internally. For land points, the spectral/angular
+albedos read in are used without modification. 
+
+Snow cover is used over sea-ice to help set surface albedos
+
+Fractional strong zenith angle dependent surface and surface
+aerodynamic roughness are obsolete. They are only input to maintain
+backwards compatability with previous CRM versions.
+
+*Important information regarding Aerosol Optical Depth (AOD) is
+contained in the file AEROSOL.
+
+Year AD must be input as an integer
+

@@ -1,0 +1,17 @@
+#! /bin/csh
+
+
+
+while ( ! -e ~/cron-interactive-on)
+    echo "Waiting....."
+    date
+    sleep 30s
+end
+
+
+
+exec './interactive'
+
+
+
+exit 0

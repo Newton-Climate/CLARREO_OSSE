@@ -1,0 +1,104 @@
+#PBS -S /bin/csh 
+#PBS -N cfd
+#==============================================================================
+#  This is a CCSM batch job script for scs
+#==============================================================================
+## BATCH INFO
+#PBS -l select=2:ncpus=8:mpiprocs=8
+#PBS -l walltime=2:00:00
+#PBS -j oe
+#PBS -m abe
+##PBS -M daniel_r_feldman@berkeley.edu
+#PBS -V      
+
+###Add modules
+
+cd $PBS_O_WORKDIR
+
+
+module load mpi/mvapich_intel
+module load netcdf/3.6.0/intel
+module load comp/intel/11.0.083_64
+
+limit stacksize unlimited
+#ulimit -s unlimited
+#export MKL_NUM_THREADS=1
+setenv MKL_NUM_THREADS 1
+setenv OMP_NUM_THREADS 1
+
+#NAME OF INPUT FILE THAT WE WISH TO RUN WITH (not the full path and minus .nc)
+#input_name=b30.042a.cam2.h0.2000-07
+#input_name2=b30.042a.cam2.h0.2050-07
+
+
+#CREATE NAMESb30.042a.cam2.h0.2000-07
+#base_dir_path=`pwd`
+#full_path_binary=${base_dir_path}"/radiation"
+#settings_forcing="/home1/dfeldman/settings_forcing.inp"
+#base_input_path="/home1/dfeldman/esg/"
+
+
+#DEBUG INFO
+#echo
+#echo "NAMES"
+#echo "current working directory = "${base_dir_path}
+#echo "full path for the executable = "${full_path_binary}
+#echo "full path for the settings_forcing = "${settings_forcing}
+#echo "base path to the input directory = "${base_input_path}
+#echo "END NAMES"
+#echo
+
+
+
+
+
+
+
+#EXECUTABLE ARGUMENTS
+#input_cam=${base_input_path}${input_name}".nc"
+#output_cam=${input_name}".out.nc"
+#input_cam2=${base_input_path}${input_name2}".nc"
+#output_cam2=${input_name2}".out.nc"
+
+
+#DEBUG INFO
+#echo
+#echo "FILE PATHS"
+#echo "full path for the netcdf input file = "${input_cam}
+#echo "name of the output netcdf file = "${output_cam}
+#echo
+#echo
+#echo "full path for the netcdf input file = "${input_cam2}
+#echo "name of the output netcdf file = "${output_cam2}
+#echo "END FILE PATHS"
+#echo
+
+date
+#EXECUTE
+mpiexec -np 16 /home1/calgieri/parallel/clarreo/clarreo_osse/trunk/NOAA_modtran_surface/radiation /home1/dfeldman/esg/b30.042a.cam2.h0.2000-07.nc /home1/dfeldman/esg/b30.042a.cam2.h0.2000-07.nc b30.042a.cam2.h0.2000-07.out.nc < /home1/dfeldman/settings_forcing.inp
+#mpiexec -np 16 ${full_path_binary}  ${input_cam}  ${input_cam}  ${output_cam} < ${settings_forcing}
+
+date
+#mpiexec -np 16 ${full_path_binary}  ${input_cam2}  ${input_cam2}  ${output_cam2} < ${settings_forcing}
+
+exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

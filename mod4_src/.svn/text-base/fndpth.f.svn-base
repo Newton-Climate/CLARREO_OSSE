@@ -1,0 +1,145 @@
+      SUBROUTINE FNDPTH(CPATH,H1,HTAN,H2,RANGEI,BETA,LENN,ANGLE,PHI)
+
+!     THIS ROUTINE DETERMINES H2, BETA AND LENN GIVEN H1, ANGLE, RANGE,
+!     HTAN, AND CPATH (THE LOWTRAN 6 MANUAL, AFGL-TR-83-0187, PP 14-17).
+
+!     PARAMETERS:
+      INCLUDE 'ERROR.h'
+
+!     DECLARE ARGUMENTS:
+!       CPATH   REFRACTIVE PATH CONSTANT [KM].
+!       H1      OBSERVER ALTITUDE [KM].
+!       HTAN    SLANT PATH TANGENT ALTITUDE [KM].
+!       H2      FINAL ALTITUDE [KM].
+!       RANGEI  SLANT PATH RANGE [KM].
+!       BETA    EACH CENTER ANGLE [DEG].
+!       LENN    LENGTH SWITCH (=0 FOR SHORT PATHS,
+!                 =1 FOR PATHS THROUGH TANGENT POINT WITH H2<H1).
+!       ANGLE   PATH ZENITH ANGLE AT H1 TOWARDS H2 [DEG].
+!       PHI     PATH ZENITH ANGLE AT H2 TOWARDS H1 [DEG].
+      INTEGER LENN
+      DOUBLE PRECISION CPATH,H1,HTAN,H2,RANGEI,BETA,ANGLE,PHI
+
+!     LIST COMMONS:
+      REAL GNDALT
+      COMMON/GRAUND/GNDALT
+      REAL RE,ZMAX
+      INTEGER IPATH
+      COMMON/PARMTR/RE,ZMAX,IPATH
+
+!     DECLARE LOCAL VARIABLES
+!       CAPRJ IS FOR CAPITAL R WITH SUBSCRIPT J
+!       PNTGRN IS THE INTEGRAND OF EQUATION 21.
+      INTEGER I
+      DOUBLE PRECISION R1,R2,R,DR,RPLDR,RANGEO,PNTGRN,SAVSIN,           &
+     &  RX,RATIO,CAPRJ,XJ,XJPL1,DX,CTHETA,STHETA,DBETA,                 &
+     &  Z,DZ,DPDEG,BASE,PERP,DRNG,DIFF,DPRE
+      DATA DR,DPDEG/0.005,57.2957795131D0/
+
+!     (RANGEI .LT. DR) SHOULD NOT HAPPEN; SO THIS CHECK IS REDUNDANT.
+      IF (RANGEI .LT. DR) THEN
+          IF(LJMASS)CALL WRTBUF(FATAL)
+          STOP ' STOPPED IN FNDPTH'
+      ENDIF
+      DPRE=DBLE(RE)
+      RANGEO=0
+      BETA=0
+      DO 200 I=1,2
+         IF (ANGLE.LE.90.D0 .AND. I.EQ.1)GOTO200
+         IF (I .EQ. 1) THEN
+            R1=DPRE+H1
+            R2=DPRE+HTAN
+         ELSEIF (I .EQ. 2) THEN
+            IF(HTAN.LT.DBLE(GNDALT+.001) .AND. ANGLE.GT.90.D0)GOTO200
+!           IF (HTAN APPROXIMATELY 0) THEN YOU ARE ABOUT TO HIT THE EART
+            R2=DPRE+DBLE(ZMAX)
+            IF (ANGLE.LE.90.D0) THEN
+               R1=DPRE + H1
+            ELSE
+               R1 =DPRE + HTAN
+            ENDIF
+         ENDIF
+         IF (R2 .LT. R1) THEN
+            DZ=-DR
+         ELSE
+            DZ=DR
+         ENDIF
+         DO 100 R=R1, R2-DZ, DZ
+            Z=R-DPRE
+            CALL IRFXN(Z,RX,RATIO)
+            STHETA=CPATH/(RX*R)
+            IF(STHETA.GT. DBLE(1.))STHETA= DBLE(1.)
+            IF(STHETA.LT.-DBLE(1.))STHETA=-DBLE(1.)
+            SAVSIN=STHETA
+            CTHETA=SQRT(DBLE(1.)-STHETA**2)
+
+!           IF (R1 .GT. R2) THEN CTHETA IS NEGATIVE BECAUSE THETA .GT. 9
+            IF (R1 .GT. R2) CTHETA=-CTHETA
+            XJ=R*CTHETA
+            CAPRJ=-R/RATIO
+            PNTGRN=1/(1-CAPRJ*STHETA*STHETA)
+            RPLDR=R+DZ
+            Z=RPLDR-DPRE
+            CALL IRFXN(Z,RX,RATIO)
+            STHETA=CPATH/(RX*RPLDR)
+            CTHETA=SQRT(1-STHETA**2)
+            IF (R1 .GT. R2) CTHETA=-CTHETA
+            XJPL1=RPLDR*CTHETA
+            DX=XJPL1-XJ
+            DRNG=PNTGRN*DX
+            RANGEO=RANGEO + DRNG
+            DBETA=(((SAVSIN+STHETA)/2)*(PNTGRN*DX))/(R-DZ/2)
+            BETA=BETA+DBETA
+            IF (RANGEO .GE. RANGEI) THEN
+               DIFF=(RANGEI-(RANGEO-DRNG))
+               H2=R -DPRE + (DZ/DRNG)*DIFF
+               BETA=BETA*DPDEG
+               IF (I .EQ. 2) THEN
+                  LENN=1
+                  IF (ANGLE.LE.90.D0)LENN=0
+                  IF(H2.LT.HTAN)THEN
+
+!                    THIS WILL BE THE CASE IF I=2, AND YOU HAVE
+!                    GONE THROUGH THE R-LOOP BARELY (ONLY) ONCE.
+                     H2=HTAN
+                     LENN=0
+                  ENDIF
+               ELSE
+                  LENN=0
+               ENDIF
+
+!              CORRECTION FOR VERY SHORT PATHS; HERE IT IS ABOUT 5 KM OR
+               IF (RANGEI .LT. 5.0 .AND. RANGEO/RANGEI .GT. 1.05) THEN
+!                 CALCULATE BETA BY STARIGHT LINE GEOMETRY.
+                  PERP =SIN(ANGLE/DPDEG)*RANGEI
+                  BASE=COS(ANGLE/DPDEG)*RANGEI + DPRE+H1
+                  BETA=ATAN(PERP/BASE)*DPDEG
+                  RANGEO=RANGEI
+                  H2=BASE-DPRE
+               ENDIF
+               PHI=DBLE(180.)-ACOS(CTHETA)*DPDEG
+               RETURN
+            ENDIF
+ 100     CONTINUE
+ 200  CONTINUE
+
+!     COMES HERE IF YOU HAVE REACHED ZMAX, BUT YOUR RANGEI IS STILL
+!     NOT EQUAL TO OUTPUT VALUE.
+!     IN THIS CASE DO THE FOLLOWING.
+
+      RANGEI=RANGEO
+      H2=DBLE(ZMAX)
+      IF (ANGLE.LE.90.D0)THEN
+         LENN=0
+      ELSE
+         LENN=1
+      ENDIF
+      IF(HTAN.LT.DBLE(GNDALT+.001) .AND. ANGLE.GT.90.D0)THEN
+!        YOU HAVE HIT THE EARTH IF YOU ARE AT THIS POINT OF THE CODE
+         LENN=0
+         H2=DBLE(GNDALT)
+      ENDIF
+      BETA=BETA*DPDEG
+      PHI=DBLE(180.)-ACOS(CTHETA)*DPDEG
+      RETURN
+      END

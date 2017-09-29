@@ -1,0 +1,232 @@
+      SUBROUTINE CRUPRF(NCRALT,M_CLOUD_LIQ,M_CLOUD_ICE,NUM_LEVS,        &
+     &                  Z_CLD_VAL) 
+
+!     THIS ROUTINE READS IN USER-DEFINED CLOUD/RAIN MODEL PROFILES.
+      INTEGER NUM_LEVS
+      REAL M_CLOUD_LIQ(NUM_LEVS-1)
+      REAL M_CLOUD_ICE(NUM_LEVS-1)
+      REAL Z_CLD_VAL(NUM_LEVS-1)
+
+!     LIST PARAMETERS
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'ERROR.h'
+
+!     DECLARE INPUTS
+!       NCRALT    NUMBER OF CLOUD/RAIN PROFILES BOUNDARY ALTITUDES
+      INTEGER NCRALT
+
+!     LIST COMMONS
+      INCLUDE 'IFIL.h'
+
+!     /CLDRR/
+!       PCLD     CLOUD PROFILE PRESSURE [MB].
+      REAL PCLD,ZCLD,CLD,CLDICE,RR
+      COMMON/CLDRR/PCLD,ZCLD(1:NZCLD,0:1),CLD(1:NZCLD,0:5),             &
+     &  CLDICE(1:NZCLD,0:1),RR(1:NZCLD,0:5)
+
+!     /CARD1/
+      INTEGER MODEL,ITYPE,IEMSCT,M1,M2,M3,IM,NOPRNT
+      LOGICAL MODTRN
+      COMMON/CARD1/MODEL,ITYPE,IEMSCT,M1,M2,M3,IM,NOPRNT,MODTRN
+
+!     /CNTRL/
+!       IKMAX    NUMBER OF PATH SEGMENTS ALONG LINE-OF-SIGHT.
+!       ML       NUMBER OF ATMOSPHERIC PROFILE LEVELS.
+!       MLFLX    NUMBER OF LEVELS FOR WHICH FLUX VALUES ARE WRITTEN.
+!       ISSGEO   LINE-OF-SIGHT FLAG (0 = SENSOR PATH, 1 = SOLAR PATHS).
+!       IMULT    MULTIPLE SCATTERING FLAG
+!                  (0=NONE, 1=AT SENSOR, -1=AT FINAL OR TANGENT POINT).
+      INTEGER IKMAX,ML,MLFLX,ISSGEO,IMULT
+      COMMON/CNTRL/IKMAX,ML,MLFLX,ISSGEO,IMULT
+
+!     /MDATA/
+      REAL P,T,WH,WCO2,WO,WN2O,WCO,WCH4,WO2
+      COMMON/MDATA/P(LAYDIM),T(LAYDIM),WH(LAYDIM),WCO2(LAYDIM),         &
+     &  WO(LAYDIM),WN2O(LAYDIM),WCO(LAYDIM),WCH4(LAYDIM),WO2(LAYDIM)
+
+!     /MODEL/
+!       ZM       PROFILE BOUNDARY ALTITUDES [KM].
+!       PM       PROFILE BOUNDARY PRESSURES [MBAR].
+!       TM       PROFILE BOUNDARY TEMPERATURES [K].
+!       RFNDX    PROFILE BOUNDARY REFRACTIVITIES.
+!       DENSTY   PROFILE BOUNDARY DENSITIES [UNITS DEPEND ON SPECIES].
+!       LRHSET   FLAG, TRUE IF RELATIVE HUMIDITY CANNOT BE SCALED.
+      REAL ZM,PM,TM,RFNDX,DENSTY
+      LOGICAL LRHSET
+      COMMON/MODEL/ZM(LAYDIM),PM(LAYDIM),TM(LAYDIM),                    &
+     &  RFNDX(LAYDIM),DENSTY(MEXT,LAYDIM),LRHSET(LAYDIM)
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      SAVE /CLDRR/
+      EXTERNAL DEVCBD,MDTA
+
+!     LOCAL VARIABLES:
+!       TCLD     CLOUD PROFILE TEMPERATURE [K].
+!       ZCLOUD   CLOUD PROFILE ABOVE SEA-LEVEL ALTITUDE [KM].
+!       PCLDSV   PREVIOUS CLOUD PROFILE PRESSURE [MB].
+      INTEGER IALTM1,ICRALT,K,KM1,KSAV,KSAVM1
+      REAL TCLD,ZCLOUD,PCLDSV
+
+!     FUNCTIONS:
+!       HYSTAT   INTEGRATES HYDROSTATIC EQUATION TO FIND ALTITUDE.
+      REAL HYSTAT
+
+!     CHECK NUMBER OF BOUNDARY ALTITUDES (NCRALT)
+      IF(NCRALT.GT.NZCLD)THEN
+          WRITE(IPR,'(/2A,I3,A,/8X,A,I3,A,/8X,2A)')' ERROR:  ',         &
+     &      'THE INPUT NUMBER OF CLOUD/RAIN BOUNDARY ALTITUDES (',      &
+     &      NCRALT,')',' EXCEEDS PARAMETER "NZCLD" (=',                 &
+     &      NZCLD,').  INCREASE "NZCLD"',' IN "PARAMS.h"',              &
+     &      ' AND MAKE NECESSARY CHANGES IN BLOCK DATA "MDTA".'
+          IF(LJMASS)CALL WRTBUF(FATAL)
+          STOP 'TOO MANY CLOUD/RAIN BOUNDARY ALTITUDES'
+      ENDIF
+
+!     WRITE OUT USER-DEFINED CLOUD/RAIN MODEL PROFILES MESSAGE
+      IF(.NOT.LJMASS)WRITE(IPR,'(/2A,I3,A)')' USER-DEFINED CLOUD/RAIN', &
+     &  ' MODEL PROFILES WITH',NCRALT,' BOUNDARY ALTITUDES.'
+
+!     READ IN DATA AT FIRST ALTITUDE
+      ICRALT=1
+      IF(MODEL.EQ.8)THEN
+          IF(LJMASS)THEN
+              CALL INITCARD( 'CARD2E1')
+          ELSE
+              READ(IRD,'(4F10.0)',ERR=60)                               &
+     &          PCLD,CLD(1,0),CLDICE(1,0),RR(1,0)
+          ENDIF
+
+!         INTEGRATE HYDROSTATIC EQUATION TO FIND ALTITUDE:
+          KM1=1
+          IF(PCLD.GT.P(1))PCLD=P(1)
+          DO 10 K=2,ML
+              IF(PCLD.GE.P(K))THEN
+                  TCLD=T(KM1)                                           &
+     &              +(T(K)-T(KM1))*LOG(PCLD/P(KM1))/LOG(P(K)/P(KM1))
+
+!                 FIND CLOSER PRESSURE LEVEL:
+                  IF(PCLD-P(K).LT.P(KM1)-PCLD)THEN
+                      ZCLOUD=HYSTAT(ZM(K),T(K),P(K),TCLD,PCLD)
+                  ELSE
+                      ZCLOUD=HYSTAT(ZM(KM1),T(KM1),P(KM1),TCLD,PCLD)
+                  ENDIF
+                  ZCLD(1,0)=ZCLOUD-ZM(1)
+                  IF(ABS(ZCLD(1,0)).LT..0001)ZCLD(1,0)=0.
+                  KSAVM1=KM1
+                  PCLDSV=PCLD
+                  GOTO20
+              ENDIF
+              KM1=K
+   10     CONTINUE
+          GOTO60
+      ELSEIF(LJMASS)THEN
+          CALL INITCARD( 'CARD2E1')
+      ELSE
+!DRF          READ(IRD,'(4F10.0)',ERR=60)                                   &
+!DRF     &      ZCLD(1,0),CLD(1,0),CLDICE(1,0),RR(1,0)
+         ZCLD(1,0) = Z_CLD_VAL(1)
+         CLD(1,0) = M_CLOUD_LIQ(1)
+         CLDICE(1,0) = M_CLOUD_ICE(1)
+         RR(1,0) = 0.0
+      ENDIF
+   20 CONTINUE
+
+!     THE BASE ALTITUDE (DEFINED RELATIVE TO THE GROUND), THE
+!     DENSITIES AND THE RAIN RATE MUST BE ALL BE NON-NEGATIVE
+      IF(ZCLD(1,0).LT.0.)THEN
+          WRITE(IPR,'(/2A,F10.5,A)')' ERROR:  THE CLOUD/RAIN',          &
+     &      ' PROFILE BASE ALTITUDE IS',ZCLD(1,0),' KM BELOW GROUND.'
+          IF(LJMASS)CALL WRTBUF(FATAL)
+          STOP ' CLOUD/RAIN PROFILE BASE ALTITUDE IS BELOW THE GROUND'
+      ENDIF
+      IF(CLD(1,0).LT.0. .OR. CLDICE(1,0).LT.0. .OR. RR(1,0).LT.0.)THEN
+          WRITE(IPR,'(/A,(A,F10.5,A))')' ERROR:  NEGATIVE',             &
+     &      ' CLOUD/RAIN DENSITY/RATE INPUT AT',ZCLD(1,0),' KM.',       &
+     &      '         WATER DROPLET DENSITY',CLD(1,0),' GM/M3',         &
+     &      '         ICE PARTICLE DENSITY ',CLDICE(1,0),' GM/M3',      &
+     &      '         RAIN RATE            ',RR(1,0),' MM/HR'
+          IF(LJMASS)CALL WRTBUF(FATAL)
+          STOP 'NEGATIVE CLOUD/RAIN DENSITY/RATE INPUT'
+      ENDIF
+
+!     LOOP OVER PROFILE ALTITUDE
+      IALTM1=1
+      DO 50 ICRALT=2,NCRALT
+
+!         READ IN DATA:
+          IF(MODEL.EQ.8)THEN
+              IF(LJMASS)THEN
+                  CALL INITCARD( 'CARD2E1' )
+              ELSE
+                  READ(IRD,'(4F10.0)',ERR=60)                           &
+     &              PCLD,CLD(ICRALT,0),CLDICE(ICRALT,0),RR(ICRALT,0)
+              ENDIF
+
+!             INTEGRATE HYDROSTATIC EQUATION TO FIND ALTITUDE:
+              KM1=KSAVM1
+              KSAV=KM1+1
+              DO 30 K=KSAV,ML
+                  IF(PCLDSV.LE.PCLD)GOTO20
+                  IF(PCLD.GE.P(K))THEN
+                      TCLD=T(KM1)                                       &
+     &                  +(T(K)-T(KM1))*LOG(PCLD/P(KM1))/LOG(P(K)/P(KM1))
+                      IF(PCLD-P(K).LT.P(KM1)-PCLD)THEN
+                          ZCLOUD=HYSTAT(ZM(K),T(K),P(K),TCLD,PCLD)
+                      ELSE
+                          ZCLOUD=HYSTAT(ZM(KM1),T(KM1),P(KM1),TCLD,PCLD)
+                      ENDIF
+                      ZCLD(ICRALT,0)=ZCLOUD-ZM(1)
+                      KSAVM1=KM1
+                      PCLDSV=PCLD
+                      GOTO40
+                  ENDIF
+                  KM1=K
+   30         CONTINUE
+              GOTO60
+          ELSEIF(LJMASS)THEN
+              CALL INITCARD( 'CARD2E1' )
+          ELSE
+!DRF              READ(IRD,'(4F10.0)',ERR=60)ZCLD(ICRALT,0),CLD(ICRALT,0),  &
+!DRF     &          CLDICE(ICRALT,0),RR(ICRALT,0)
+            ZCLD(ICRALT,0) = Z_CLD_VAL(ICRALT)
+            CLD(ICRALT,0) = M_CLOUD_LIQ(ICRALT)
+            CLDICE(ICRALT,0) = M_CLOUD_ICE(ICRALT)
+            RR(ICRALT,0) = 0.0
+          ENDIF
+   40     CONTINUE
+
+!         CHECK FOR INCREASING ALTITUDES.
+          IF(ZCLD(ICRALT,0).LE.ZCLD(IALTM1,0))THEN
+              WRITE(IPR,'(/3A,/8X,A,/(8X,I5,F10.5))')' ERROR: ',        &
+     &          ' THE CLOUD/RAIN PROFILE ALTITUDES MUST BE INPUT IN',   &
+     &          ' INCREASING ORDER.',' VALUES READ IN THUS FAR ARE:',   &
+     &          (IALTM1,ZCLD(IALTM1,0),IALTM1=1,ICRALT)
+              IF(LJMASS)CALL WRTBUF(FATAL)
+              STOP ' CLOUD/RAIN ALTITUDES NOT MONOTONICALLY INCREASING'
+          ENDIF
+
+!         CHECK FOR NEGATIVE CLOUD DENSITIES OR RAIN RATES.
+          IF(CLD(ICRALT,0).LT.0. .OR. CLDICE(ICRALT,0).LT.0.            &
+     &      .OR. RR(ICRALT,0).LT.0.)THEN
+              WRITE(IPR,'(/2A,F10.5,A,/(8X,A,F10.5,A))')                &
+     &          ' ERROR:  NEGATIVE CLOUD/RAIN DENSITY',                 &
+     &          '/RATE INPUT AT',ZCLD(ICRALT,0),' KM.',                 &
+     &          ' WATER DROPLET DENSITY',CLD(ICRALT,0),' GM/M3',        &
+     &          ' ICE PARTICLE DENSITY ',CLDICE(ICRALT,0),' GM/M3',     &
+     &          ' RAIN RATE            ',RR(ICRALT,0),' MM/HR'
+              IF(LJMASS)CALL WRTBUF(FATAL)
+              STOP ' NEGATIVE CLOUD/RAIN DENSITY/RATE INPUT'
+          ENDIF
+          IALTM1=ICRALT
+   50 CONTINUE
+
+!     RETURN TO CRPROF
+      RETURN
+
+!     ERROR READING CLOUD/RAIN DATA
+   60 CONTINUE
+      WRITE(IPR,'(/2A,I3)')' ERROR:  UNABLE TO READ',                   &
+     &  ' CLOUD/RAIN PROFILE DATA FOR LAYER',ICRALT
+      IF(LJMASS)CALL WRTBUF(FATAL)
+      STOP 'ERROR READING CLOUD/RAIN PROFILE DATA'
+      END

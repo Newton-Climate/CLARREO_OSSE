@@ -1,0 +1,4 @@
+Not invoked from a known Work Load Manager:
+ o For PBS   : PBS_NODEFILE is not set.
+ o For SLURM : SLURM_JOB_ID is not set.
+mpiexec.real error: Aborting.

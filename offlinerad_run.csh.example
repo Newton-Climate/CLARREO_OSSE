@@ -1,0 +1,51 @@
+#!/bin/sh
+
+########################################################################################
+##### assumes you have run "gmake" in working dir
+#     if in production mode, use OMP, change = SMP to TRUE in Makefile
+#     if in debug mode, SMP = FALSE    
+##### assumes you have modified params.h file to appropriate plat,plon,plev,pcol
+#     pcol = plev
+##### assumes you have input file in INPUT dir
+#  
+##### assumes you have created OUTPUT dir for output file 
+#
+##### assumes you have modified settings.inp to your case (resides in INPUT dir)                                  #     see README.main,REAMDE.swap  
+##### job_type = serial because not using mpi
+##### OMP_NUM_THREADS = # of proccessors on node, if using 32way node, set to 32
+########################################################################################3
+
+
+ 
+## Load leveler options
+#@ class          = com_pr32
+#@ job_name       = oflr_eul64x128_dev59r
+#@ shell          = /usr/bin/csh
+#@ output         = $(job_name).$(stepid).out
+#@ error          = $(job_name).$(stepid).err
+#@ job_type       = serial 
+#@ account_no = 06010016
+#@ ja_report = yes
+##@ network.MPI    = csss,not_shared,us
+##@ node           = 8
+##@ tasks_per_node = 2 
+#@ node_usage     = not_shared
+#@ wall_clock_limit = 1000
+#@ queue
+                                                                                                          
+## More environment variables.  These are necessary for both batch and interactive jobs.
+#setenv MP_SHARED_MEMORY yes
+#setenv OMP_NUM_THREADS 32 
+#setenv XLSMPOPTS "stack=86000000"
+limit stacksize unlimited
+
+## Run "Radiation" 
+#setenv $wkdir /ptmp/shields/oflr_eul64x128_dev59r/NOAA
+#cd $wkdir 
+touch oflr_output.txt
+echo "Beg:: "`date` `perl -e 'print time();'` >> oflr_output.txt
+time ./radiation ./INPUT/eul64x128_dev59r.cam2.h1.0007-12-18-10800.nc ./INPUT/eul64x128_dev59r.cam2.h1.0007-12-18-10800.nc ./OUTPUT/oflr_eul64x128_dev59r.cam2.h1.0007-12-18-10800.nc < INPUT/settings_forcing.inp 
+echo "End:: "`date` `perl -e 'print time();'` >> oflr_output.txt
+
+exit
+

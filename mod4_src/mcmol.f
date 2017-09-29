@@ -1,0 +1,126 @@
+      SUBROUTINE MCMOL(IVX,IK,IKMAX,NMWAVE,                             &
+     &  TH2O,TUMIX,TO3,TLH2O,TLUMIX,TLO3)
+
+!     MCMOL WRITES MOLECULAR TRANSMITTANCE DATA FOR MONTE-CARLO
+!     SIMULATIONS (ASSUMES NM BINS AND 1 CM-1 BAND MODEL).
+
+!     PARAMETERS:
+      INCLUDE 'PARAMS.h'
+
+!     INPUT ARGUMENTS:
+!       IVX      SPECTRAL FREQUENCY [CM-1].
+!       IK       PATH SEGMENT INDEX.
+!       IKMAX    NUMBER OF PATH SEGMENTS.
+!       NMWAVE   WAVELENGTH BIN OF PREVIOUS DATA [NM].
+!       TH2O     DIRECT PATH MOLECULAR H2O TRANSMITTANCE.
+!       TUMIX    DIRECT PATH UNIFORMLY MIXED GASES TRANSMITTANCE.
+!       TO3      DIRECT PATH MOLECULAR O3 TRANSMITTANCE.
+!       TLH2O    L-SHAPED PATH MOLECULAR H2O TRANSMITTANCE.
+!       TLUMIX   L-SHAPED PATH UNIFORMLY MIXED GASES TRANSMITTANCE.
+!       TLO3     L-SHAPED PATH MOLECULAR O3 TRANSMITTANCE.
+
+!     OUTPUT ARGUMENTS:
+!       NMWAVE   WAVELENGTH BIN OF CURRENT DATA [NM].
+      INTEGER IVX,IK,IKMAX,NMWAVE
+      REAL TH2O,TUMIX,TO3,TLH2O,TLUMIX,TLO3
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     /JM5/
+!       IRPT     REPEAT INPUT FLAG (0=NONE, 1=ALL, 3=GEOM, 4=SPEC).
+!       IFAC     CURRENT COLUMN SCALING FACTOR INDEX.
+!       NFACMN   NUMBER OF COLUMN SCALING FACTOR LESS THAN 1.
+!       NFACMX   NUMBER OF COLUMN SCALING FACTOR GREATER THAN 1.
+!       FACMC    CURRENT COLUMN SCALING FACTOR.
+!       SCALMN   MINIMUM COLUMN SCALING FACTOR.
+!       SCALMX   MAXIMUM COLUMN SCALING FACTOR.
+      INTEGER IRPT,IFAC,NFACMN,NFACMX
+      REAL FACMC
+      DOUBLE PRECISION SCALMN,SCALMX
+      COMMON/JM5/SCALMN,SCALMX,IRPT,IFAC,NFACMN,NFACMX,FACMC
+
+!     LOCAL VARIABLES:
+!       NM       CURRENT WAVELENGTH [NM].
+!       I        PATH SEGMENT INDEX.
+      INTEGER NM,I
+
+!     SAVED VARIABLES:
+!       IREC     RECORD NUMBER.
+!       WT       SPECTRAL BIN NORMALIZATION.
+!       DWT      SPECTRAL BIN WEIGHT.
+!       TRNH2O   MOLECULAR H2O TRANSMITTANCE.
+!       TRNUMX   UNIFORMLY MIXED GASES TRANSMITTANCE.
+!       TRNO3    MOLECULAR O3 TRANSMITTANCE.
+!       SAVH2O   SAVED MOLECULAR H2O TRANSMITTANCE.
+!       SAVUMX   SAVED UNIFORMLY MIXED GASES TRANSMITTANCE.
+!       SAVO3    SAVED MOLECULAR O3 TRANSMITTANCE.
+      INTEGER IREC
+      REAL WT,DWT,                                                      &
+     &  TRNH2O(1:2,0:LAYTWO),TRNUMX(1:2,0:LAYTWO),TRNO3(1:2,0:LAYTWO),  &
+     &  SAVH2O(1:2,0:LAYTWO),SAVUMX(1:2,0:LAYTWO),SAVO3(1:2,0:LAYTWO)
+      SAVE IREC,WT,DWT,TRNH2O,TRNUMX,TRNO3,SAVH2O,SAVUMX,SAVO3
+      NM=INT(1.E7/(IVX+.5)+.5)
+      IF(NMWAVE.NE.NM)THEN
+
+!         NEW SPECTRAL BIN:
+          IF(NMWAVE.NE.0)THEN
+
+!             WRITE PREVIOUS WAVELENGTH BIN DATA:
+              IF(IK.EQ.0)THEN
+                  DWT=1.E7/(NM+.5)-(IVX-.5)
+                  WT=WT+DWT
+              ENDIF
+              SAVH2O(1,IK)=(TRNH2O(1,IK)+DWT*TLH2O)/WT
+              SAVUMX(1,IK)=(TRNUMX(1,IK)+DWT*TLUMIX)/WT
+              SAVO3(1,IK)=(TRNO3(1,IK)+DWT*TLO3)/WT
+              SAVH2O(2,IK)=(TRNH2O(2,IK)+DWT*TH2O)/WT
+              SAVUMX(2,IK)=(TRNUMX(2,IK)+DWT*TUMIX)/WT
+              SAVO3(2,IK)=(TRNO3(2,IK)+DWT*TO3)/WT
+              IF(IK.EQ.IKMAX)THEN
+                  IREC=IREC+1
+                  WRITE(IDBOUT,REC=IREC)                                &
+     &              (SAVH2O(1,I),I=0,IKMAX),(SAVUMX(1,I),I=0,IKMAX),    &
+     &              (SAVO3(1,I),I=0,IKMAX),(SAVH2O(2,I),I=0,IKMAX),     &
+     &              (SAVUMX(2,I),I=0,IKMAX),(SAVO3(2,I),I=0,IKMAX)
+                  IF(IFAC.EQ.0)THEN
+                      WRITE(IPR1,'(I8,A,/(13F9.6))')NMWAVE,             &
+     &                  ' NM - H2O (L-SHAPE)',(SAVH2O(1,I),I=0,IKMAX)
+                      WRITE(IPR1,'(I8,A,/(13F9.6))')NMWAVE,             &
+     &                  ' NM - UMIX (L-SHAPE)',(SAVUMX(1,I),I=0,IKMAX)
+                      WRITE(IPR1,'(I8,A,/(13F9.6))')NMWAVE,             &
+     &                  ' NM - O3 (L-SHAPE)',(SAVO3(1,I),I=0,IKMAX)
+                      WRITE(IPR1,'(I8,A,/(13F9.6))')NMWAVE,             &
+     &                  ' NM - H2O (DIRECT)',(SAVH2O(2,I),I=0,IKMAX)
+                      WRITE(IPR1,'(I8,A,/(13F9.6))')NMWAVE,             &
+     &                  ' NM - UMIX (DIRECT)',(SAVUMX(2,I),I=0,IKMAX)
+                      WRITE(IPR1,'(I8,A,/(13F9.6))')NMWAVE,             &
+     &                  ' NM - O3 (DIRECT)',(SAVO3(2,I),I=0,IKMAX)
+                  ENDIF
+                  WT=1.-DWT
+                  NMWAVE=NM
+              ENDIF
+          ELSEIF(IK.EQ.0)THEN
+              IREC=0
+              DWT=MAX(1.E7/(NM+.5)-(IVX-.5),0.)
+          ELSEIF(IK.EQ.IKMAX)THEN
+              WT=1.-DWT
+              NMWAVE=NM
+          ENDIF
+          TRNH2O(1,IK)=(1.-DWT)*TLH2O
+          TRNUMX(1,IK)=(1.-DWT)*TLUMIX
+          TRNO3(1,IK)=(1.-DWT)*TLO3
+          TRNH2O(2,IK)=(1.-DWT)*TH2O
+          TRNUMX(2,IK)=(1.-DWT)*TUMIX
+          TRNO3(2,IK)=(1.-DWT)*TO3
+      ELSE
+          IF(IK.EQ.IKMAX)WT=WT+1.
+          TRNH2O(1,IK)=TRNH2O(1,IK)+TLH2O
+          TRNUMX(1,IK)=TRNUMX(1,IK)+TLUMIX
+          TRNO3(1,IK)=TRNO3(1,IK)+TLO3
+          TRNH2O(2,IK)=TRNH2O(2,IK)+TH2O
+          TRNUMX(2,IK)=TRNUMX(2,IK)+TUMIX
+          TRNO3(2,IK)=TRNO3(2,IK)+TO3
+      ENDIF
+      RETURN
+      END

@@ -1,0 +1,1097 @@
+#f90 = pgf90
+#opt = -fastsse
+#linkopt = -fastsse
+
+f90 = pgf90
+#opt = -O -r8 -i4
+opt = -O -g 
+linkopt = -O
+
+O = mod4_obj/
+S = mod4_src/
+
+LINK = $(f90) $(linkopt)  -o
+COMPILE = $(f90) $(opt) -c
+EXECUTABLE = Mod4v3r1_F90.exe
+
+$(EXECUTABLE):			  \
+	$(O)Modtrn.o $(O)ab.o     \
+	$(O)abcd.o   $(O)abcdta.o \
+	$(O)aerext.o $(O)aermrg.o \
+	$(O)aernsm.o $(O)aerprf.o \
+	$(O)aertmp.o $(O)aitk.o   \
+	$(O)albtrn.o $(O)altrin.o \
+	$(O)aprfnu.o $(O)aruexa.o \
+	$(O)asymtx.o $(O)atmcon.o \
+	$(O)bbfn.o   $(O)betabs.o \
+	$(O)bfh2o.o  $(O)bmcork.o \
+	$(O)bmdata.o $(O)bmflux.o \
+	$(O)bmload.o $(O)bmod.o   \
+	$(O)bmtran.o $(O)bmxld.o  \
+	$(O)bo2c.o   $(O)bo3hh0.o \
+	$(O)bo3hh1.o $(O)bo3hh2.o \
+	$(O)bs.o     $(O)c4d.o    \
+	$(O)c4dta.o  $(O)c6dta.o  \
+	$(O)card5.o  $(O)check.o  \
+	$(O)chekin.o $(O)chkres.o \
+	$(O)cirmod.o $(O)cirr18.o \
+	$(O)cirrus.o $(O)ckd.o    \
+	$(O)clddta.o $(O)cldmod.o \
+	$(O)cldprf.o $(O)cmpint.o \
+	$(O)cnvphi.o $(O)compar.o \
+	$(O)convrt.o $(O)cool.o   \
+	$(O)cool0.o  $(O)cossct.o \
+	$(O)cph2o.o  $(O)cpo3.o   \
+	$(O)cptrcg.o $(O)cpumix.o \
+	$(O)crdeal.o $(O)crdriv.o \
+	$(O)crfile.o $(O)crmerg.o \
+	$(O)crprof.o $(O)crspec.o \
+	$(O)cruprf.o $(O)cruspc.o \
+	$(O)cxdta.o  \
+	$(O)dbltx.o  $(O)debye.o  \
+	$(O)defalt.o $(O)del.o    \
+	$(O)denlay.o $(O)desatt.o \
+	$(O)devcbd.o $(O)dfltp.o  \
+	$(O)dgrd.o   $(O)disbbf.o \
+	$(O)disort.o $(O)dop.o    \
+	$(O)dpandx.o $(O)dpexnt.o \
+	$(O)dpfill.o $(O)dpfish.o \
+	$(O)dpfnmn.o $(O)dplayr.o \
+	$(O)dprarf.o $(O)dprfpa.o \
+	$(O)dpscht.o $(O)driver.o \
+	$(O)dstdta.o $(O)errmsg.o \
+	$(O)exabin.o $(O)expint.o \
+	$(O)extdta.o $(O)fdbeta.o \
+	$(O)filter.o $(O)filtsm.o \
+	$(O)flayz.o  $(O)fluxes.o \
+	$(O)flxadd.o $(O)flxsum.o \
+	$(O)flxtbl.o $(O)fnames.o \
+	$(O)fndpth.o $(O)frn296.o \
+	$(O)frq5dt.o $(O)ftrang.o \
+	$(O)gamfog.o $(O)geo.o    \
+	$(O)geoinp.o $(O)getpf.o  \
+	$(O)gmrain.o $(O)gtcldv.o \
+	$(O)gtstrt.o $(O)h2src.o  \
+	$(O)hengns.o $(O)hertda.o \
+	$(O)hno3.o   $(O)indx.o   \
+	$(O)intcor.o $(O)interp.o \
+	$(O)irecln.o $(O)irfxn.o  \
+	$(O)isamax.o $(O)jou.o    \
+	$(O)lay5dt.o $(O)laycld.o \
+	$(O)layvsa.o $(O)lenstr.o \
+	$(O)lepoly.o $(O)locate.o \
+	$(O)loop.o   $(O)m3d.o    \
+	$(O)m3dcrd.o $(O)m3ddb.o  \
+	$(O)m3din.o  $(O)m3drew.o \
+	$(O)m3dwrt.o $(O)mapms.o  \
+	$(O)mardta.o $(O)marine.o \
+	$(O)mccont.o $(O)mcmol.o  \
+	$(O)mdta.o   $(O)mlatmb.o \
+	$(O)molsct.o $(O)msrad.o  \
+	$(O)mssolr.o $(O)msthml.o \
+	$(O)newh2.o  $(O)newsrc.o \
+	$(O)no2xs.o  $(O)novaer.o \
+	$(O)novmrg.o $(O)nunit.o  \
+	$(O)o2cont.o $(O)o2inf2.o \
+	$(O)o2int.o  $(O)o2mate.o \
+	$(O)o3chap.o $(O)o3hht0.o \
+	$(O)o3hht1.o $(O)o3hht2.o \
+	$(O)o3int.o  $(O)o3uv.o   \
+	$(O)o3uvfd.o \
+	$(O)openbm.o $(O)opnfl.o  \
+	$(O)pf.o     $(O)pfexp.o  \
+	$(O)phasef.o $(O)phsdta.o \
+	$(O)plkavg.o $(O)pravin.o \
+	$(O)prfdta.o $(O)prtinp.o \
+	$(O)prtint.o $(O)psi.o    \
+	$(O)psieca.o $(O)pslct.o  \
+	$(O)qgausn.o $(O)rain.o   \
+	$(O)random.o $(O)ratio.o  \
+	$(O)rdcork.o $(O)rdexa.o  \
+	$(O)rdnsm.o  $(O)rdsun.o  \
+	$(O)reduce.o $(O)rflect.o \
+	$(O)rfract.o $(O)right.o  \
+	$(O)rmchan.o $(O)rnscat.o \
+	$(O)rtbis.o  $(O)s15bd.o  \
+	$(O)sasum.o  $(O)saxpy.o  \
+	$(O)schrun.o $(O)sclcol.o \
+	$(O)scnflx.o $(O)sdot.o   \
+	$(O)secsca.o $(O)setdis.o \
+	$(O)setmtx.o $(O)sf260.o  \
+	$(O)sf296.o  $(O)sgbco.o  \
+	$(O)sgbfa.o  $(O)sgbsl.o  \
+	$(O)sgeco.o  $(O)sgefa.o  \
+	$(O)sgesl.o  $(O)shade.o  \
+	$(O)shumg.o  $(O)sinsca.o \
+	$(O)sint.o   $(O)slf260.o \
+	$(O)slf296.o $(O)slftst.o \
+	$(O)smgeo.o  $(O)smprep.o \
+	$(O)sncms.o  $(O)so2xs.o  \
+	$(O)soleig.o $(O)solve0.o \
+	$(O)solve1.o $(O)solzen.o \
+	$(O)source.o $(O)spaltr.o \
+	$(O)spcflx.o $(O)sscal.o  \
+	$(O)sscork.o $(O)ssgeo.o  \
+	$(O)ssrad.o  $(O)stdmdl.o \
+	$(O)subsol.o $(O)sunbd.o  \
+	$(O)svsola.o $(O)tab.o    \
+	$(O)tanht.o  $(O)terpev.o \
+	$(O)terpso.o $(O)thmflx.o \
+	$(O)title.o  $(O)tnrain.o \
+	$(O)trans.o  $(O)trlay.o  \
+	$(O)tstbad.o $(O)upbeam.o \
+	$(O)upcase.o $(O)upisot.o \
+	$(O)usrint.o $(O)vsa.o    \
+	$(O)vsansm.o $(O)watvap.o \
+	$(O)wrtbad.o $(O)wrtbuf.o \
+	$(O)wrtdim.o $(O)wrtflt.o \
+	$(O)wtchan.o $(O)wtcool.o \
+	$(O)wtlft.o  $(O)wtrgt.o  \
+	$(O)wtsum.o  $(O)wvbnrg.o \
+	$(O)xifunc.o $(O)xmlatm.o \
+	$(O)zeroal.o $(O)zeroit.o \
+	$(O)getvis.o
+	$(LINK) $(EXECUTABLE)     \
+	$(O)Modtrn.o $(O)ab.o     \
+	$(O)abcd.o   $(O)abcdta.o \
+	$(O)aerext.o $(O)aermrg.o \
+	$(O)aernsm.o $(O)aerprf.o \
+	$(O)aertmp.o $(O)aitk.o   \
+	$(O)albtrn.o $(O)altrin.o \
+	$(O)aprfnu.o $(O)aruexa.o \
+	$(O)asymtx.o $(O)atmcon.o \
+	$(O)bbfn.o   $(O)betabs.o \
+	$(O)bfh2o.o  $(O)bmcork.o \
+	$(O)bmdata.o $(O)bmflux.o \
+	$(O)bmload.o $(O)bmod.o   \
+	$(O)bmtran.o $(O)bmxld.o  \
+	$(O)bo2c.o   $(O)bo3hh0.o \
+	$(O)bo3hh1.o $(O)bo3hh2.o \
+	$(O)bs.o     $(O)c4d.o    \
+	$(O)c4dta.o  $(O)c6dta.o  \
+	$(O)card5.o  $(O)check.o  \
+	$(O)chekin.o $(O)chkres.o \
+	$(O)cirmod.o $(O)cirr18.o \
+	$(O)cirrus.o $(O)ckd.o    \
+	$(O)clddta.o $(O)cldmod.o \
+	$(O)cldprf.o $(O)cmpint.o \
+	$(O)cnvphi.o $(O)compar.o \
+	$(O)convrt.o $(O)cool.o   \
+	$(O)cool0.o  $(O)cossct.o \
+	$(O)cph2o.o  $(O)cpo3.o   \
+	$(O)cptrcg.o $(O)cpumix.o \
+	$(O)crdeal.o $(O)crdriv.o \
+	$(O)crfile.o $(O)crmerg.o \
+	$(O)crprof.o $(O)crspec.o \
+	$(O)cruprf.o $(O)cruspc.o \
+	$(O)cxdta.o  \
+	$(O)dbltx.o  $(O)debye.o  \
+	$(O)defalt.o $(O)del.o    \
+	$(O)denlay.o $(O)desatt.o \
+	$(O)devcbd.o $(O)dfltp.o  \
+	$(O)dgrd.o   $(O)disbbf.o \
+	$(O)disort.o $(O)dop.o    \
+	$(O)dpandx.o $(O)dpexnt.o \
+	$(O)dpfill.o $(O)dpfish.o \
+	$(O)dpfnmn.o $(O)dplayr.o \
+	$(O)dprarf.o $(O)dprfpa.o \
+	$(O)dpscht.o $(O)driver.o \
+	$(O)dstdta.o $(O)errmsg.o \
+	$(O)exabin.o $(O)expint.o \
+	$(O)extdta.o $(O)fdbeta.o \
+	$(O)filter.o $(O)filtsm.o \
+	$(O)flayz.o  $(O)fluxes.o \
+	$(O)flxadd.o $(O)flxsum.o \
+	$(O)flxtbl.o $(O)fnames.o \
+	$(O)fndpth.o $(O)frn296.o \
+	$(O)frq5dt.o $(O)ftrang.o \
+	$(O)gamfog.o $(O)geo.o    \
+	$(O)geoinp.o $(O)getpf.o  \
+	$(O)getvis.o \
+	$(O)gmrain.o $(O)gtcldv.o \
+	$(O)gtstrt.o $(O)h2src.o  \
+	$(O)hengns.o $(O)hertda.o \
+	$(O)hno3.o   $(O)indx.o   \
+	$(O)intcor.o $(O)interp.o \
+	$(O)irecln.o $(O)irfxn.o  \
+	$(O)isamax.o $(O)jou.o    \
+	$(O)lay5dt.o $(O)laycld.o \
+	$(O)layvsa.o $(O)lenstr.o \
+	$(O)lepoly.o $(O)locate.o \
+	$(O)loop.o   $(O)m3d.o    \
+	$(O)m3dcrd.o $(O)m3ddb.o  \
+	$(O)m3din.o  $(O)m3drew.o \
+	$(O)m3dwrt.o $(O)mapms.o  \
+	$(O)mardta.o $(O)marine.o \
+	$(O)mccont.o $(O)mcmol.o  \
+	$(O)mdta.o   $(O)mlatmb.o \
+	$(O)molsct.o $(O)msrad.o  \
+	$(O)mssolr.o $(O)msthml.o \
+	$(O)newh2.o  $(O)newsrc.o \
+	$(O)no2xs.o  $(O)novaer.o \
+	$(O)novmrg.o $(O)nunit.o  \
+	$(O)o2cont.o $(O)o2inf2.o \
+	$(O)o2int.o  $(O)o2mate.o \
+	$(O)o3chap.o $(O)o3hht0.o \
+	$(O)o3hht1.o $(O)o3hht2.o \
+	$(O)o3int.o  $(O)o3uv.o   \
+	$(O)o3uvfd.o \
+	$(O)openbm.o $(O)opnfl.o  \
+	$(O)pf.o     $(O)pfexp.o  \
+	$(O)phasef.o $(O)phsdta.o \
+	$(O)plkavg.o $(O)pravin.o \
+	$(O)prfdta.o $(O)prtinp.o \
+	$(O)prtint.o $(O)psi.o    \
+	$(O)psieca.o $(O)pslct.o  \
+	$(O)qgausn.o $(O)rain.o   \
+	$(O)random.o $(O)ratio.o  \
+	$(O)rdcork.o $(O)rdexa.o  \
+	$(O)rdnsm.o  $(O)rdsun.o  \
+	$(O)reduce.o $(O)rflect.o \
+	$(O)rfract.o $(O)right.o  \
+	$(O)rmchan.o $(O)rnscat.o \
+	$(O)rtbis.o  $(O)s15bd.o  \
+	$(O)sasum.o  $(O)saxpy.o  \
+	$(O)schrun.o $(O)sclcol.o \
+	$(O)scnflx.o $(O)sdot.o   \
+	$(O)secsca.o $(O)setdis.o \
+	$(O)setmtx.o $(O)sf260.o  \
+	$(O)sf296.o  $(O)sgbco.o  \
+	$(O)sgbfa.o  $(O)sgbsl.o  \
+	$(O)sgeco.o  $(O)sgefa.o  \
+	$(O)sgesl.o  $(O)shade.o  \
+	$(O)shumg.o  $(O)sinsca.o \
+	$(O)sint.o   $(O)slf260.o \
+	$(O)slf296.o $(O)slftst.o \
+	$(O)smgeo.o  $(O)smprep.o \
+	$(O)sncms.o  $(O)so2xs.o  \
+	$(O)soleig.o $(O)solve0.o \
+	$(O)solve1.o $(O)solzen.o \
+	$(O)source.o $(O)spaltr.o \
+	$(O)spcflx.o $(O)sscal.o  \
+	$(O)sscork.o $(O)ssgeo.o  \
+	$(O)ssrad.o  $(O)stdmdl.o \
+	$(O)subsol.o $(O)sunbd.o  \
+	$(O)svsola.o $(O)tab.o    \
+	$(O)tanht.o  $(O)terpev.o \
+	$(O)terpso.o $(O)thmflx.o \
+	$(O)title.o  $(O)tnrain.o \
+	$(O)trans.o  $(O)trlay.o  \
+	$(O)tstbad.o $(O)upbeam.o \
+	$(O)upcase.o $(O)upisot.o \
+	$(O)usrint.o $(O)vsa.o    \
+	$(O)vsansm.o $(O)watvap.o \
+	$(O)wrtbad.o $(O)wrtbuf.o \
+	$(O)wrtdim.o $(O)wrtflt.o \
+	$(O)wtchan.o $(O)wtcool.o \
+	$(O)wtlft.o  $(O)wtrgt.o  \
+	$(O)wtsum.o  $(O)wvbnrg.o \
+	$(O)xifunc.o $(O)xmlatm.o \
+	$(O)zeroal.o $(O)zeroit.o
+
+$(O)Modtrn.o:	$(S)Modtrn.f
+		$(COMPILE) $(S)Modtrn.f -o $(O)Modtrn.o
+
+$(O)ab.o:	$(S)ab.f
+		$(COMPILE) $(S)ab.f     -o $(O)ab.o
+
+$(O)abcd.o:	$(S)abcd.f
+		$(COMPILE) $(S)abcd.f   -o $(O)abcd.o
+
+$(O)abcdta.o:	$(S)abcdta.f
+		$(COMPILE) $(S)abcdta.f -o $(O)abcdta.o
+
+$(O)aerext.o:	$(S)aerext.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)aerext.f -o $(O)aerext.o
+
+$(O)aermrg.o:	$(S)aermrg.f $(S)PARAMS.h $(S)BASE.h
+		$(COMPILE) $(S)aermrg.f -o $(O)aermrg.o
+
+$(O)aernsm.o:	$(S)aernsm.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)aernsm.f -o $(O)aernsm.o
+
+$(O)aerprf.o:	$(S)aerprf.f
+		$(COMPILE) $(S)aerprf.f -o $(O)aerprf.o
+
+$(O)aertmp.o:	$(S)aertmp.f $(S)PARAMS.h $(S)BASE.h
+		$(COMPILE) $(S)aertmp.f -o $(O)aertmp.o
+
+$(O)aitk.o:	$(S)aitk.f
+		$(COMPILE) $(S)aitk.f   -o $(O)aitk.o
+
+$(O)albtrn.o:	$(S)albtrn.f $(S)PARAMS.h
+		$(COMPILE) $(S)albtrn.f -o $(O)albtrn.o
+
+$(O)altrin.o:	$(S)altrin.f
+		$(COMPILE) $(S)altrin.f -o $(O)altrin.o
+
+$(O)aprfnu.o:	$(S)aprfnu.f $(S)PARAMS.h
+		$(COMPILE) $(S)aprfnu.f -o $(O)aprfnu.o
+
+$(O)aruexa.o:	$(S)aruexa.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)aruexa.f -o $(O)aruexa.o
+
+$(O)asymtx.o:	$(S)asymtx.f
+		$(COMPILE) $(S)asymtx.f -o $(O)asymtx.o
+
+$(O)atmcon.o:	$(S)atmcon.f
+		$(COMPILE) $(S)atmcon.f -o $(O)atmcon.o
+
+$(O)bbfn.o:	$(S)bbfn.f
+		$(COMPILE) $(S)bbfn.f   -o $(O)bbfn.o
+
+$(O)betabs.o:	$(S)betabs.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)betabs.f -o $(O)betabs.o
+
+$(O)bfh2o.o:	$(S)bfh2o.f
+		$(COMPILE) $(S)bfh2o.f  -o $(O)bfh2o.o
+
+$(O)bmcork.o:	$(S)bmcork.f $(S)PARAMS.h $(S)BASE.h $(S)BMHEAD.h $(S)BMDAT.h $(S)IFIL.h $(S)SOLS.h
+		$(COMPILE) $(S)bmcork.f -o $(O)bmcork.o
+
+$(O)bmdata.o:	$(S)bmdata.f $(S)PARAMS.h $(S)BMHEAD.h $(S)BMDAT.h $(S)BASE.h $(S)IFIL.h $(S)SOLS.h
+		$(COMPILE) $(S)bmdata.f -o $(O)bmdata.o
+
+$(O)bmflux.o:	$(S)bmflux.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)bmflux.f -o $(O)bmflux.o
+
+$(O)bmload.o:	$(S)bmload.f $(S)PARAMS.h $(S)BMHEAD.h $(S)BMDAT.h
+		$(COMPILE) $(S)bmload.f -o $(O)bmload.o
+
+$(O)bmod.o:	$(S)bmod.f $(S)PARAMS.h $(S)BMHEAD.h $(S)BMDAT.h $(S)BASE.h $(S)SOLS.h $(S)IFIL.h
+		$(COMPILE) $(S)bmod.f   -o $(O)bmod.o
+
+$(O)bmtran.o:	$(S)bmtran.f $(S)PARAMS.h $(S)BMHEAD.h
+		$(COMPILE) $(S)bmtran.f -o $(O)bmtran.o
+
+$(O)bmxld.o:	$(S)bmxld.f $(S)PARAMS.h $(S)BMHEAD.h $(S)BMDAT.h
+		$(COMPILE) $(S)bmxld.f  -o $(O)bmxld.o
+
+$(O)bo2c.o:	$(S)bo2c.f
+		$(COMPILE) $(S)bo2c.f   -o $(O)bo2c.o
+
+$(O)bo3hh0.o:	$(S)bo3hh0.f
+		$(COMPILE) $(S)bo3hh0.f -o $(O)bo3hh0.o
+
+$(O)bo3hh1.o:	$(S)bo3hh1.f
+		$(COMPILE) $(S)bo3hh1.f -o $(O)bo3hh1.o
+
+$(O)bo3hh2.o:	$(S)bo3hh2.f
+		$(COMPILE) $(S)bo3hh2.f -o $(O)bo3hh2.o
+
+$(O)bs.o:	$(S)bs.f
+		$(COMPILE) $(S)bs.f     -o $(O)bs.o
+
+$(O)c4d.o:	$(S)c4d.f
+		$(COMPILE) $(S)c4d.f    -o $(O)c4d.o
+
+$(O)c4dta.o:	$(S)c4dta.f
+		$(COMPILE) $(S)c4dta.f  -o $(O)c4dta.o
+
+$(O)c6dta.o:	$(S)c6dta.f
+		$(COMPILE) $(S)c6dta.f  -o $(O)c6dta.o
+
+$(O)card5.o:	$(S)card5.f $(S)IFIL.h
+		$(COMPILE) $(S)card5.f  -o $(O)card5.o
+
+$(O)check.o:	$(S)check.f $(S)PARAMS.h
+		$(COMPILE) $(S)check.f  -o $(O)check.o
+
+$(O)chekin.o:	$(S)chekin.f
+		$(COMPILE) $(S)chekin.f -o $(O)chekin.o
+
+$(O)chkres.o:	$(S)chkres.f $(S)PARAMS.h $(S)IFIL.h $(S)BMHEAD.h
+		$(COMPILE) $(S)chkres.f -o $(O)chkres.o
+
+$(O)cirmod.o:	$(S)cirmod.f90
+		$(COMPILE) $(S)cirmod.f90 -o $(O)cirmod.o
+
+$(O)cirr18.o:	$(S)cirr18.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)cirr18.f -o $(O)cirr18.o
+
+$(O)cirrus.o:	$(S)cirrus.f $(S)PARAMS.h
+		$(COMPILE) $(S)cirrus.f -o $(O)cirrus.o
+
+$(O)ckd.o:	$(S)ckd.f
+		$(COMPILE) $(S)ckd.f    -o $(O)ckd.o
+
+$(O)clddta.o:	$(S)clddta.f $(S)PARAMS.h
+		$(COMPILE) $(S)clddta.f -o $(O)clddta.o
+
+$(O)cldmod.o:	$(S)cldmod.f90
+		$(COMPILE) $(S)cldmod.f90 -o $(O)cldmod.o
+
+$(O)cldprf.o:	$(S)cldprf.f $(S)IFIL.h
+		$(COMPILE) $(S)cldprf.f -o $(O)cldprf.o
+
+$(O)cmpint.o:	$(S)cmpint.f
+		$(COMPILE) $(S)cmpint.f -o $(O)cmpint.o
+
+$(O)cnvphi.o:	$(S)cnvphi.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)cnvphi.f -o $(O)cnvphi.o
+
+$(O)compar.o:	$(S)compar.f $(S)PARAMS.h
+		$(COMPILE) $(S)compar.f -o $(O)compar.o
+
+$(O)convrt.o:	$(S)convrt.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)convrt.f -o $(O)convrt.o
+
+$(O)cool.o:	$(S)cool.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)cool.f   -o $(O)cool.o
+
+$(O)cool0.o:	$(S)cool0.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)cool0.f  -o $(O)cool0.o
+
+$(O)cossct.o:	$(S)cossct.f
+		$(COMPILE) $(S)cossct.f -o $(O)cossct.o
+
+$(O)cph2o.o:	$(S)cph2o.f
+		$(COMPILE) $(S)cph2o.f  -o $(O)cph2o.o
+
+$(O)cpo3.o:	$(S)cpo3.f
+		$(COMPILE) $(S)cpo3.f   -o $(O)cpo3.o
+
+$(O)cptrcg.o:	$(S)cptrcg.f
+		$(COMPILE) $(S)cptrcg.f -o $(O)cptrcg.o
+
+$(O)cpumix.o:	$(S)cpumix.f
+		$(COMPILE) $(S)cpumix.f -o $(O)cpumix.o
+
+$(O)crdeal.o:	$(S)crdeal.f90
+		$(COMPILE) $(S)crdeal.f90 -o $(O)crdeal.o
+
+$(O)crdriv.o:	$(S)crdriv.f
+		$(COMPILE) $(S)crdriv.f -o $(O)crdriv.o
+
+$(O)crfile.o:	$(S)crfile.f90 $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)crfile.f90 -o $(O)crfile.o
+
+$(O)crmerg.o:	$(S)crmerg.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)crmerg.f -o $(O)crmerg.o
+
+$(O)crprof.o:	$(S)crprof.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)crprof.f -o $(O)crprof.o
+
+$(O)crspec.o:	$(S)crspec.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)crspec.f -o $(O)crspec.o
+
+$(O)cruprf.o:	$(S)cruprf.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)cruprf.f -o $(O)cruprf.o
+
+$(O)cruspc.o:	$(S)cruspc.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)cruspc.f -o $(O)cruspc.o
+
+$(O)cxdta.o:	$(S)cxdta.f
+		$(COMPILE) $(S)cxdta.f  -o $(O)cxdta.o
+
+$(O)dbltx.o:	$(S)dbltx.f
+		$(COMPILE) $(S)dbltx.f  -o $(O)dbltx.o
+
+$(O)debye.o:	$(S)debye.f
+		$(COMPILE) $(S)debye.f  -o $(O)debye.o
+
+$(O)defalt.o:	$(S)defalt.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)defalt.f -o $(O)defalt.o
+
+$(O)del.o:	$(S)del.f
+		$(COMPILE) $(S)del.f    -o $(O)del.o
+
+$(O)denlay.o:	$(S)denlay.f
+		$(COMPILE) $(S)denlay.f -o $(O)denlay.o
+
+$(O)desatt.o:	$(S)desatt.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)desatt.f -o $(O)desatt.o
+
+$(O)devcbd.o:	$(S)devcbd.f $(S)IFIL.h
+		$(COMPILE) $(S)devcbd.f -o $(O)devcbd.o
+
+$(O)dfltp.o:	$(S)dfltp.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)dfltp.f  -o $(O)dfltp.o
+
+$(O)dgrd.o:	$(S)dgrd.f $(S)IFIL.h
+		$(COMPILE) $(S)dgrd.f   -o $(O)dgrd.o
+
+$(O)disbbf.o:	$(S)disbbf.f
+		$(COMPILE) $(S)disbbf.f -o $(O)disbbf.o
+
+$(O)disort.o:	$(S)disort.f $(S)PARAMS.h
+		$(COMPILE) $(S)disort.f -o $(O)disort.o
+
+$(O)dop.o:	$(S)dop.f
+		$(COMPILE) $(S)dop.f    -o $(O)dop.o
+
+$(O)dpandx.o:	$(S)dpandx.f
+		$(COMPILE) $(S)dpandx.f -o $(O)dpandx.o
+
+$(O)dpexnt.o:	$(S)dpexnt.f
+		$(COMPILE) $(S)dpexnt.f -o $(O)dpexnt.o
+
+$(O)dpfill.o:	$(S)dpfill.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)dpfill.f -o $(O)dpfill.o
+
+$(O)dpfish.o:	$(S)dpfish.f $(S)PARAMS.h
+		$(COMPILE) $(S)dpfish.f -o $(O)dpfish.o
+
+$(O)dpfnmn.o:	$(S)dpfnmn.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)dpfnmn.f -o $(O)dpfnmn.o
+
+$(O)dplayr.o:	$(S)dplayr.f $(S)PARAMS.h
+		$(COMPILE) $(S)dplayr.f -o $(O)dplayr.o
+
+$(O)dprarf.o:	$(S)dprarf.f
+		$(COMPILE) $(S)dprarf.f -o $(O)dprarf.o
+
+$(O)dprfpa.o:	$(S)dprfpa.f $(S)PARAMS.h $(S)IFIL.h $(S)SOLS.h
+		$(COMPILE) $(S)dprfpa.f -o $(O)dprfpa.o
+
+$(O)dpscht.o:	$(S)dpscht.f
+		$(COMPILE) $(S)dpscht.f -o $(O)dpscht.o
+
+$(O)driver.o:	$(S)driver.f $(S)PARAMS.h $(S)ERROR.h $(S)IFIL.h $(S)BASE.h $(S)BMHEAD.h $(S)SOLS.h
+		$(COMPILE) $(S)driver.f -o $(O)driver.o
+
+$(O)dstdta.o:	$(S)dstdta.f $(S)PARAMS.h
+		$(COMPILE) $(S)dstdta.f -o $(O)dstdta.o
+
+$(O)errmsg.o:	$(S)errmsg.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)errmsg.f -o $(O)errmsg.o
+
+$(O)exabin.o:	$(S)exabin.f $(S)PARAMS.h $(S)BASE.h
+		$(COMPILE) $(S)exabin.f -o $(O)exabin.o
+
+$(O)expint.o:	$(S)expint.f
+		$(COMPILE) $(S)expint.f -o $(O)expint.o
+
+$(O)extdta.o:	$(S)extdta.f $(S)PARAMS.h
+		$(COMPILE) $(S)extdta.f -o $(O)extdta.o
+
+$(O)fdbeta.o:	$(S)fdbeta.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)fdbeta.f -o $(O)fdbeta.o
+
+$(O)filter.o:	$(S)filter.f $(S)PARAMS.h $(S)CHANLS.h $(S)IFIL.h $(S)BMHEAD.h
+		$(COMPILE) $(S)filter.f -o $(O)filter.o
+
+$(O)filtsm.o:	$(S)filtsm.f $(S)CHANLS.h
+		$(COMPILE) $(S)filtsm.f -o $(O)filtsm.o
+
+$(O)flayz.o:	$(S)flayz.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)flayz.f  -o $(O)flayz.o
+
+$(O)fluxes.o:	$(S)fluxes.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)fluxes.f -o $(O)fluxes.o
+
+$(O)flxadd.o:	$(S)flxadd.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)flxadd.f -o $(O)flxadd.o
+
+$(O)flxsum.o:	$(S)flxsum.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)flxsum.f -o $(O)flxsum.o
+
+$(O)flxtbl.o:	$(S)flxtbl.f $(S)PARAMS.h $(S)IFIL.h $(S)BMHEAD.h
+		$(COMPILE) $(S)flxtbl.f -o $(O)flxtbl.o
+
+$(O)fnames.o:	$(S)fnames.f $(S)PARAMS.h $(S)CHANLS.h $(S)IFIL.h
+		$(COMPILE) $(S)fnames.f -o $(O)fnames.o
+
+$(O)fndpth.o:	$(S)fndpth.f $(S)PARAMS.h
+		$(COMPILE) $(S)fndpth.f -o $(O)fndpth.o
+
+$(O)frn296.o:	$(S)frn296.f
+		$(COMPILE) $(S)frn296.f -o $(O)frn296.o
+
+$(O)frq5dt.o:	$(S)frq5dt.f
+		$(COMPILE) $(S)frq5dt.f -o $(O)frq5dt.o
+
+$(O)ftrang.o:	$(S)ftrang.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)ftrang.f -o $(O)ftrang.o
+
+$(O)gamfog.o:	$(S)gamfog.f
+		$(COMPILE) $(S)gamfog.f -o $(O)gamfog.o
+
+$(O)geo.o:	$(S)geo.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h $(S)SOLS.h
+		$(COMPILE) $(S)geo.f    -o $(O)geo.o
+
+$(O)geoinp.o:	$(S)geoinp.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)geoinp.f -o $(O)geoinp.o
+
+$(O)getpf.o:	$(S)getpf.f90 $(S)PARAMS.h
+		$(COMPILE) $(S)getpf.f90  -o $(O)getpf.o
+
+$(O)getvis.o:	$(S)getvis.f
+		$(COMPILE) $(S)getvis.f  -o $(O)getvis.o
+
+$(O)gmrain.o:	$(S)gmrain.f
+		$(COMPILE) $(S)gmrain.f -o $(O)gmrain.o
+
+$(O)gtcldv.o:	$(S)gtcldv.f90 $(S)PARAMS.h
+		$(COMPILE) $(S)gtcldv.f90 -o $(O)gtcldv.o
+
+$(O)gtstrt.o:	$(S)gtstrt.f
+		$(COMPILE) $(S)gtstrt.f -o $(O)gtstrt.o
+
+$(O)h2src.o:	$(S)h2src.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)h2src.f  -o $(O)h2src.o
+
+$(O)hengns.o:	$(S)hengns.f $(S)IFIL.h
+		$(COMPILE) $(S)hengns.f -o $(O)hengns.o
+
+$(O)hertda.o:	$(S)hertda.f
+		$(COMPILE) $(S)hertda.f -o $(O)hertda.o
+
+$(O)hno3.o:	$(S)hno3.f
+		$(COMPILE) $(S)hno3.f   -o $(O)hno3.o
+
+$(O)indx.o:	$(S)indx.f $(S)IFIL.h
+		$(COMPILE) $(S)indx.f   -o $(O)indx.o
+
+$(O)intcor.o:	$(S)intcor.f
+		$(COMPILE) $(S)intcor.f -o $(O)intcor.o
+
+$(O)interp.o:	$(S)interp.f
+		$(COMPILE) $(S)interp.f -o $(O)interp.o
+
+$(O)irecln.o:	$(S)irecln.f
+		$(COMPILE) $(S)irecln.f -o $(O)irecln.o
+
+$(O)irfxn.o:	$(S)irfxn.f $(S)PARAMS.h
+		$(COMPILE) $(S)irfxn.f  -o $(O)irfxn.o
+
+$(O)isamax.o:	$(S)isamax.f
+		$(COMPILE) $(S)isamax.f -o $(O)isamax.o
+
+$(O)jou.o:	$(S)jou.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)jou.f    -o $(O)jou.o
+
+$(O)lay5dt.o:	$(S)lay5dt.f $(S)PARAMS.h $(S)BASE.h
+		$(COMPILE) $(S)lay5dt.f -o $(O)lay5dt.o
+
+$(O)laycld.o:	$(S)laycld.f $(S)PARAMS.h
+		$(COMPILE) $(S)laycld.f -o $(O)laycld.o
+
+$(O)layvsa.o:	$(S)layvsa.f $(S)PARAMS.h
+		$(COMPILE) $(S)layvsa.f -o $(O)layvsa.o
+
+$(O)lenstr.o:	$(S)lenstr.f
+		$(COMPILE) $(S)lenstr.f -o $(O)lenstr.o
+
+$(O)lepoly.o:	$(S)lepoly.f
+		$(COMPILE) $(S)lepoly.f -o $(O)lepoly.o
+
+$(O)locate.o:	$(S)locate.f
+		$(COMPILE) $(S)locate.f -o $(O)locate.o
+
+$(O)loop.o:	$(S)loop.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h $(S)SOLS.h
+		$(COMPILE) $(S)loop.f   -o $(O)loop.o
+
+$(O)m3d.o:	$(S)m3d.f $(S)PARAMS.h $(S)IFIL.h $(S)BASE.h $(S)BMHEAD.h
+		$(COMPILE) $(S)m3d.f    -o $(O)m3d.o
+
+$(O)m3dcrd.o:	$(S)m3dcrd.f $(S)PARAMS.h $(S)BASE.h $(S)SOLS.h
+		$(COMPILE) $(S)m3dcrd.f -o $(O)m3dcrd.o
+
+$(O)m3ddb.o:	$(S)m3ddb.f $(S)PARAMS.h $(S)IFIL.h $(S)BMHEAD.h
+		$(COMPILE) $(S)m3ddb.f  -o $(O)m3ddb.o
+
+$(O)m3din.o:	$(S)m3din.f $(S)PARAMS.h $(S)BASE.h
+		$(COMPILE) $(S)m3din.f  -o $(O)m3din.o
+
+$(O)m3drew.o:	$(S)m3drew.f
+		$(COMPILE) $(S)m3drew.f -o $(O)m3drew.o
+
+$(O)m3dwrt.o:	$(S)m3dwrt.f
+		$(COMPILE) $(S)m3dwrt.f -o $(O)m3dwrt.o
+
+$(O)mapms.o:	$(S)mapms.f $(S)PARAMS.h
+		$(COMPILE) $(S)mapms.f  -o $(O)mapms.o
+
+$(O)mardta.o:	$(S)mardta.f
+		$(COMPILE) $(S)mardta.f -o $(O)mardta.o
+
+$(O)marine.o:	$(S)marine.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)marine.f -o $(O)marine.o
+
+$(O)mccont.o:	$(S)mccont.f $(S)PARAMS.h $(S)IFIL.h $(S)BMHEAD.h $(S)BASE.h
+		$(COMPILE) $(S)mccont.f -o $(O)mccont.o
+
+$(O)mcmol.o:	$(S)mcmol.f $(S)PARAMS.h $(S)IFIL.h $(S)BMHEAD.h
+		$(COMPILE) $(S)mcmol.f  -o $(O)mcmol.o
+
+$(O)mdta.o:	$(S)mdta.f $(S)PARAMS.h
+		$(COMPILE) $(S)mdta.f   -o $(O)mdta.o
+
+$(O)mlatmb.o:	$(S)mlatmb.f
+		$(COMPILE) $(S)mlatmb.f -o $(O)mlatmb.o
+
+$(O)molsct.o:	$(S)molsct.f
+		$(COMPILE) $(S)molsct.f -o $(O)molsct.o
+
+$(O)msrad.o:	$(S)msrad.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)msrad.f  -o $(O)msrad.o
+
+$(O)mssolr.o:	$(S)mssolr.f
+		$(COMPILE) $(S)mssolr.f -o $(O)mssolr.o
+
+$(O)msthml.o:	$(S)msthml.f
+		$(COMPILE) $(S)msthml.f -o $(O)msthml.o
+
+$(O)newh2.o:	$(S)newh2.f
+		$(COMPILE) $(S)newh2.f  -o $(O)newh2.o
+
+$(O)newsrc.o:	$(S)newsrc.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)newsrc.f -o $(O)newsrc.o
+
+$(O)no2xs.o:	$(S)no2xs.f
+		$(COMPILE) $(S)no2xs.f  -o $(O)no2xs.o
+
+$(O)novaer.o:	$(S)novaer.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)novaer.f -o $(O)novaer.o
+
+$(O)novmrg.o:	$(S)novmrg.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)novmrg.f -o $(O)novmrg.o
+
+$(O)nunit.o:	$(S)nunit.f $(S)IFIL.h
+		$(COMPILE) $(S)nunit.f  -o $(O)nunit.o
+
+$(O)o2cont.o:	$(S)o2cont.f
+		$(COMPILE) $(S)o2cont.f -o $(O)o2cont.o
+
+$(O)o2inf2.o:	$(S)o2inf2.f
+		$(COMPILE) $(S)o2inf2.f -o $(O)o2inf2.o
+
+$(O)o2int.o:	$(S)o2int.f
+		$(COMPILE) $(S)o2int.f  -o $(O)o2int.o
+
+$(O)o2mate.o:	$(S)o2mate.f
+		$(COMPILE) $(S)o2mate.f -o $(O)o2mate.o
+
+$(O)o3chap.o:	$(S)o3chap.f
+		$(COMPILE) $(S)o3chap.f -o $(O)o3chap.o
+
+$(O)o3hht0.o:	$(S)o3hht0.f
+		$(COMPILE) $(S)o3hht0.f -o $(O)o3hht0.o
+
+$(O)o3hht1.o:	$(S)o3hht1.f
+		$(COMPILE) $(S)o3hht1.f -o $(O)o3hht1.o
+
+$(O)o3hht2.o:	$(S)o3hht2.f
+		$(COMPILE) $(S)o3hht2.f -o $(O)o3hht2.o
+
+$(O)o3int.o:	$(S)o3int.f
+		$(COMPILE) $(S)o3int.f  -o $(O)o3int.o
+
+$(O)o3uv.o:	$(S)o3uv.f
+		$(COMPILE) $(S)o3uv.f   -o $(O)o3uv.o
+
+$(O)o3uvfd.o:	$(S)o3uvfd.f
+		$(COMPILE) $(S)o3uvfd.f -o $(O)o3uvfd.o
+
+$(O)openbm.o:	$(S)openbm.f $(S)PARAMS.h $(S)IFIL.h $(S)BMHEAD.h
+		$(COMPILE) $(S)openbm.f -o $(O)openbm.o
+
+$(O)opnfl.o:	$(S)opnfl.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)opnfl.f  -o $(O)opnfl.o
+
+$(O)pf.o:	$(S)pf.f
+		$(COMPILE) $(S)pf.f     -o $(O)pf.o
+
+$(O)pfexp.o:	$(S)pfexp.f $(S)PARAMS.h
+		$(COMPILE) $(S)pfexp.f  -o $(O)pfexp.o
+
+$(O)phasef.o:	$(S)phasef.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)phasef.f -o $(O)phasef.o
+
+$(O)phsdta.o:	$(S)phsdta.f
+		$(COMPILE) $(S)phsdta.f -o $(O)phsdta.o
+
+$(O)plkavg.o:	$(S)plkavg.f
+		$(COMPILE) $(S)plkavg.f -o $(O)plkavg.o
+
+$(O)pravin.o:	$(S)pravin.f $(S)PARAMS.h
+		$(COMPILE) $(S)pravin.f -o $(O)pravin.o
+
+$(O)prfdta.o:	$(S)prfdta.f
+		$(COMPILE) $(S)prfdta.f -o $(O)prfdta.o
+
+$(O)prtinp.o:	$(S)prtinp.f $(S)PARAMS.h
+		$(COMPILE) $(S)prtinp.f -o $(O)prtinp.o
+
+$(O)prtint.o:	$(S)prtint.f $(S)PARAMS.h
+		$(COMPILE) $(S)prtint.f -o $(O)prtint.o
+
+$(O)psi.o:	$(S)psi.f
+		$(COMPILE) $(S)psi.f    -o $(O)psi.o
+
+$(O)psieca.o:	$(S)psieca.f
+		$(COMPILE) $(S)psieca.f -o $(O)psieca.o
+
+$(O)pslct.o:	$(S)pslct.f
+		$(COMPILE) $(S)pslct.f  -o $(O)pslct.o
+
+$(O)qgausn.o:	$(S)qgausn.f
+		$(COMPILE) $(S)qgausn.f -o $(O)qgausn.o
+
+$(O)rain.o:	$(S)rain.f $(S)PARAMS.h $(S)BASE.h
+		$(COMPILE) $(S)rain.f   -o $(O)rain.o
+
+$(O)random.o:	$(S)random.f
+		$(COMPILE) $(S)random.f -o $(O)random.o
+
+$(O)ratio.o:	$(S)ratio.f
+		$(COMPILE) $(S)ratio.f  -o $(O)ratio.o
+
+$(O)rdcork.o:	$(S)rdcork.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)rdcork.f -o $(O)rdcork.o
+
+$(O)rdexa.o:	$(S)rdexa.f $(S)PARAMS.h $(S)IFIL.h $(S)BASE.h
+		$(COMPILE) $(S)rdexa.f  -o $(O)rdexa.o
+
+$(O)rdnsm.o:	$(S)rdnsm.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)rdnsm.f  -o $(O)rdnsm.o
+
+$(O)rdsun.o:	$(S)rdsun.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)rdsun.f  -o $(O)rdsun.o
+
+$(O)reduce.o:	$(S)reduce.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)reduce.f -o $(O)reduce.o
+
+$(O)rflect.o:	$(S)rflect.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)rflect.f -o $(O)rflect.o
+
+$(O)rfract.o:	$(S)rfract.f
+		$(COMPILE) $(S)rfract.f -o $(O)rfract.o
+
+$(O)right.o:	$(S)right.f
+		$(COMPILE) $(S)right.f  -o $(O)right.o
+
+$(O)rmchan.o:	$(S)rmchan.f $(S)CHANLS.h $(S)IFIL.h
+		$(COMPILE) $(S)rmchan.f -o $(O)rmchan.o
+
+$(O)rnscat.o:	$(S)rnscat.f $(S)IFIL.h
+		$(COMPILE) $(S)rnscat.f -o $(O)rnscat.o
+
+$(O)rtbis.o:	$(S)rtbis.f $(S)PARAMS.h
+		$(COMPILE) $(S)rtbis.f  -o $(O)rtbis.o
+
+$(O)s15bd.o:	$(S)s15bd.f
+		$(COMPILE) $(S)s15bd.f  -o $(O)s15bd.o
+
+$(O)sasum.o:	$(S)sasum.f
+		$(COMPILE) $(S)sasum.f  -o $(O)sasum.o
+
+$(O)saxpy.o:	$(S)saxpy.f
+		$(COMPILE) $(S)saxpy.f  -o $(O)saxpy.o
+
+$(O)schrun.o:	$(S)schrun.f
+		$(COMPILE) $(S)schrun.f -o $(O)schrun.o
+
+$(O)sclcol.o:	$(S)sclcol.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)sclcol.f -o $(O)sclcol.o
+
+$(O)scnflx.o:	$(S)scnflx.f $(S)PARAMS.h $(S)BMHEAD.h
+		$(COMPILE) $(S)scnflx.f -o $(O)scnflx.o
+
+$(O)sdot.o:	$(S)sdot.f
+		$(COMPILE) $(S)sdot.f   -o $(O)sdot.o
+
+$(O)secsca.o:	$(S)secsca.f
+		$(COMPILE) $(S)secsca.f -o $(O)secsca.o
+
+$(O)setdis.o:	$(S)setdis.f
+		$(COMPILE) $(S)setdis.f -o $(O)setdis.o
+
+$(O)setmtx.o:	$(S)setmtx.f
+		$(COMPILE) $(S)setmtx.f -o $(O)setmtx.o
+
+$(O)sf260.o:	$(S)sf260.f
+		$(COMPILE) $(S)sf260.f  -o $(O)sf260.o
+
+$(O)sf296.o:	$(S)sf296.f
+		$(COMPILE) $(S)sf296.f  -o $(O)sf296.o
+
+$(O)sgbco.o:	$(S)sgbco.f
+		$(COMPILE) $(S)sgbco.f  -o $(O)sgbco.o
+
+$(O)sgbfa.o:	$(S)sgbfa.f
+		$(COMPILE) $(S)sgbfa.f  -o $(O)sgbfa.o
+
+$(O)sgbsl.o:	$(S)sgbsl.f
+		$(COMPILE) $(S)sgbsl.f  -o $(O)sgbsl.o
+
+$(O)sgeco.o:	$(S)sgeco.f
+		$(COMPILE) $(S)sgeco.f  -o $(O)sgeco.o
+
+$(O)sgefa.o:	$(S)sgefa.f
+		$(COMPILE) $(S)sgefa.f  -o $(O)sgefa.o
+
+$(O)sgesl.o:	$(S)sgesl.f
+		$(COMPILE) $(S)sgesl.f  -o $(O)sgesl.o
+
+$(O)shade.o:	$(S)shade.f $(S)PARAMS.h
+		$(COMPILE) $(S)shade.f  -o $(O)shade.o
+
+$(O)shumg.o:	$(S)shumg.f
+		$(COMPILE) $(S)shumg.f  -o $(O)shumg.o
+
+$(O)sinsca.o:	$(S)sinsca.f
+		$(COMPILE) $(S)sinsca.f -o $(O)sinsca.o
+
+$(O)sint.o:	$(S)sint.f
+		$(COMPILE) $(S)sint.f   -o $(O)sint.o
+
+$(O)slf260.o:	$(S)slf260.f
+		$(COMPILE) $(S)slf260.f -o $(O)slf260.o
+
+$(O)slf296.o:	$(S)slf296.f
+		$(COMPILE) $(S)slf296.f -o $(O)slf296.o
+
+$(O)slftst.o:	$(S)slftst.f
+		$(COMPILE) $(S)slftst.f -o $(O)slftst.o
+
+$(O)smgeo.o:	$(S)smgeo.f
+		$(COMPILE) $(S)smgeo.f  -o $(O)smgeo.o
+
+$(O)smprep.o:	$(S)smprep.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)smprep.f -o $(O)smprep.o
+
+$(O)sncms.o:	$(S)sncms.f
+		$(COMPILE) $(S)sncms.f  -o $(O)sncms.o
+
+$(O)so2xs.o:	$(S)so2xs.f
+		$(COMPILE) $(S)so2xs.f  -o $(O)so2xs.o
+
+$(O)soleig.o:	$(S)soleig.f $(S)PARAMS.h
+		$(COMPILE) $(S)soleig.f -o $(O)soleig.o
+
+$(O)solve0.o:	$(S)solve0.f
+		$(COMPILE) $(S)solve0.f -o $(O)solve0.o
+
+$(O)solve1.o:	$(S)solve1.f
+		$(COMPILE) $(S)solve1.f -o $(O)solve1.o
+
+$(O)solzen.o:	$(S)solzen.f $(S)PARAMS.h
+		$(COMPILE) $(S)solzen.f -o $(O)solzen.o
+
+$(O)source.o:	$(S)source.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)source.f -o $(O)source.o
+
+$(O)spaltr.o:	$(S)spaltr.f
+		$(COMPILE) $(S)spaltr.f -o $(O)spaltr.o
+
+$(O)spcflx.o:	$(S)spcflx.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)spcflx.f -o $(O)spcflx.o
+
+$(O)sscal.o:	$(S)sscal.f
+		$(COMPILE) $(S)sscal.f  -o $(O)sscal.o
+
+$(O)sscork.o:	$(S)sscork.f $(S)PARAMS.h $(S)BASE.h $(S)SOLS.h
+		$(COMPILE) $(S)sscork.f -o $(O)sscork.o
+
+$(O)ssgeo.o:	$(S)ssgeo.f $(S)PARAMS.h $(S)BASE.h $(S)SOLS.h $(S)IFIL.h
+		$(COMPILE) $(S)ssgeo.f  -o $(O)ssgeo.o
+
+$(O)ssrad.o:	$(S)ssrad.f $(S)PARAMS.h $(S)IFIL.h $(S)BASE.h $(S)SOLS.h
+		$(COMPILE) $(S)ssrad.f  -o $(O)ssrad.o
+
+$(O)stdmdl.o:	$(S)stdmdl.f $(S)PARAMS.h $(S)BASE.h $(S)IFIL.h
+		$(COMPILE) $(S)stdmdl.f -o $(O)stdmdl.o
+
+$(O)subsol.o:	$(S)subsol.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)subsol.f -o $(O)subsol.o
+
+$(O)sunbd.o:	$(S)sunbd.f
+		$(COMPILE) $(S)sunbd.f  -o $(O)sunbd.o
+
+$(O)svsola.o:	$(S)svsola.f
+		$(COMPILE) $(S)svsola.f -o $(O)svsola.o
+
+$(O)tab.o:	$(S)tab.f
+		$(COMPILE) $(S)tab.f    -o $(O)tab.o
+
+$(O)tanht.o:	$(S)tanht.f $(S)PARAMS.h
+		$(COMPILE) $(S)tanht.f  -o $(O)tanht.o
+
+$(O)terpev.o:	$(S)terpev.f
+		$(COMPILE) $(S)terpev.f -o $(O)terpev.o
+
+$(O)terpso.o:	$(S)terpso.f
+		$(COMPILE) $(S)terpso.f -o $(O)terpso.o
+
+$(O)thmflx.o:	$(S)thmflx.f $(S)PARAMS.h $(S)BASE.h
+		$(COMPILE) $(S)thmflx.f -o $(O)thmflx.o
+
+$(O)title.o:	$(S)title.f
+		$(COMPILE) $(S)title.f  -o $(O)title.o
+
+$(O)tnrain.o:	$(S)tnrain.f
+		$(COMPILE) $(S)tnrain.f -o $(O)tnrain.o
+
+$(O)trans.o:	$(S)trans.f $(S)PARAMS.h $(S)ERROR.h $(S)IFIL.h $(S)BASE.h $(S)BMHEAD.h $(S)SOLS.h $(S)JMASS.h
+		$(COMPILE) $(S)trans.f  -o $(O)trans.o
+
+$(O)trlay.o:	$(S)trlay.f $(S)IFIL.h
+		$(COMPILE) $(S)trlay.f  -o $(O)trlay.o
+
+$(O)tstbad.o:	$(S)tstbad.f
+		$(COMPILE) $(S)tstbad.f -o $(O)tstbad.o
+
+$(O)upbeam.o:	$(S)upbeam.f
+		$(COMPILE) $(S)upbeam.f -o $(O)upbeam.o
+
+$(O)upcase.o:	$(S)upcase.f
+		$(COMPILE) $(S)upcase.f -o $(O)upcase.o
+
+$(O)upisot.o:	$(S)upisot.f
+		$(COMPILE) $(S)upisot.f -o $(O)upisot.o
+
+$(O)usrint.o:	$(S)usrint.f
+		$(COMPILE) $(S)usrint.f -o $(O)usrint.o
+
+$(O)vsa.o:	$(S)vsa.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)vsa.f    -o $(O)vsa.o
+
+$(O)vsansm.o:	$(S)vsansm.f $(S)PARAMS.h
+		$(COMPILE) $(S)vsansm.f -o $(O)vsansm.o
+
+$(O)watvap.o:	$(S)watvap.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)watvap.f -o $(O)watvap.o
+
+$(O)wrtbad.o:	$(S)wrtbad.f
+		$(COMPILE) $(S)wrtbad.f -o $(O)wrtbad.o
+
+$(O)wrtbuf.o:	$(S)wrtbuf.f $(S)PARAMS.h $(S)ERROR.h $(S)JMASS.h $(S)IFIL.h
+		$(COMPILE) $(S)wrtbuf.f -o $(O)wrtbuf.o
+
+$(O)wrtdim.o:	$(S)wrtdim.f
+		$(COMPILE) $(S)wrtdim.f -o $(O)wrtdim.o
+
+$(O)wrtflt.o:	$(S)wrtflt.f $(S)CHANLS.h $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)wrtflt.f -o $(O)wrtflt.o
+
+$(O)wtchan.o:	$(S)wtchan.f $(S)PARAMS.h $(S)CHANLS.h $(S)IFIL.h $(S)BMHEAD.h
+		$(COMPILE) $(S)wtchan.f -o $(O)wtchan.o
+
+$(O)wtcool.o:	$(S)wtcool.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)wtcool.f -o $(O)wtcool.o
+
+$(O)wtlft.o:	$(S)wtlft.f
+		$(COMPILE) $(S)wtlft.f  -o $(O)wtlft.o
+
+$(O)wtrgt.o:	$(S)wtrgt.f
+		$(COMPILE) $(S)wtrgt.f  -o $(O)wtrgt.o
+
+$(O)wtsum.o:	$(S)wtsum.f $(S)PARAMS.h $(S)IFIL.h
+		$(COMPILE) $(S)wtsum.f  -o $(O)wtsum.o
+
+$(O)wvbnrg.o:	$(S)wvbnrg.f
+		$(COMPILE) $(S)wvbnrg.f -o $(O)wvbnrg.o
+
+$(O)xifunc.o:	$(S)xifunc.f
+		$(COMPILE) $(S)xifunc.f -o $(O)xifunc.o
+
+$(O)xmlatm.o:	$(S)xmlatm.f $(S)PARAMS.h
+		$(COMPILE) $(S)xmlatm.f -o $(O)xmlatm.o
+
+$(O)zeroal.o:	$(S)zeroal.f
+		$(COMPILE) $(S)zeroal.f -o $(O)zeroal.o
+
+$(O)zeroit.o:	$(S)zeroit.f
+		$(COMPILE) $(S)zeroit.f -o $(O)zeroit.o

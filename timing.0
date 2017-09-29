@@ -1,0 +1,14 @@
+Procid = 0
+Wallclock timer cost est.:        0 usec per start/stop pair
+CPU timer cost est.:              4 usec per start/stop pair
+CPU accumulation interval is 0.01 seconds
+
+Stats for thread 0:
+Name           Called    Usr       Sys       Usr+Sys   Wallclock Max       Min       
+radcswmx              16     0.900     0.010     0.910     0.905     0.449     0.003 
+
+TIMER OVERHEAD (wallclock seconds) =     0.000089
+
+Same stats sorted by timer with thread number appended:
+Name               Called    Usr       Sys       Usr+Sys   Wallclock Max       Min       
+OVERHEAD.0   (wallclock seconds) =     0.000089

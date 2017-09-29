@@ -1,0 +1,109 @@
+      SUBROUTINE VSANSM(K,AHAZE,IHA1,ZNEW)
+      INCLUDE 'PARAMS.h'
+
+!     /CNTRL/
+!       IKMAX    NUMBER OF PATH SEGMENTS ALONG LINE-OF-SIGHT.
+!       ML       NUMBER OF ATMOSPHERIC PROFILE LEVELS.
+!       MLFLX    NUMBER OF LEVELS FOR WHICH FLUX VALUES ARE WRITTEN.
+!       ISSGEO   LINE-OF-SIGHT FLAG (0 = SENSOR PATH, 1 = SOLAR PATHS).
+!       IMULT    MULTIPLE SCATTERING FLAG
+!                  (0=NONE, 1=AT SENSOR, -1=AT FINAL OR TANGENT POINT).
+      INTEGER IKMAX,ML,MLFLX,ISSGEO,IMULT
+      COMMON/CNTRL/IKMAX,ML,MLFLX,ISSGEO,IMULT
+      INTEGER JUNITP,JUNITT,JUNIT,JLOW
+      REAL WMOL
+      COMMON/CARD1B/JUNITP,JUNITT,JUNIT(13),WMOL(12),JLOW
+      COMMON /ZVSALY/ ZVSA(10),RHVSA(10),AHVSA(10),IHVSA(10)
+      COMMON/NSINP/ZM(40),PM(40),TM(40),WMDL(40,12)
+
+      COMMON /MDATA/P(LAYDIM),T(LAYDIM),WH(LAYDIM),WCO2(LAYDIM),        &
+     & WO(LAYDIM),WN2O(LAYDIM),WCO(LAYDIM),WCH4(LAYDIM),WO2(LAYDIM)
+      COMMON /MDATA1/ WNO(LAYDIM),WSO2(LAYDIM),WNO2(LAYDIM),            &
+     & WNH3(LAYDIM),WHNO3(LAYDIM)
+      REAL WWMOL(12)
+
+!     OUTPUT COMMON MDATA AND MDATA1
+
+!     MODEL 7 CODING
+!     OLD LAYERS  AEROSOL RETURNED
+!     NEW LAYERS P,T,DP,AEROSOL
+
+      JML=ML
+      J=1
+      KN=K
+110   IF(KN.GT.10)GO TO 140
+      JL=J-1
+      IF(JL.LT.1)JL=1
+      JP=JL+1
+      JLS = JL
+      IF(ZVSA(KN).EQ.ZM(JL))GO TO 140
+      JLS = JP
+      IF(ZVSA(KN).EQ.ZM(JP))GO TO 140
+      IF(ZVSA(KN).GT.ZM(JL).AND.ZVSA(KN).LT.ZM(JP))GO TO 115
+      IF(J. GE. JML) GO TO 115
+      J = J + 1
+      GO TO 110
+115   ZNEW=ZVSA(KN)
+      DIF=ZM(JP)-ZM(JL)
+      DZ=ZVSA(KN)-ZM(JL)
+      DLIN=DZ/DIF
+      P(K)  = (PM(JP)-PM(JL))*DLIN+PM(JL)
+      T(K)   =(TM(JP)-TM(JL))*DLIN+TM(JL)
+      DO 120 KM = 1,12
+      WWMOL(KM)=(WMDL(JP,KM)-WMDL(JL,KM))*DLIN+WMDL(JL,KM)
+120   CONTINUE
+      IHA1  =IHVSA(KN)
+      AHAZE  =AHVSA(KN)
+      FAC=(ZVSA(KN)-ZM(JL))/DIF
+      IF(PM(JP).GT.0.0.AND.PM(JL).GT.0.) THEN
+           P(K)  =PM(JL)*(PM(JP)/PM(JL))**FAC
+      ENDIF
+      IF(TM(JP).GT.0.0.AND.TM(JL).GT.0.) THEN
+           T(K)   =TM(JL)*(TM(JP)/TM(JL))**FAC
+      ENDIF
+      DO 130 KM = 1,12
+      IF(WMDL(JP,KM) .GT.0.0.AND.WMDL(JL,KM).GT.0.0)                    &
+     &  WWMOL(KM)=(WMDL(JL,KM)*WMDL(JP,KM)/WMDL(JL,KM))**FAC
+130   CONTINUE
+       WH(K)    = WWMOL(1)
+       WCO2(K)  = WWMOL(2)
+       WO(K)    = WWMOL(3)
+       WN2O(K)  = WWMOL(4)
+       WCO(K)   = WWMOL(5)
+       WCH4(K)  = WWMOL(6)
+       WO2(K)   = WWMOL(7)
+       WNO(K)   = WWMOL(8)
+       WSO2(K)  = WWMOL(9)
+       WNO2(K)  = WWMOL(10)
+       WNH3(K)  = WWMOL(11)
+       WHNO3(K) = WWMOL(12)
+      RETURN
+140   CONTINUE
+      J = JLS
+      IF(K.GT.10) THEN
+         J = K - 10 + JLOW
+         IHA1  =0
+         AHAZE  =0.
+      ENDIF
+      ZNEW = ZM(J)
+      P(K)  =PM(J)
+      T(K) = TM(J)
+      DO 135 KM = 1,12
+      WWMOL(KM)= WMDL(J,KM)
+135   CONTINUE
+       WH(K)    = WWMOL(1)
+       WCO2(K)  = WWMOL(2)
+       WO(K)    = WWMOL(3)
+       WN2O(K)  = WWMOL(4)
+       WCO(K)   = WWMOL(5)
+       WCH4(K)  = WWMOL(6)
+       WO2(K)   = WWMOL(7)
+       WNO(K)   = WWMOL(8)
+       WSO2(K)  = WWMOL(9)
+       WNO2(K)  = WWMOL(10)
+       WNH3(K)  = WWMOL(11)
+       WHNO3(K) = WWMOL(12)
+      IF(KN.LE.9) IHA1  =IHVSA(KN)
+      IF(KN.LE.9)AHAZE  =AHVSA(KN)
+      RETURN
+      END

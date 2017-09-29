@@ -1,0 +1,1973 @@
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           1  0.424242383192393       9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           2  5.471120834231748E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           3  5.508076972422256E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           4  5.109920631617979E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           5  3.838808044367708E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           6  1.379308984055717E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           7  4.081634887304493E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           1  0.424242383192393       9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           8  1.459852617292151E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           9  1.081083240606498E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          10  8.298746976857471E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          16  3.210231593803160E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          17  2.945540369119359E-003  9.999999747378752E-006
+ k,btest,eps=           2  5.471120834231748E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           3  5.508076972422256E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           4  5.109920631617979E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           5  3.838808044367708E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          18  5.509669375667627E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          19  3.955170957203141E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          20  1.796537383913969E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          21  1.007543726163584E-003  9.999999747378752E-006
+1 Layer Locations (*1000) 
+ k,btest,eps=           6  1.379308984055717E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           7  4.081634887304493E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           8  1.459852617292151E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           9  1.081083240606498E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          10  8.298746976857471E-003  9.999999747378752E-006
+   1    0.0000              0.0000              0.0000
+                  0.0000             10.0000             10.0000
+   2    0.0000             13.0000             13.0000
+                  0.0000             16.0000             16.0000
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          16  3.210231593803160E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          17  2.945540369119359E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          18  5.509669375667627E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          19  3.955170957203141E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+   3    0.0000             20.8000             20.8000
+                  0.0000             25.6000             25.6000
+   4    0.0000             33.3000             33.3000
+                  0.0000             41.0000             41.0000
+   5    0.0000             53.0000             53.0000
+                  0.0000             65.0000             65.0000
+   6    0.0000             77.5000             77.5000
+                  0.0000             90.0000             90.0000
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          20  1.796537383913969E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          21  1.007543726163584E-003  9.999999747378752E-006
+1 Layer Locations (*1000) 
+   1    0.0000              0.0000              0.0000
+   7    0.0000            105.0000            105.0000
+                  0.0000            120.0000            120.0000
+   8    0.0000            145.0000            145.0000
+                  0.0000            170.0000            170.0000
+   9    0.0000            200.0000            200.0000
+                  0.0000            230.0000            230.0000
+  10    0.0000            265.0000            265.0000
+                  0.0000            300.0000            300.0000
+                  0.0000             10.0000             10.0000
+   2    0.0000             13.0000             13.0000
+                  0.0000             16.0000             16.0000
+   3    0.0000             20.8000             20.8000
+                  0.0000             25.6000             25.6000
+   4    0.0000             33.3000             33.3000
+                  0.0000             41.0000             41.0000
+   5    0.0000             53.0000             53.0000
+                  0.0000             65.0000             65.0000
+  11    0.0000            340.0000            340.0000
+                  0.0000            380.0000            380.0000
+  12    0.0000            420.0000            420.0000
+                  0.0000            460.0000            460.0000
+  13    0.0000            500.0000            500.0000
+                  0.0000            540.0000            540.0000
+  14    0.0000            580.0000            580.0000
+                  0.0000            620.0000            620.0000
+  15    0.0000            660.0000            660.0000
+   6    0.0000             77.5000             77.5000
+                  0.0000             90.0000             90.0000
+   7    0.0000            105.0000            105.0000
+                  0.0000            120.0000            120.0000
+   8    0.0000            145.0000            145.0000
+                  0.0000            170.0000            170.0000
+   9    0.0000            200.0000            200.0000
+                  0.0000            230.0000            230.0000
+  10    0.0000            265.0000            265.0000
+                  0.0000            700.0000            700.0000
+  16    0.0000            740.0000            740.0000
+                  0.0000            780.0000            780.0000
+  17    0.0000            815.0000            815.0000
+                  0.0000            850.0000            850.0000
+  18    0.0000            880.0000            880.0000
+                  0.0000            910.0000            910.0000
+  19    0.0000            930.0000            930.0000
+                  0.0000            950.0000            950.0000
+                  0.0000            300.0000            300.0000
+  11    0.0000            340.0000            340.0000
+                  0.0000            380.0000            380.0000
+  12    0.0000            420.0000            420.0000
+                  0.0000            460.0000            460.0000
+  13    0.0000            500.0000            500.0000
+                  0.0000            540.0000            540.0000
+  14    0.0000            580.0000            580.0000
+                  0.0000            620.0000            620.0000
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+  20    0.0000            962.5000            962.5000
+                  0.0000            975.0000            975.0000
+  21    0.0000            984.0000            984.0000
+                  0.0000            993.0000            993.0000
+  22    0.0000           1000.0000           1000.0000
+ reference pressures (Pa)
+   1         0.0000
+                         1000.0000      1300.0000
+   2      1300.0000
+                         1600.0001       780.0000
+   3      2080.0000
+                         2559.9999      1250.0001
+   4      3330.0001
+                         4100.0001      1969.9998
+   5      5299.9999
+  15    0.0000            660.0000            660.0000
+                  0.0000            700.0000            700.0000
+  16    0.0000            740.0000            740.0000
+                  0.0000            780.0000            780.0000
+  17    0.0000            815.0000            815.0000
+                  0.0000            850.0000            850.0000
+  18    0.0000            880.0000            880.0000
+                  0.0000            910.0000            910.0000
+  19    0.0000            930.0000            930.0000
+                  0.0000            950.0000            950.0000
+  20    0.0000            962.5000            962.5000
+ k,btest,eps=           1  0.424242383192393       9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           2  5.471120834231748E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           3  5.508076972422256E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           4  5.109920631617979E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           5  3.838808044367708E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+                         6499.9998      2450.0001
+   6      7750.0001
+                         9000.0004      2750.0004
+   7     10500.0004
+                        11999.9997      3999.9992
+   8     14499.9996
+                        17000.0002      5500.0007
+   9     20000.0003
+                        23000.0004      6500.0013
+  10     26500.0015
+                        30000.0012      7499.9988
+  11     34000.0004
+                        37999.9995      8000.0013
+  12     42000.0017
+                        46000.0008      7999.9983
+  13     50000.0000
+                        54000.0021      8000.0043
+  14     58000.0043
+                  0.0000            975.0000            975.0000
+  21    0.0000            984.0000            984.0000
+                  0.0000            993.0000            993.0000
+  22    0.0000           1000.0000           1000.0000
+ reference pressures (Pa)
+   1         0.0000
+                         1000.0000      1300.0000
+   2      1300.0000
+                         1600.0001       780.0000
+   3      2080.0000
+                         2559.9999      1250.0001
+   4      3330.0001
+                         4100.0001      1969.9998
+   5      5299.9999
+                         6499.9998      2450.0001
+   6      7750.0001
+ k,btest,eps=           6  1.379308984055717E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           7  4.081634887304493E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           8  1.459852617292151E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           9  1.081083240606498E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          10  8.298746976857471E-003  9.999999747378752E-006
+                        62000.0005      7999.9924
+  15     65999.9967
+                        69999.9988      8000.0043
+  16     74000.0010
+                        77999.9971      7499.9988
+  17     81499.9998
+                        85000.0024      6499.9998
+  18     87999.9995
+                        91000.0026      5000.0012
+  19     93000.0007
+                        94999.9988      3249.9969
+  20     96249.9976
+                        97500.0024      2149.9991
+  21     98399.9968
+                        99299.9971      1600.0032
+  22    100000.0000
+                         9000.0004      2750.0004
+   7     10500.0004
+                        11999.9997      3999.9992
+   8     14499.9996
+                        17000.0002      5500.0007
+   9     20000.0003
+                        23000.0004      6500.0013
+  10     26500.0015
+                        30000.0012      7499.9988
+  11     34000.0004
+                        37999.9995      8000.0013
+  12     42000.0017
+                        46000.0008      7999.9983
+  13     50000.0000
+                        54000.0021      8000.0043
+  14     58000.0043
+                        62000.0005      7999.9924
+  15     65999.9967
+                        69999.9988      8000.0043
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          16  3.210231593803160E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          17  2.945540369119359E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          18  5.509669375667627E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          19  3.955170957203141E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          20  1.796537383913969E-003  9.999999747378752E-006
+(shr_orb_params) Calculate characteristics of the orbit:
+(shr_orb_params) CVS revision: $Revision: 1.2.4.1 $
+(shr_orb_params) CVS Tag     : $Name:  $
+(shr_orb_params) Calculate orbit for year:      1950
+  16     74000.0010
+                        77999.9971      7499.9988
+  17     81499.9998
+                        85000.0024      6499.9998
+  18     87999.9995
+                        91000.0026      5000.0012
+  19     93000.0007
+                        94999.9988      3249.9969
+  20     96249.9976
+                        97500.0024      2149.9991
+  21     98399.9968
+                        99299.9971      1600.0032
+  22    100000.0000
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          21  1.007543726163584E-003  9.999999747378752E-006
+1 Layer Locations (*1000) 
+   1    0.0000              0.0000              0.0000
+                  0.0000             10.0000             10.0000
+   2    0.0000             13.0000             13.0000
+                  0.0000             16.0000             16.0000
+(shr_orb_params) Calculate characteristics of the orbit:
+(shr_orb_params) CVS revision: $Revision: 1.2.4.1 $
+(shr_orb_params) CVS Tag     : $Name:  $
+(shr_orb_params) Calculate orbit for year:      1950
+   3    0.0000             20.8000             20.8000
+                  0.0000             25.6000             25.6000
+   4    0.0000             33.3000             33.3000
+                  0.0000             41.0000             41.0000
+   5    0.0000             53.0000             53.0000
+                  0.0000             65.0000             65.0000
+   6    0.0000             77.5000             77.5000
+                  0.0000             90.0000             90.0000
+   7    0.0000            105.0000            105.0000
+                  0.0000            120.0000            120.0000
+   8    0.0000            145.0000            145.0000
+                  0.0000            170.0000            170.0000
+   9    0.0000            200.0000            200.0000
+(shr_orb_params) ------ Computed Orbital Parameters ------
+(shr_orb_params) Eccentricity      =   1.672393E-02
+(shr_orb_params) Obliquity (deg)   =   2.344627E+01
+(shr_orb_params) Obliquity (rad)   =   4.092146E-01
+(shr_orb_params) Long of perh(deg) =   1.020391E+02
+(shr_orb_params) Long of perh(rad) =   4.922510E+00
+(shr_orb_params) Long at v.e.(rad) =  -3.262537E-02
+(shr_orb_params) -----------------------------------------
+                  0.0000            230.0000            230.0000
+  10    0.0000            265.0000            265.0000
+                  0.0000            300.0000            300.0000
+  11    0.0000            340.0000            340.0000
+                  0.0000            380.0000            380.0000
+  12    0.0000            420.0000            420.0000
+                  0.0000            460.0000            460.0000
+  13    0.0000            500.0000            500.0000
+(shr_orb_params) ------ Computed Orbital Parameters ------
+(shr_orb_params) Eccentricity      =   1.672393E-02
+(shr_orb_params) Obliquity (deg)   =   2.344627E+01
+(shr_orb_params) Obliquity (rad)   =   4.092146E-01
+(shr_orb_params) Long of perh(deg) =   1.020391E+02
+(shr_orb_params) Long of perh(rad) =   4.922510E+00
+(shr_orb_params) Long at v.e.(rad) =  -3.262537E-02
+(shr_orb_params) -----------------------------------------
+                  0.0000            540.0000            540.0000
+  14    0.0000            580.0000            580.0000
+                  0.0000            620.0000            620.0000
+  15    0.0000            660.0000            660.0000
+                  0.0000            700.0000            700.0000
+  16    0.0000            740.0000            740.0000
+                  0.0000            780.0000            780.0000
+  17    0.0000            815.0000            815.0000
+                  0.0000            850.0000            850.0000
+  18    0.0000            880.0000            880.0000
+                  0.0000            910.0000            910.0000
+  19    0.0000            930.0000            930.0000
+                  0.0000            950.0000            950.0000
+  20    0.0000            962.5000            962.5000
+                  0.0000            975.0000            975.0000
+  21    0.0000            984.0000            984.0000
+                  0.0000            993.0000            993.0000
+  22    0.0000           1000.0000           1000.0000
+ reference pressures (Pa)
+   1         0.0000
+                         1000.0000      1300.0000
+   2      1300.0000
+                         1600.0001       780.0000
+   3      2080.0000
+                         2559.9999      1250.0001
+   4      3330.0001
+                         4100.0001      1969.9998
+   5      5299.9999
+                         6499.9998      2450.0001
+   6      7750.0001
+                         9000.0004      2750.0004
+   7     10500.0004
+                        11999.9997      3999.9992
+   8     14499.9996
+                        17000.0002      5500.0007
+   9     20000.0003
+                        23000.0004      6500.0013
+  10     26500.0015
+                        30000.0012      7499.9988
+  11     34000.0004
+ Advected constituent list:
+   1  Q         Specific humidity                                                                                                                 wet
+   2  N2O       Nitrous Oxide                                                                                                                     wet
+   3  CH4       Methane                                                                                                                           wet
+   4  CFC11     CFC11                                                                                                                             wet
+   5  CFC12     CFC12                                                                                                                             wet
+ No nonadvected constituents
+ Advected constituent list:
+   1  Q         Specific humidity                                                                                                                 wet
+   2  N2O       Nitrous Oxide                                                                                                                     wet
+   3  CH4       Methane                                                                                                                           wet
+   4  CFC11     CFC11                                                                                                                             wet
+   5  CFC12     CFC12                                                                                                                             wet
+ No nonadvected constituents
+ scenario = FIXED           
+ ghg_surfvals_init: ghg surface values are fixed as follows
+                        37999.9995      8000.0013
+  12     42000.0017
+                        46000.0008      7999.9983
+  13     50000.0000
+                        54000.0021      8000.0043
+  14     58000.0043
+                        62000.0005      7999.9924
+  15     65999.9967
+                        69999.9988      8000.0043
+  16     74000.0010
+                        77999.9971      7499.9988
+  17     81499.9998
+                        85000.0024      6499.9998
+  18     87999.9995
+                        91000.0026      5000.0012
+  19     93000.0007
+                        94999.9988      3249.9969
+ scenario = FIXED           
+ ghg_surfvals_init: ghg surface values are fixed as follows
+   co2 volume mixing ratio =   3.549999964889139E-004
+   ch4 volume mixing ratio =   1.713999949970457E-006
+   n2o volume mixing ratio =   3.110000079686870E-007
+   f11 volume mixing ratio =   2.799999954117283E-010
+   f12 volume mixing ratio =   5.029999750050251E-010
+   co2 volume mixing ratio =   3.549999964889139E-004
+   ch4 volume mixing ratio =   1.713999949970457E-006
+   n2o volume mixing ratio =   3.110000079686870E-007
+   f11 volume mixing ratio =   2.799999954117283E-010
+   f12 volume mixing ratio =   5.029999750050251E-010
+  20     96249.9976
+                        97500.0024      2149.9991
+  21     98399.9968
+                        99299.9971      1600.0032
+  22    100000.0000
+(shr_orb_params) Calculate characteristics of the orbit:
+(shr_orb_params) CVS revision: $Revision: 1.2.4.1 $
+(shr_orb_params) CVS Tag     : $Name:  $
+(shr_orb_params) Calculate orbit for year:      1950
+(shr_orb_params) ------ Computed Orbital Parameters ------
+(shr_orb_params) Eccentricity      =   1.672393E-02
+(shr_orb_params) Obliquity (deg)   =   2.344627E+01
+(shr_orb_params) Obliquity (rad)   =   4.092146E-01
+(shr_orb_params) Long of perh(deg) =   1.020391E+02
+(shr_orb_params) Long of perh(rad) =   4.922510E+00
+(shr_orb_params) Long at v.e.(rad) =  -3.262537E-02
+(shr_orb_params) -----------------------------------------
+ Advected constituent list:
+   1  Q         Specific humidity                                                                                                                 wet
+   2  N2O       Nitrous Oxide                                                                                                                     wet
+   3  CH4       Methane                                                                                                                           wet
+   4  CFC11     CFC11                                                                                                                             wet
+   5  CFC12     CFC12                                                                                                                             wet
+ No nonadvected constituents
+ scenario = FIXED           
+ ghg_surfvals_init: ghg surface values are fixed as follows
+   co2 volume mixing ratio =   3.549999964889139E-004
+   ch4 volume mixing ratio =   1.713999949970457E-006
+   n2o volume mixing ratio =   3.110000079686870E-007
+   f11 volume mixing ratio =   2.799999954117283E-010
+   f12 volume mixing ratio =   5.029999750050251E-010
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           1  0.424242383192393       9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           2  5.471120834231748E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           3  5.508076972422256E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           4  5.109920631617979E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           5  3.838808044367708E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           6  1.379308984055717E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           7  4.081634887304493E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           8  1.459852617292151E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=           9  1.081083240606498E-002  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          10  8.298746976857471E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          16  3.210231593803160E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          17  2.945540369119359E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          18  5.509669375667627E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          19  3.955170957203141E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          20  1.796537383913969E-003  9.999999747378752E-006
+HYCOEF: A and/or B vertical level coefficients at full
+ levels are not the arithmetic mean of half-level values
+ k,btest,eps=          21  1.007543726163584E-003  9.999999747378752E-006
+1 Layer Locations (*1000) 
+   1    0.0000              0.0000              0.0000
+                  0.0000             10.0000             10.0000
+   2    0.0000             13.0000             13.0000
+                  0.0000             16.0000             16.0000
+   3    0.0000             20.8000             20.8000
+                  0.0000             25.6000             25.6000
+   4    0.0000             33.3000             33.3000
+                  0.0000             41.0000             41.0000
+   5    0.0000             53.0000             53.0000
+                  0.0000             65.0000             65.0000
+   6    0.0000             77.5000             77.5000
+                  0.0000             90.0000             90.0000
+   7    0.0000            105.0000            105.0000
+                  0.0000            120.0000            120.0000
+   8    0.0000            145.0000            145.0000
+                  0.0000            170.0000            170.0000
+   9    0.0000            200.0000            200.0000
+                  0.0000            230.0000            230.0000
+  10    0.0000            265.0000            265.0000
+                  0.0000            300.0000            300.0000
+  11    0.0000            340.0000            340.0000
+                  0.0000            380.0000            380.0000
+  12    0.0000            420.0000            420.0000
+                  0.0000            460.0000            460.0000
+  13    0.0000            500.0000            500.0000
+                  0.0000            540.0000            540.0000
+  14    0.0000            580.0000            580.0000
+                  0.0000            620.0000            620.0000
+  15    0.0000            660.0000            660.0000
+                  0.0000            700.0000            700.0000
+  16    0.0000            740.0000            740.0000
+                  0.0000            780.0000            780.0000
+  17    0.0000            815.0000            815.0000
+                  0.0000            850.0000            850.0000
+  18    0.0000            880.0000            880.0000
+                  0.0000            910.0000            910.0000
+  19    0.0000            930.0000            930.0000
+                  0.0000            950.0000            950.0000
+  20    0.0000            962.5000            962.5000
+                  0.0000            975.0000            975.0000
+  21    0.0000            984.0000            984.0000
+                  0.0000            993.0000            993.0000
+  22    0.0000           1000.0000           1000.0000
+ reference pressures (Pa)
+   1         0.0000
+                         1000.0000      1300.0000
+   2      1300.0000
+                         1600.0001       780.0000
+   3      2080.0000
+                         2559.9999      1250.0001
+   4      3330.0001
+                         4100.0001      1969.9998
+   5      5299.9999
+                         6499.9998      2450.0001
+   6      7750.0001
+                         9000.0004      2750.0004
+   7     10500.0004
+                        11999.9997      3999.9992
+   8     14499.9996
+                        17000.0002      5500.0007
+   9     20000.0003
+                        23000.0004      6500.0013
+  10     26500.0015
+                        30000.0012      7499.9988
+  11     34000.0004
+                        37999.9995      8000.0013
+  12     42000.0017
+                        46000.0008      7999.9983
+  13     50000.0000
+                        54000.0021      8000.0043
+  14     58000.0043
+                        62000.0005      7999.9924
+  15     65999.9967
+                        69999.9988      8000.0043
+  16     74000.0010
+                        77999.9971      7499.9988
+  17     81499.9998
+                        85000.0024      6499.9998
+  18     87999.9995
+                        91000.0026      5000.0012
+  19     93000.0007
+                        94999.9988      3249.9969
+  20     96249.9976
+                        97500.0024      2149.9991
+  21     98399.9968
+                        99299.9971      1600.0032
+  22    100000.0000
+(shr_orb_params) Calculate characteristics of the orbit:
+(shr_orb_params) CVS revision: $Revision: 1.2.4.1 $
+(shr_orb_params) CVS Tag     : $Name:  $
+(shr_orb_params) Calculate orbit for year:      1950
+(shr_orb_params) ------ Computed Orbital Parameters ------
+(shr_orb_params) Eccentricity      =   1.672393E-02
+(shr_orb_params) Obliquity (deg)   =   2.344627E+01
+(shr_orb_params) Obliquity (rad)   =   4.092146E-01
+(shr_orb_params) Long of perh(deg) =   1.020391E+02
+(shr_orb_params) Long of perh(rad) =   4.922510E+00
+(shr_orb_params) Long at v.e.(rad) =  -3.262537E-02
+(shr_orb_params) -----------------------------------------
+ Advected constituent list:
+   1  Q         Specific humidity                                                                                                                 wet
+   2  N2O       Nitrous Oxide                                                                                                                     wet
+   3  CH4       Methane                                                                                                                           wet
+   4  CFC11     CFC11                                                                                                                             wet
+   5  CFC12     CFC12                                                                                                                             wet
+ No nonadvected constituents
+ scenario = FIXED           
+ ghg_surfvals_init: ghg surface values are fixed as follows
+   co2 volume mixing ratio =   3.549999964889139E-004
+   ch4 volume mixing ratio =   1.713999949970457E-006
+   n2o volume mixing ratio =   3.110000079686870E-007
+   f11 volume mixing ratio =   2.799999954117283E-010
+   f12 volume mixing ratio =   5.029999750050251E-010
+ RADINI: ntoplw =           1  pressure:   999.999977648258     
+ RADINI: ntoplw =           1  pressure:   999.999977648258     
+ (GETFIL): attempting to find local file abs_ems_factors_fastvx.c030508.nc
+ (GETFIL): attempting to find local file abs_ems_factors_fastvx.c030508.nc
+ RADINI: ntoplw =           1  pressure:   999.999977648258     
+ (GETFIL): attempting to find local file abs_ems_factors_fastvx.c030508.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/abs_ems_factors_f
+ astvx.c030508.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/abs_ems_factors_f
+ astvx.c030508.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/abs_ems_factors_f
+ astvx.c030508.nc
+ RADINI: ntoplw =           1  pressure:   999.999977648258     
+ (GETFIL): attempting to find local file abs_ems_factors_fastvx.c030508.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/abs_ems_factors_f
+ astvx.c030508.nc
+  *** SATURATION VAPOR PRESSURE TABLE COMPLETED ***
+  *** SATURATION VAPOR PRESSURE TABLE COMPLETED ***
+  *** SATURATION VAPOR PRESSURE TABLE COMPLETED ***
+  *** SATURATION VAPOR PRESSURE TABLE COMPLETED ***
+ rh panic attack  -303.649993896484        324.369995117188     
+ rh panic attack  -303.649993896484        324.369995117188     
+ rh panic attack  -303.649993896484        324.369995117188     
+ rh panic attack  -303.649993896484        324.369995117188     
+ changing rh at          121         120           1  2.151543185391347E-006
+ -7.375370822666286E-007
+ changing rh at          121         120           1  2.151543185391347E-006
+ -7.375370822666286E-007
+ changing rh at          122         120           1  2.149971351173008E-006
+ -8.791541437299647E-007
+ changing rh at          122         120           1  2.149971351173008E-006
+ -8.791541437299647E-007
+ changing rh at          123         120           1  2.148515704902820E-006
+ -1.096517136946199E-006
+ changing rh at          123         120           1  2.148515704902820E-006
+ -1.096517136946199E-006
+ changing rh at          124         120           1  2.147182385670022E-006
+ -1.459873782253831E-006
+ changing rh at          124         120           1  2.147182385670022E-006
+ -1.459873782253831E-006
+ changing rh at          125         120           1  2.145974576706067E-006
+ -2.161319928410306E-006
+ changing rh at          125         120           1  2.145974576706067E-006
+ -2.161319928410306E-006
+ changing rh at          126         120           1  2.144896143363439E-006
+ -3.973501596059070E-006
+ changing rh at          126         120           1  2.144896143363439E-006
+ -3.973501596059070E-006
+ changing rh at          127         120           1  2.143950496247271E-006
+ -1.708327062680095E-005
+ changing rh at          127         120           1  2.143950496247271E-006
+ -1.708327062680095E-005
+ changing rh at          121         120           1  2.151543185391347E-006
+ -7.375370822666286E-007
+ changing rh at          122         120           1  2.149971351173008E-006
+ -8.791541437299647E-007
+ changing rh at          123         120           1  2.148515704902820E-006
+ -1.096517136946199E-006
+ changing rh at          124         120           1  2.147182385670022E-006
+ -1.459873782253831E-006
+ changing rh at          125         120           1  2.145974576706067E-006
+ -2.161319928410306E-006
+ changing rh at          126         120           1  2.144896143363439E-006
+ -3.973501596059070E-006
+ changing rh at          127         120           1  2.143950496247271E-006
+ -1.708327062680095E-005
+ changing rh at          138         120           1  2.142248831660254E-006
+ -7.789995751491833E-005
+ changing rh at          138         120           2  2.142295289197885E-006
+ -5.998498008490277E-006
+ changing rh at          138         120           1  2.142248831660254E-006
+ -7.789995751491833E-005
+ changing rh at          138         120           2  2.142295289197885E-006
+ -5.998498008490277E-006
+ changing rh at          139         120           1  2.142822495443397E-006
+ -6.048045376760450E-006
+ changing rh at          140         120           1  2.143496658391086E-006
+ -3.063888917155270E-006
+ changing rh at          139         120           1  2.142822495443397E-006
+ -6.048045376760450E-006
+ changing rh at          140         120           1  2.143496658391086E-006
+ -3.063888917155270E-006
+ changing rh at          141         120           1  2.144264271919382E-006
+ -2.033634652336978E-006
+ changing rh at          141         120           1  2.144264271919382E-006
+ -2.033634652336978E-006
+ changing rh at          142         120           1  2.145118969565373E-006
+ -1.520282855245518E-006
+ changing rh at          142         120           1  2.145118969565373E-006
+ -1.520282855245518E-006
+ changing rh at          121         120           1  2.151543185391347E-006
+ -7.375370822666286E-007
+ changing rh at          143         120           1  2.146052111129393E-006
+ -1.217411008617181E-006
+ changing rh at          122         120           1  2.149971351173008E-006
+ -8.791541437299647E-007
+ changing rh at          144         120           1  2.147056648027501E-006
+ -1.020173303810944E-006
+ changing rh at          143         120           1  2.146052111129393E-006
+ -1.217411008617181E-006
+ changing rh at          123         120           1  2.148515704902820E-006
+ -1.096517136946199E-006
+ changing rh at          144         120           1  2.147056648027501E-006
+ -1.020173303810944E-006
+ changing rh at          124         120           1  2.147182385670022E-006
+ -1.459873782253831E-006
+ changing rh at          145         120           1  2.148123030565330E-006
+ -8.830927155458706E-007
+ changing rh at          145         120           1  2.148123030565330E-006
+ -8.830927155458706E-007
+ changing rh at          146         120           1  2.149243300664239E-006
+ -7.833375875325816E-007
+ changing rh at          146         120           1  2.149243300664239E-006
+ -7.833375875325816E-007
+ changing rh at          125         120           1  2.145974576706067E-006
+ -2.161319928410306E-006
+ changing rh at          138         120           1  2.142248831660254E-006
+ -7.789995751491833E-005
+ changing rh at          138         120           2  2.142295289197885E-006
+ -5.998498008490277E-006
+ changing rh at          147         120           1  2.150406999135157E-006
+ -7.081860834379731E-007
+ changing rh at          126         120           1  2.144896143363439E-006
+ -3.973501596059070E-006
+ changing rh at          147         120           1  2.150406999135157E-006
+ -7.081860834379731E-007
+ changing rh at          127         120           1  2.143950496247271E-006
+ -1.708327062680095E-005
+ changing rh at          139         120           1  2.142822495443397E-006
+ -6.048045376760450E-006
+ changing rh at          140         120           1  2.143496658391086E-006
+ -3.063888917155270E-006
+ changing rh at          141         120           1  2.144264271919382E-006
+ -2.033634652336978E-006
+ changing rh at          142         120           1  2.145118969565373E-006
+ -1.520282855245518E-006
+ changing rh at          143         120           1  2.146052111129393E-006
+ -1.217411008617181E-006
+ changing rh at          144         120           1  2.147056648027501E-006
+ -1.020173303810944E-006
+ changing rh at          145         120           1  2.148123030565330E-006
+ -8.830927155458706E-007
+ changing rh at          146         120           1  2.149243300664239E-006
+ -7.833375875325816E-007
+ changing rh at          147         120           1  2.150406999135157E-006
+ -7.081860834379731E-007
+ changing rh at          138         120           1  2.142248831660254E-006
+ -7.789995751491833E-005
+ changing rh at          138         120           2  2.142295289197885E-006
+ -5.998498008490277E-006
+ changing rh at          139         120           1  2.142822495443397E-006
+ -6.048045376760450E-006
+ changing rh at          140         120           1  2.143496658391086E-006
+ -3.063888917155270E-006
+ changing rh at          141         120           1  2.144264271919382E-006
+ -2.033634652336978E-006
+ changing rh at          142         120           1  2.145118969565373E-006
+ -1.520282855245518E-006
+ changing rh at          143         120           1  2.146052111129393E-006
+ -1.217411008617181E-006
+ changing rh at          144         120           1  2.147056648027501E-006
+ -1.020173303810944E-006
+ changing rh at          145         120           1  2.148123030565330E-006
+ -8.830927155458706E-007
+ changing rh at          146         120           1  2.149243300664239E-006
+ -7.833375875325816E-007
+ changing rh at          147         120           1  2.150406999135157E-006
+ -7.081860834379731E-007
+ Here cal           0   600.000000000000                0           0
+    20920215           0           0           0    20920200           0
+   31.0000000000000     
+ Here cal           0   600.000000000000                0           0
+    20920215           0           0           0    20920200           0
+   31.0000000000000     
+ Here cal           0   600.000000000000                0           0
+    20920215           0           0           0    20920200           0
+   31.0000000000000     
+ Here cal           0   600.000000000000                0           0
+    20920215           0           0           0    20920200           0
+   31.0000000000000     
+ ********** BEGIN LOOKING AT THE WEIGHT OF EACH PROCESSOR ***************
+ total procs =            4  total weight =    125266.000000000     
+ my rank =            0  my weight =    31313.0000000000     
+ my rank =            1  my weight =    31314.0000000000     
+ my rank =            2  my weight =    31309.0000000000     
+ my rank =            3  my weight =    31330.0000000000     
+ *******START DEBUG LOAD BALANCING**********************************************
+ *******
+ 
+ my rank =            0
+ lat =            1
+ start long =            1  end long =          180
+ lat =            2
+ start long =            1  end long =          180
+ lat =            3
+ start long =            1  end long =          180
+ lat =            4
+ start long =            1  end long =          180
+ lat =            5
+ start long =            1  end long =          180
+ lat =            6
+ start long =            1  end long =          180
+ lat =            7
+ start long =            1  end long =          180
+ lat =            8
+ start long =            1  end long =          180
+ lat =            9
+ start long =            1  end long =          180
+ lat =           10
+ start long =            1  end long =          180
+ lat =           11
+ start long =            1  end long =          180
+ lat =           12
+ start long =            1  end long =          180
+ lat =           13
+ start long =            1  end long =          180
+ lat =           14
+ start long =            1  end long =          180
+ lat =           15
+ start long =            1  end long =          180
+ lat =           16
+ start long =            1  end long =          180
+ lat =           17
+ start long =            1  end long =          180
+ lat =           18
+ start long =            1  end long =          180
+ lat =           19
+ start long =            1  end long =          180
+ lat =           20
+ start long =            1  end long =          180
+ lat =           21
+ start long =            1  end long =          180
+ lat =           22
+ start long =            1  end long =          180
+ lat =           23
+ start long =            1  end long =           88
+ 
+ -------------------------------------------------------------------------------
+ --------
+ 
+ my rank =            1
+ lat =           23
+ start long =           89  end long =          180
+ lat =           24
+ start long =            1  end long =          180
+ lat =           25
+ start long =            1  end long =          180
+ lat =           26
+ start long =            1  end long =          180
+ lat =           27
+ start long =            1  end long =          180
+ lat =           28
+ start long =            1  end long =          180
+ lat =           29
+ start long =            1  end long =          180
+ lat =           30
+ start long =            1  end long =          180
+ lat =           31
+ start long =            1  end long =          180
+ lat =           32
+ start long =            1  end long =          180
+ lat =           33
+ start long =            1  end long =          180
+ lat =           34
+ start long =            1  end long =          180
+ lat =           35
+ start long =            1  end long =          180
+ lat =           36
+ start long =            1  end long =          180
+ lat =           37
+ start long =            1  end long =          180
+ lat =           38
+ start long =            1  end long =          180
+ lat =           39
+ start long =            1  end long =          180
+ lat =           40
+ start long =            1  end long =          180
+ lat =           41
+ start long =            1  end long =          180
+ lat =           42
+ start long =            1  end long =          180
+ lat =           43
+ start long =            1  end long =          180
+ lat =           44
+ start long =            1  end long =          180
+ lat =           45
+ start long =            1  end long =          180
+ lat =           46
+ start long =            1  end long =          180
+ lat =           47
+ start long =            1  end long =          180
+ lat =           48
+ start long =            1  end long =          180
+ lat =           49
+ start long =            1  end long =          180
+ lat =           50
+ start long =            1  end long =          180
+ lat =           51
+ start long =            1  end long =          180
+ lat =           52
+ start long =            1  end long =          180
+ lat =           53
+ start long =            1  end long =          180
+ lat =           54
+ start long =            1  end long =          180
+ lat =           55
+ start long =            1  end long =          180
+ lat =           56
+ start long =            1  end long =          106
+ 
+ -------------------------------------------------------------------------------
+ --------
+ 
+ my rank =            2
+ lat =           56
+ start long =          107  end long =          180
+ lat =           57
+ start long =            1  end long =          180
+ lat =           58
+ start long =            1  end long =          180
+ lat =           59
+ start long =            1  end long =          180
+ lat =           60
+ start long =            1  end long =          180
+ lat =           61
+ start long =            1  end long =          180
+ lat =           62
+ start long =            1  end long =          180
+ lat =           63
+ start long =            1  end long =          180
+ lat =           64
+ start long =            1  end long =          180
+ lat =           65
+ start long =            1  end long =          180
+ lat =           66
+ start long =            1  end long =          180
+ lat =           67
+ start long =            1  end long =          180
+ lat =           68
+ start long =            1  end long =          180
+ lat =           69
+ start long =            1  end long =          180
+ lat =           70
+ start long =            1  end long =          180
+ lat =           71
+ start long =            1  end long =          180
+ lat =           72
+ start long =            1  end long =          180
+ lat =           73
+ start long =            1  end long =          180
+ lat =           74
+ start long =            1  end long =          180
+ lat =           75
+ start long =            1  end long =          180
+ lat =           76
+ start long =            1  end long =          180
+ lat =           77
+ start long =            1  end long =          180
+ lat =           78
+ start long =            1  end long =          180
+ lat =           79
+ start long =            1  end long =          180
+ lat =           80
+ start long =            1  end long =          180
+ lat =           81
+ start long =            1  end long =          180
+ lat =           82
+ start long =            1  end long =          180
+ lat =           83
+ start long =            1  end long =          180
+ lat =           84
+ start long =            1  end long =          180
+ lat =           85
+ start long =            1  end long =          180
+ lat =           86
+ start long =            1  end long =          180
+ lat =           87
+ start long =            1  end long =          180
+ lat =           88
+ start long =            1  end long =          180
+ lat =           89
+ start long =            1  end long =          180
+ lat =           90
+ start long =            1  end long =          180
+ lat =           91
+ start long =            1  end long =          180
+ lat =           92
+ start long =            1  end long =          121
+ 
+ -------------------------------------------------------------------------------
+ --------
+ 
+ my rank =            3
+ lat =           92
+ start long =          122  end long =          180
+ lat =           93
+ start long =            1  end long =          180
+ lat =           94
+ start long =            1  end long =          180
+ lat =           95
+ start long =            1  end long =          180
+ lat =           96
+ start long =            1  end long =          180
+ lat =           97
+ start long =            1  end long =          180
+ lat =           98
+ start long =            1  end long =          180
+ lat =           99
+ start long =            1  end long =          180
+ lat =          100
+ start long =            1  end long =          180
+ lat =          101
+ start long =            1  end long =          180
+ lat =          102
+ start long =            1  end long =          180
+ lat =          103
+ start long =            1  end long =          180
+ lat =          104
+ start long =            1  end long =          180
+ lat =          105
+ start long =            1  end long =          180
+ lat =          106
+ start long =            1  end long =          180
+ lat =          107
+ start long =            1  end long =          180
+ lat =          108
+ start long =            1  end long =          180
+ lat =          109
+ start long =            1  end long =          180
+ lat =          110
+ start long =            1  end long =          180
+ lat =          111
+ start long =            1  end long =          180
+ lat =          112
+ start long =            1  end long =          180
+ lat =          113
+ start long =            1  end long =          180
+ lat =          114
+ start long =            1  end long =          180
+ lat =          115
+ start long =            1  end long =          180
+ lat =          116
+ start long =            1  end long =          180
+ lat =          117
+ start long =            1  end long =          180
+ lat =          118
+ start long =            1  end long =          180
+ lat =          119
+ start long =            1  end long =          180
+ lat =          120
+ start long =            1  end long =          180
+ 
+ -------------------------------------------------------------------------------
+ --------
+ *********END DEBUG LOAD BALANCING**********************************************
+ *******
+  _______________________________________________________
+  _______ initializing aerosol optical properties _______
+  _______________________________________________________
+ (GETFIL): attempting to find local file AerosolOptics_c040105.nc
+  _______________________________________________________
+  _______ initializing aerosol optical properties _______
+  _______________________________________________________
+ (GETFIL): attempting to find local file AerosolOptics_c040105.nc
+  _______________________________________________________
+  _______ initializing aerosol optical properties _______
+  _______________________________________________________
+  _______________________________________________________
+  _______ initializing aerosol optical properties _______
+  _______________________________________________________
+ (GETFIL): attempting to find local file AerosolOptics_c040105.nc
+ (GETFIL): attempting to find local file AerosolOptics_c040105.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/AerosolOptics_c04
+ 0105.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/AerosolOptics_c04
+ 0105.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/AerosolOptics_c04
+ 0105.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/AerosolOptics_c04
+ 0105.nc
+  aer_optics_initialize : nrh_opac =  8
+  aer_optics_initialize : nbnd = 19
+  aer_optics_initialize : nrh_opac =  8
+  aer_optics_initialize : nbnd = 19
+  aer_optics_initialize : nrh_opac =  8
+  aer_optics_initialize : nbnd = 19
+  aer_optics_initialize : nrh_opac =  8
+  aer_optics_initialize : nbnd = 19
+  _______ hygroscopic growth in visible band _______
+  SO4
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            5.581    1.000    0.650
+  0.801           13.614    1.000    0.742
+  0.836           16.185    1.000    0.750
+  0.858           17.971    1.000    0.755
+  0.873           19.389    1.000    0.759
+  0.885           20.585    1.000    0.762
+  0.896           21.630    1.000    0.764
+  0.904           23.093    1.000    0.766
+  0.912           24.959    1.000    0.769
+  0.919           26.745    1.000    0.771
+  0.925           28.462    1.000    0.772
+  0.930           30.121    1.000    0.774
+  0.935           31.730    1.000    0.775
+  0.940           33.293    1.000    0.777
+  0.944           34.817    1.000    0.778
+  0.948           36.305    1.000    0.779
+  0.952           38.717    1.000    0.781
+  0.956           41.820    1.000    0.782
+  0.959           44.986    1.000    0.783
+  0.963           48.213    1.000    0.784
+  0.966           51.498    1.000    0.785
+  0.969           54.841    1.000    0.786
+  0.971           58.241    1.000    0.787
+  0.974           61.695    1.000    0.788
+  0.977           65.207    1.000    0.789
+  0.979           68.771    1.000    0.789
+  0.982           75.009    1.000    0.790
+  0.984           82.961    1.000    0.791
+  0.986           91.458    1.000    0.791
+  0.988          100.506    1.000    0.791
+  0.990          110.112    1.000    0.792
+  0.992          120.296    1.000    0.792
+  0.994          131.074    1.000    0.793
+  0.996          142.462    1.000    0.793
+  0.998          154.473    1.000    0.794
+  1.000          166.809    1.000    0.794
+  SSLT
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            0.395    1.000    0.752
+  0.801            1.495    1.000    0.825
+  0.836            1.689    1.000    0.828
+  0.858            1.818    1.000    0.829
+  0.873            1.918    1.000    0.831
+  0.885            2.000    1.000    0.831
+  0.896            2.072    1.000    0.832
+  0.904            2.173    1.000    0.833
+  0.912            2.303    1.000    0.834
+  0.919            2.425    1.000    0.835
+  0.925            2.540    1.000    0.836
+  0.930            2.650    1.000    0.836
+  _______ hygroscopic growth in visible band _______
+  SO4
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            5.581    1.000    0.650
+  0.801           13.614    1.000    0.742
+  0.935            2.755    1.000    0.837
+  0.940            2.856    1.000    0.838
+  0.944            2.953    1.000    0.838
+  0.948            3.047    1.000    0.839
+  0.952            3.215    1.000    0.839
+  0.956            3.436    1.000    0.840
+  0.959            3.660    1.000    0.841
+  0.963            3.885    1.000    0.841
+  0.836           16.185    1.000    0.750
+  0.858           17.971    1.000    0.755
+  0.873           19.389    1.000    0.759
+  0.885           20.585    1.000    0.762
+  0.896           21.630    1.000    0.764
+  0.904           23.093    1.000    0.766
+  0.912           24.959    1.000    0.769
+  0.966            4.113    1.000    0.842
+  0.969            4.343    1.000    0.842
+  0.971            4.575    1.000    0.843
+  0.974            4.808    1.000    0.843
+  0.977            5.044    1.000    0.844
+  0.979            5.281    1.000    0.844
+  0.982            5.740    1.000    0.845
+  0.984            6.339    1.000    0.846
+  0.919           26.745    1.000    0.771
+  0.925           28.462    1.000    0.772
+  0.930           30.121    1.000    0.774
+  0.935           31.730    1.000    0.775
+  0.940           33.293    1.000    0.777
+  0.944           34.817    1.000    0.778
+  0.948           36.305    1.000    0.779
+  0.952           38.717    1.000    0.781
+  0.986            6.977    1.000    0.847
+  0.988            7.656    1.000    0.848
+  0.990            8.376    1.000    0.849
+  0.992            9.138    1.000    0.849
+  0.994            9.943    1.000    0.850
+  0.996           10.793    1.000    0.851
+  0.998           11.688    1.000    0.852
+  1.000           12.607    1.000    0.852
+  0.956           41.820    1.000    0.782
+  0.959           44.986    1.000    0.783
+  0.963           48.213    1.000    0.784
+  0.966           51.498    1.000    0.785
+  0.969           54.841    1.000    0.786
+  0.971           58.241    1.000    0.787
+  0.974           61.695    1.000    0.788
+  0.977           65.207    1.000    0.789
+  OCPHI
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            3.421    0.965    0.621
+  0.801            8.298    0.986    0.710
+  0.836            9.396    0.987    0.717
+  0.858           10.130    0.988    0.722
+  0.873           10.698    0.989    0.725
+  0.885           11.168    0.989    0.727
+  0.979           68.771    1.000    0.789
+  0.982           75.009    1.000    0.790
+  0.984           82.961    1.000    0.791
+  0.986           91.458    1.000    0.791
+  0.988          100.506    1.000    0.791
+  0.990          110.112    1.000    0.792
+  0.992          120.296    1.000    0.792
+  0.994          131.074    1.000    0.793
+  0.896           11.573    0.990    0.729
+  0.904           12.145    0.990    0.732
+  0.912           12.870    0.991    0.734
+  0.919           13.551    0.991    0.737
+  0.925           14.195    0.991    0.739
+  0.930           14.808    0.992    0.741
+  0.935           15.394    0.992    0.742
+  0.940           15.956    0.992    0.744
+  0.996          142.462    1.000    0.793
+  0.998          154.473    1.000    0.794
+  1.000          166.809    1.000    0.794
+  SSLT
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            0.395    1.000    0.752
+  0.801            1.495    1.000    0.825
+  0.836            1.689    1.000    0.828
+  _______ hygroscopic growth in visible band _______
+  SO4
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            5.581    1.000    0.650
+  0.801           13.614    1.000    0.742
+  0.836           16.185    1.000    0.750
+  0.858           17.971    1.000    0.755
+  0.873           19.389    1.000    0.759
+  0.885           20.585    1.000    0.762
+  0.896           21.630    1.000    0.764
+  0.944           16.498    0.993    0.745
+  0.948           17.022    0.993    0.747
+  0.952           17.884    0.993    0.749
+  0.956           18.985    0.994    0.751
+  0.959           20.091    0.994    0.752
+  0.963           21.200    0.994    0.754
+  0.966           22.312    0.994    0.756
+  0.969           23.427    0.995    0.758
+  0.971           24.546    0.995    0.759
+  0.974           25.667    0.995    0.761
+  0.977           26.793    0.995    0.762
+  0.858            1.818    1.000    0.829
+  0.873            1.918    1.000    0.831
+  0.885            2.000    1.000    0.831
+  0.896            2.072    1.000    0.832
+  0.904            2.173    1.000    0.833
+  0.912            2.303    1.000    0.834
+  0.919            2.425    1.000    0.835
+  0.925            2.540    1.000    0.836
+  0.930            2.650    1.000    0.836
+  0.935            2.755    1.000    0.837
+  0.940            2.856    1.000    0.838
+  0.904           23.093    1.000    0.766
+  0.912           24.959    1.000    0.769
+  0.919           26.745    1.000    0.771
+  0.925           28.462    1.000    0.772
+  0.930           30.121    1.000    0.774
+  0.935           31.730    1.000    0.775
+  0.940           33.293    1.000    0.777
+  0.944           34.817    1.000    0.778
+  0.948           36.305    1.000    0.779
+  0.952           38.717    1.000    0.781
+  0.956           41.820    1.000    0.782
+  0.979           27.922    0.996    0.764
+  0.982           29.780    0.996    0.765
+  0.984           32.068    0.996    0.767
+  0.986           34.448    0.996    0.769
+  0.988           36.918    0.997    0.771
+  0.990           39.477    0.997    0.773
+  0.992           42.126    0.997    0.774
+  0.994           44.865    0.997    0.776
+  0.996           47.696    0.998    0.777
+  0.998           50.617    0.998    0.779
+  1.000           53.574    0.998    0.781
+  0.944            2.953    1.000    0.838
+  0.948            3.047    1.000    0.839
+  0.952            3.215    1.000    0.839
+  0.956            3.436    1.000    0.840
+  0.959            3.660    1.000    0.841
+  0.963            3.885    1.000    0.841
+  0.966            4.113    1.000    0.842
+  0.969            4.343    1.000    0.842
+  0.971            4.575    1.000    0.843
+  0.974            4.808    1.000    0.843
+  0.977            5.044    1.000    0.844
+  0.979            5.281    1.000    0.844
+  0.982            5.740    1.000    0.845
+  0.959           44.986    1.000    0.783
+  0.963           48.213    1.000    0.784
+  0.966           51.498    1.000    0.785
+  0.969           54.841    1.000    0.786
+  0.971           58.241    1.000    0.787
+  0.974           61.695    1.000    0.788
+  0.977           65.207    1.000    0.789
+  0.979           68.771    1.000    0.789
+  0.982           75.009    1.000    0.790
+  0.984           82.961    1.000    0.791
+  0.986           91.458    1.000    0.791
+  0.988          100.506    1.000    0.791
+  _______________________________________________________
+  _______ initializing land surface properties __________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_brdf_maps_inmcm4.nc
+  0.984            6.339    1.000    0.846
+  0.986            6.977    1.000    0.847
+  0.988            7.656    1.000    0.848
+  0.990            8.376    1.000    0.849
+  0.992            9.138    1.000    0.849
+  0.994            9.943    1.000    0.850
+  0.996           10.793    1.000    0.851
+  0.998           11.688    1.000    0.852
+  1.000           12.607    1.000    0.852
+  OCPHI
+     rh    ext (m^2 g-1)      ssa      asm
+  0.990          110.112    1.000    0.792
+  0.992          120.296    1.000    0.792
+  0.994          131.074    1.000    0.793
+  0.996          142.462    1.000    0.793
+  0.998          154.473    1.000    0.794
+  1.000          166.809    1.000    0.794
+  SSLT
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            0.395    1.000    0.752
+  0.801            1.495    1.000    0.825
+  0.836            1.689    1.000    0.828
+  0.000            3.421    0.965    0.621
+  0.801            8.298    0.986    0.710
+  0.836            9.396    0.987    0.717
+  0.858           10.130    0.988    0.722
+  0.873           10.698    0.989    0.725
+  0.885           11.168    0.989    0.727
+  0.896           11.573    0.990    0.729
+  0.858            1.818    1.000    0.829
+  0.873            1.918    1.000    0.831
+  0.885            2.000    1.000    0.831
+  0.896            2.072    1.000    0.832
+  0.904            2.173    1.000    0.833
+  0.912            2.303    1.000    0.834
+  0.919            2.425    1.000    0.835
+  0.925            2.540    1.000    0.836
+  _______ hygroscopic growth in visible band _______
+  0.904           12.145    0.990    0.732
+  0.912           12.870    0.991    0.734
+  0.919           13.551    0.991    0.737
+  0.925           14.195    0.991    0.739
+  0.930           14.808    0.992    0.741
+  0.935           15.394    0.992    0.742
+  0.940           15.956    0.992    0.744
+  0.944           16.498    0.993    0.745
+  0.948           17.022    0.993    0.747
+  0.952           17.884    0.993    0.749
+  0.956           18.985    0.994    0.751
+  0.930            2.650    1.000    0.836
+  0.935            2.755    1.000    0.837
+  0.940            2.856    1.000    0.838
+  0.944            2.953    1.000    0.838
+  0.948            3.047    1.000    0.839
+  0.952            3.215    1.000    0.839
+  0.956            3.436    1.000    0.840
+  0.959            3.660    1.000    0.841
+  0.963            3.885    1.000    0.841
+  0.966            4.113    1.000    0.842
+  0.969            4.343    1.000    0.842
+  SO4
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            5.581    1.000    0.650
+  0.801           13.614    1.000    0.742
+  0.836           16.185    1.000    0.750
+  0.858           17.971    1.000    0.755
+  0.873           19.389    1.000    0.759
+  0.885           20.585    1.000    0.762
+  0.896           21.630    1.000    0.764
+  0.959           20.091    0.994    0.752
+  0.963           21.200    0.994    0.754
+  0.966           22.312    0.994    0.756
+  0.969           23.427    0.995    0.758
+  0.971           24.546    0.995    0.759
+  0.974           25.667    0.995    0.761
+  0.977           26.793    0.995    0.762
+  0.979           27.922    0.996    0.764
+  0.982           29.780    0.996    0.765
+  0.984           32.068    0.996    0.767
+  0.986           34.448    0.996    0.769
+  0.988           36.918    0.997    0.771
+  0.971            4.575    1.000    0.843
+  0.974            4.808    1.000    0.843
+  0.977            5.044    1.000    0.844
+  0.979            5.281    1.000    0.844
+  0.982            5.740    1.000    0.845
+  0.984            6.339    1.000    0.846
+  0.986            6.977    1.000    0.847
+  0.988            7.656    1.000    0.848
+  0.990            8.376    1.000    0.849
+  0.992            9.138    1.000    0.849
+  0.994            9.943    1.000    0.850
+  0.904           23.093    1.000    0.766
+  0.912           24.959    1.000    0.769
+  0.919           26.745    1.000    0.771
+  0.925           28.462    1.000    0.772
+  0.930           30.121    1.000    0.774
+  0.935           31.730    1.000    0.775
+  0.940           33.293    1.000    0.777
+  0.944           34.817    1.000    0.778
+  0.948           36.305    1.000    0.779
+  0.952           38.717    1.000    0.781
+  0.990           39.477    0.997    0.773
+  0.992           42.126    0.997    0.774
+  0.994           44.865    0.997    0.776
+  0.996           47.696    0.998    0.777
+  0.998           50.617    0.998    0.779
+  1.000           53.574    0.998    0.781
+  _______________________________________________________
+  _______ initializing land surface properties __________
+  _______________________________________________________
+  0.996           10.793    1.000    0.851
+  0.998           11.688    1.000    0.852
+  1.000           12.607    1.000    0.852
+  OCPHI
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            3.421    0.965    0.621
+  0.801            8.298    0.986    0.710
+  0.836            9.396    0.987    0.717
+  0.858           10.130    0.988    0.722
+  0.873           10.698    0.989    0.725
+  0.885           11.168    0.989    0.727
+  0.956           41.820    1.000    0.782
+  0.959           44.986    1.000    0.783
+  0.963           48.213    1.000    0.784
+  0.966           51.498    1.000    0.785
+  0.969           54.841    1.000    0.786
+  0.971           58.241    1.000    0.787
+  0.974           61.695    1.000    0.788
+  0.977           65.207    1.000    0.789
+  0.979           68.771    1.000    0.789
+  0.982           75.009    1.000    0.790
+  0.984           82.961    1.000    0.791
+ (GETFIL): attempting to find local file modis_snowfree_brdf_maps_inmcm4.nc
+  0.896           11.573    0.990    0.729
+  0.904           12.145    0.990    0.732
+  0.912           12.870    0.991    0.734
+  0.919           13.551    0.991    0.737
+  0.925           14.195    0.991    0.739
+  0.930           14.808    0.992    0.741
+  0.935           15.394    0.992    0.742
+  0.940           15.956    0.992    0.744
+  0.944           16.498    0.993    0.745
+  0.948           17.022    0.993    0.747
+  0.986           91.458    1.000    0.791
+  0.988          100.506    1.000    0.791
+  0.990          110.112    1.000    0.792
+  0.992          120.296    1.000    0.792
+  0.994          131.074    1.000    0.793
+  0.996          142.462    1.000    0.793
+  0.998          154.473    1.000    0.794
+  0.952           17.884    0.993    0.749
+  0.956           18.985    0.994    0.751
+  0.959           20.091    0.994    0.752
+  0.963           21.200    0.994    0.754
+  0.966           22.312    0.994    0.756
+  0.969           23.427    0.995    0.758
+  0.971           24.546    0.995    0.759
+  0.974           25.667    0.995    0.761
+  0.977           26.793    0.995    0.762
+  1.000          166.809    1.000    0.794
+  SSLT
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            0.395    1.000    0.752
+  0.801            1.495    1.000    0.825
+  0.836            1.689    1.000    0.828
+  0.858            1.818    1.000    0.829
+  0.873            1.918    1.000    0.831
+  0.979           27.922    0.996    0.764
+  0.982           29.780    0.996    0.765
+  0.984           32.068    0.996    0.767
+  0.986           34.448    0.996    0.769
+  0.988           36.918    0.997    0.771
+  0.990           39.477    0.997    0.773
+  0.992           42.126    0.997    0.774
+  0.994           44.865    0.997    0.776
+  0.885            2.000    1.000    0.831
+  0.896            2.072    1.000    0.832
+  0.904            2.173    1.000    0.833
+  0.912            2.303    1.000    0.834
+  0.919            2.425    1.000    0.835
+  0.925            2.540    1.000    0.836
+  0.930            2.650    1.000    0.836
+  0.935            2.755    1.000    0.837
+  0.996           47.696    0.998    0.777
+  0.998           50.617    0.998    0.779
+  1.000           53.574    0.998    0.781
+  _______________________________________________________
+  _______ initializing land surface properties __________
+  _______________________________________________________
+  0.940            2.856    1.000    0.838
+  0.944            2.953    1.000    0.838
+  0.948            3.047    1.000    0.839
+  0.952            3.215    1.000    0.839
+  0.956            3.436    1.000    0.840
+  0.959            3.660    1.000    0.841
+  0.963            3.885    1.000    0.841
+ (GETFIL): attempting to find local file modis_snowfree_brdf_maps_inmcm4.nc
+  0.966            4.113    1.000    0.842
+  0.969            4.343    1.000    0.842
+  0.971            4.575    1.000    0.843
+  0.974            4.808    1.000    0.843
+  0.977            5.044    1.000    0.844
+  0.979            5.281    1.000    0.844
+  0.982            5.740    1.000    0.845
+  0.984            6.339    1.000    0.846
+  0.986            6.977    1.000    0.847
+  0.988            7.656    1.000    0.848
+  0.990            8.376    1.000    0.849
+  0.992            9.138    1.000    0.849
+  0.994            9.943    1.000    0.850
+  0.996           10.793    1.000    0.851
+  0.998           11.688    1.000    0.852
+  1.000           12.607    1.000    0.852
+  OCPHI
+     rh    ext (m^2 g-1)      ssa      asm
+  0.000            3.421    0.965    0.621
+  0.801            8.298    0.986    0.710
+  0.836            9.396    0.987    0.717
+  0.858           10.130    0.988    0.722
+  0.873           10.698    0.989    0.725
+  0.885           11.168    0.989    0.727
+  0.896           11.573    0.990    0.729
+  0.904           12.145    0.990    0.732
+  0.912           12.870    0.991    0.734
+  0.919           13.551    0.991    0.737
+  0.925           14.195    0.991    0.739
+  0.930           14.808    0.992    0.741
+  0.935           15.394    0.992    0.742
+  0.940           15.956    0.992    0.744
+  0.944           16.498    0.993    0.745
+  0.948           17.022    0.993    0.747
+  0.952           17.884    0.993    0.749
+  0.956           18.985    0.994    0.751
+  0.959           20.091    0.994    0.752
+  0.963           21.200    0.994    0.754
+  0.966           22.312    0.994    0.756
+  0.969           23.427    0.995    0.758
+  0.971           24.546    0.995    0.759
+  0.974           25.667    0.995    0.761
+  0.977           26.793    0.995    0.762
+  0.979           27.922    0.996    0.764
+  0.982           29.780    0.996    0.765
+  0.984           32.068    0.996    0.767
+  0.986           34.448    0.996    0.769
+  0.988           36.918    0.997    0.771
+  0.990           39.477    0.997    0.773
+  0.992           42.126    0.997    0.774
+  0.994           44.865    0.997    0.776
+  0.996           47.696    0.998    0.777
+  0.998           50.617    0.998    0.779
+  1.000           53.574    0.998    0.781
+  _______________________________________________________
+  _______ initializing land surface properties __________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_brdf_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_brdf_m
+ aps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_brdf_m
+ aps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_brdf_m
+ aps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_brdf_m
+ aps_inmcm4.nc
+ mcdate_input =    20920200.0000000     
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+ mcdate_input =    20920200.0000000     
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+ mcdate_input =    20920200.0000000     
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+ mcdate_input =    20920200.0000000     
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+  _______________________________________________________
+  _______ initializing ocean surface properties _________
+  _______________________________________________________
+ (GETFIL): attempting to find local file ocean_reflectance.nc
+  _______________________________________________________
+  _______ initializing ocean surface properties _________
+  _______________________________________________________
+ (GETFIL): attempting to find local file ocean_reflectance.nc
+  _______________________________________________________
+  _______ initializing ocean surface properties _________
+  _______________________________________________________
+ (GETFIL): attempting to find local file ocean_reflectance.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/ocean_reflectance
+ .nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/ocean_reflectance
+ .nc
+  _______________________________________________________
+  _______ initializing ocean surface properties _________
+  _______________________________________________________
+ (GETFIL): attempting to find local file ocean_reflectance.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/ocean_reflectance
+ .nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/ocean_reflectance
+ .nc
+  _______________________________________________________
+  _______ initializing ice/snow surface properties ______
+  _______________________________________________________
+ (GETFIL): attempting to find local file snow_reflectance.nc
+  _______________________________________________________
+  _______ initializing ice/snow surface properties ______
+  _______________________________________________________
+ (GETFIL): attempting to find local file snow_reflectance.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/snow_reflectance.
+ nc
+  _______________________________________________________
+  _______ initializing ice/snow surface properties ______
+  _______________________________________________________
+ (GETFIL): attempting to find local file snow_reflectance.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/snow_reflectance.
+ nc
+  _______________________________________________________
+  _______ initializing ice/snow surface properties ______
+  _______________________________________________________
+ (GETFIL): attempting to find local file snow_reflectance.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/snow_reflectance.
+ nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/snow_reflectance.
+ nc
+  _______________________________________________________
+  _______ read in snow-fraction--------------------------
+  _______________________________________________________
+ (GETFIL): attempting to find local file snc_inmcm4.nc
+  _______________________________________________________
+  _______ read in snow-fraction--------------------------
+  _______________________________________________________
+ (GETFIL): attempting to find local file snc_inmcm4.nc
+ (GETFIL): using /nobackupp2/nhnguye3/osse_input_files/cmip5_osse/snc_inmcm4.nc
+  _______________________________________________________
+  _______ read in snow-fraction--------------------------
+  _______________________________________________________
+ (GETFIL): attempting to find local file snc_inmcm4.nc
+ (GETFIL): using /nobackupp2/nhnguye3/osse_input_files/cmip5_osse/snc_inmcm4.nc
+  _______________________________________________________
+  _______ read in snow-fraction--------------------------
+  _______________________________________________________
+ (GETFIL): attempting to find local file snc_inmcm4.nc
+ (GETFIL): using /nobackupp2/nhnguye3/osse_input_files/cmip5_osse/snc_inmcm4.nc
+ (GETFIL): using /nobackupp2/nhnguye3/osse_input_files/cmip5_osse/snc_inmcm4.nc
+ fsno_index =            2
+ fsno_index =            2
+ fsno_index =            2
+ fsno_index =            2
+  _______________________________________________________
+  _______ initializing ice/snow brdf land type info _____
+  _______________________________________________________
+  _______________________________________________________
+  _______ initializing ice/snow brdf land type info _____
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_brdf_maps_inmcm4.nc
+ (GETFIL): attempting to find local file modis_snow_brdf_maps_inmcm4.nc
+  _______________________________________________________
+  _______ initializing ice/snow brdf land type info _____
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_brdf_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snow_brdf_maps_
+ inmcm4.nc
+  _______________________________________________________
+  _______ initializing ice/snow brdf land type info _____
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_brdf_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snow_brdf_maps_
+ inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snow_brdf_maps_
+ inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snow_brdf_maps_
+ inmcm4.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow Albedo For Landtype----
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_albedo_2003.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow Albedo For Landtype----
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_albedo_2003.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow Albedo For Landtype----
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_albedo_2003.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modis_snow_albedo
+ _2003.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modis_snow_albedo
+ _2003.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modis_snow_albedo
+ _2003.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow Albedo For Landtype----
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snow_albedo_2003.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow-Free Albedo properties_
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_albedo_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modis_snow_albedo
+ _2003.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow-Free Albedo properties_
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_albedo_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_albedo
+ _maps_inmcm4.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow-Free Albedo properties_
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_albedo_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_albedo
+ _maps_inmcm4.nc
+  _______________________________________________________
+  _______ initializing MODIS Snow-Free Albedo properties_
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_snowfree_albedo_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_albedo
+ _maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_snowfree_albedo
+ _maps_inmcm4.nc
+  _______________________________________________________
+  _______ initializing land emissivity properties _______
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_emis_maps_inmcm4.nc
+  _______________________________________________________
+  _______ initializing land emissivity properties _______
+  _______________________________________________________
+  _______________________________________________________
+  _______ initializing land emissivity properties _______
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_emis_maps_inmcm4.nc
+ (GETFIL): attempting to find local file modis_emis_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_emis_maps_inmcm
+ 4.nc
+  _______________________________________________________
+  _______ initializing land emissivity properties _______
+  _______________________________________________________
+ (GETFIL): attempting to find local file modis_emis_maps_inmcm4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_emis_maps_inmcm
+ 4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_emis_maps_inmcm
+ 4.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/modis/interpolation/modis_emis_maps_inmcm
+ 4.nc
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+ mcdate_input =    20920200.0000000     
+ fsno_index1 =    200.000000000000     
+ fsno_index2 =    2.00000000000000     
+ month_selected =            2
+ num_lon =          180
+  _______________________________________________________
+  _______ initializing phase function properties ________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modtran_mie_phase_functions.nc
+  _______________________________________________________
+  _______ initializing phase function properties ________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modtran_mie_phase_functions.nc
+  _______________________________________________________
+  _______ initializing phase function properties ________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modtran_mie_phase_functions.nc
+  _______________________________________________________
+  _______ initializing phase function properties ________
+  _______________________________________________________
+ (GETFIL): attempting to find local file modtran_mie_phase_functions.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modtran_mie_phase
+ _functions.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modtran_mie_phase
+ _functions.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modtran_mie_phase
+ _functions.nc
+ (GETFIL): using 
+ /nobackupp2/nhnguye3/osse_input_files/input_files/input_files/modtran_mie_phase
+ _functions.nc
+ OZNINI: Read ozone data for dates          116           0  and          214
+           0
+ OZNINI: Read ozone data for dates          116           0  and          214
+           0
+ OZNINI: Read ozone data for dates          116           0  and          214
+           0
+ OZNINI: Read ozone data for dates          116           0  and          214
+           0
+           0   600.000000000000                0           0    20920215
+           0           0           0    20920200           0
+   31.0000000000000     
+           0   600.000000000000                0           0    20920215
+           0           0           0    20920200           0
+   31.0000000000000     
+           0   600.000000000000                0           0    20920215
+           0           0           0    20920200           0
+   31.0000000000000     
+           0   600.000000000000                0           0    20920215
+           0           0           0    20920200           0
+   31.0000000000000     
+  MYRANK ===            1  STARTLAT ===           23  ENDLAT ===           56
+ --> itime, ilat =            1          23
+ ***MYRANK ===            1  ***MYLAT ===           23  ***STARTLONG === 
+          89  ***ENDLONG ===          180
+  MYRANK ===            3  STARTLAT ===           92  ENDLAT ===          120
+ --> itime, ilat =            1          92
+ ***MYRANK ===            3  ***MYLAT ===           92  ***STARTLONG === 
+         122  ***ENDLONG ===          180
+  MYRANK ===            2  STARTLAT ===           56  ENDLAT ===           92
+ --> itime, ilat =            1          56
+ ***MYRANK ===            2  ***MYLAT ===           56  ***STARTLONG === 
+         107  ***ENDLONG ===          180
+  MYRANK ===            0  STARTLAT ===            1  ENDLAT ===           23
+ --> itime, ilat =            1           1
+ ***MYRANK ===            0  ***MYLAT ===            1  ***STARTLONG === 
+           1  ***ENDLONG ===          180
+ assigning cliqwp         180          21
+ assigning cliqwp         180          21
+ assigning cliqwp         180          21
+ assigning cliqwp         180          21
+ CTAPE5FN=
+ /nobackupp2/nhnguye3/modpcrtm/output000002.tp5                                 
+                                          
+ ITP5=           1
+          43
+ IRD, LNFLRT =            1           0
+ 
+           2           7
+ ITP5=
+   134217728
+           2
+ tape6
+           1
+ /nobackupp2/nhnguye3/modpcrtm/output000002.tp5                                 
+                                          
+ CTAPE5FN=
+ /nobackupp2/nhnguye3/modpcrtm/output000000.tp5                                 
+                                          
+ ITP5=           1
+          43
+ IRD, LNFLRT =            1           0
+ 
+           2           7
+ ITP5=
+   134217728
+           2
+ tape6
+           1
+ /nobackupp2/nhnguye3/modpcrtm/output000000.tp5                                 
+                                          
+OPNFL error from FNAMES:  "OLD" File "/nobackupp2/nhnguye3/modpcrtm/output000002.tp5" does not exist.
+           7
+ tape7
+ IRD=
+           1
+ before cd1
+ after cd1

@@ -1,0 +1,12 @@
+      SUBROUTINE  ZEROIT(A, LENGTH)
+
+!         ZEROS A REAL ARRAY -A- HAVING -LENGTH- ELEMENTS
+
+      REAL  A(*)
+
+      DO 10  L=1, LENGTH
+         A(L)=0.0
+10    CONTINUE
+
+      RETURN
+      END

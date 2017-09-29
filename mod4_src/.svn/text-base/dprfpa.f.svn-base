@@ -1,0 +1,299 @@
+      SUBROUTINE DPRFPA(H1,H2,ANGLE,PHI,LENN,HMIN,IAMT,BETA,RANGE,BEND)
+
+!     THIS ROUTINE, A DOUBLE PRECISION VERSION OF THE PREVIOUS ROUTINE
+!     "RFPATH", TRACES THE REFRACTED RAY FROM H1 WITH INITIAL ZENITH
+!     ANGLE "ANGLE" TO H2 WHERE THE ZENITH ANGLE IS PHI, AND CALCULATES
+!     THE ABSORBER AMOUNTS (IF IAMT.EQ.1) ALONG THE PATH.  IT STARTS
+!     FROM THE LOWEST POINT ALONG THE PATH (THE TANGENT HEIGHT HMIN
+!     IF LENN=1 OR HA=MIN(H1,H2) IF LENN=0) AND PROCEEDS TO THE HIGHEST
+!     POINT.  BETA AND RANGE ARE THE EARTH CENTERED ANGLE AND THE TOTAL
+!     DISTANCE RESPECTIVELY FOR THE REFRACTED PATH FROM H1 TO H2.
+
+!     DECLARE INPUTS
+      DOUBLE PRECISION H1,H2,ANGLE,PHI,HMIN,BETA,RANGE,BEND
+      INTEGER LENN,IAMT
+
+!     INCLUDE PARAMETERS
+      INCLUDE 'PARAMS.h'
+      INCLUDE 'ERROR.h'
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+      REAL RE,ZMAX
+      INTEGER IPATH
+      COMMON/PARMTR/RE,ZMAX,IPATH
+
+!     COMMON/RCNSTN/
+!       PI       THE CONSTANT PI
+!       DEG      NUMBER OF DEGREES IN ONE RADIAN.
+!       BIGNUM   MAXIMUM SINGLE PRECISION NUMBER.
+!       BIGEXP   MAXIMUM EXPONENTIAL ARGUMENT WITHOUT OVERFLOW.
+!       RRIGHT   SMALLEST SINGLE PRECISION REAL ADDED TO 1 EXCEEDS 1.
+      REAL PI,DEG,BIGNUM,BIGEXP,RRIGHT
+      COMMON/RCNSTN/PI,DEG,BIGNUM,BIGEXP,RRIGHT
+
+!     /RFRPTH/
+      REAL SPZP,SPPP,SPTP,SPPPSM,SPTPSM,SPRHOP,SPDENP,SPAMTP,DRANGE
+      COMMON/RFRPTH/SPZP(LAYDIM+1),SPPP(LAYDIM+1),SPTP(LAYDIM+1),       &
+     &  SPPPSM(LAYDIM+1),SPTPSM(LAYDIM+1),SPRHOP(LAYDIM+1),             &
+     &  SPDENP(MEXT,LAYDIM+1),SPAMTP(MEXT,LAYDIM+1),DRANGE(LAYDIM+1)
+      DOUBLE PRECISION ZP,PP,TP,RFNDXP,PPSUM,TPSUM,RHOPSM,DENP,AMTP
+      COMMON/DPRFRP/ZP(LAYDIM+1),PP(LAYDIM+1),TP(LAYDIM+1),             &
+     &  RFNDXP(LAYDIM+1),PPSUM(LAYDIM+1),TPSUM(LAYDIM+1),               &
+     &  RHOPSM(LAYDIM+1),DENP(MEXT,LAYDIM+1),AMTP(MEXT,LAYDIM+1)
+      INCLUDE 'SOLS.h'
+
+!     /CNTRL/
+!       IKMAX    NUMBER OF PATH SEGMENTS ALONG LINE-OF-SIGHT.
+!       ML       NUMBER OF ATMOSPHERIC PROFILE LEVELS.
+!       MLFLX    NUMBER OF LEVELS FOR WHICH FLUX VALUES ARE WRITTEN.
+!       ISSGEO   LINE-OF-SIGHT FLAG (0 = SENSOR PATH, 1 = SOLAR PATHS).
+!       IMULT    MULTIPLE SCATTERING FLAG
+!                  (0=NONE, 1=AT SENSOR, -1=AT FINAL OR TANGENT POINT).
+      INTEGER IKMAX,ML,MLFLX,ISSGEO,IMULT
+      COMMON/CNTRL/IKMAX,ML,MLFLX,ISSGEO,IMULT
+
+!     /PATH/
+!       QTHETA  COSINE OF PATH ZENITH AT PATH BOUNDARIES.
+!       AHT     ALTITUDES AT PATH BOUNDARIES [KM].
+!       IHT     ALTITUDES AT PATH BOUNDARIES [M].
+!       TPH     TEMPERATURE AT PATH BOUNDARIES [K].
+!       IMAP    MAPPING FROM PATH SEGMENT MIDPOINT TO VERTICAL LAYER.
+!       LOWAHT  INDEX OF VERTICAL LAYER BOUNDARY AT OR JUST BELOW AHT.
+!       FACAHT  ALTITUDE INTERPOLATION FRACTION FOR AHT.
+      INTEGER IHT,IMAP,LOWAHT
+      REAL QTHETA,AHT,TPH,FACAHT
+      COMMON/PATH/QTHETA(LAYTWO),AHT(LAYTWO),IHT(0:LAYTWO),             &
+     &  TPH(LAYTWO),IMAP(LAYTWO),LOWAHT(LAYTWO),FACAHT(LAYTWO)
+      DOUBLE PRECISION DHALFR,DPRNG2
+      COMMON/SMALL1/DHALFR,DPRNG2
+      LOGICAL LSMALL
+      COMMON/SMALL2/LSMALL
+      DOUBLE PRECISION SMH1,SMH2,TRANGE
+      COMMON/SMALL4/SMH1,SMH2,TRANGE
+      LOGICAL LPRINT
+      COMMON/CPRINT/LPRINT
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     DECLARE LOCAL VARIABLES
+      INTEGER IHIGH,KA,JD,J2A,J2B,JO,IORDER,                            &
+     &  MAX,I,JNEXT,JHA,JMAX,J2,J,IHLOW,J1
+      DOUBLE PRECISION DPANDX,HA,HB,SH,GAMMA,CPATH,S,SINAI,THETA,DS,    &
+     &  DBEND,DBETA,COSAI,ANGLEA,SAVCOS,SAVSIN,RNG,DPRE
+
+!     LIST DATA
+      CHARACTER*2 HLOW(2)
+      DOUBLE PRECISION DPDEG
+      DATA HLOW/'H1','H2'/,DPDEG/57.2957795131D0/
+      IF(LSMALL)THEN
+!         IF (LSMALL) SET H1 AND H2 EQUAL TO DOUBLE PRECISION
+!         VALUES SAVED VIA COMMON STATEMENTS.
+          H1=SMH1
+          H2=SMH2
+      ENDIF
+      DPRE=DBLE(RE)
+      MAX=0
+      IF(H1.LE.H2)THEN
+          IORDER=1
+          HA=H1
+          HB=H2
+          ANGLEA=ANGLE
+      ELSE
+          IORDER=-1
+          HA=H2
+          HB=H1
+          ANGLEA=PHI
+      ENDIF
+      IF(LSMALL)THEN
+          SAVSIN=SIN(ANGLEA/DPDEG)
+          SAVCOS=-COS(ANGLEA/DPDEG)
+          SINAI=SIN(ANGLEA/DPDEG)
+          COSAI=-COS(ANGLEA/DPDEG)
+      ENDIF
+      JNEXT=1
+      IF(.NOT.LJMASS .AND. IAMT.EQ.1 .AND. NPR.LT.1 .AND. LPRINT)       &
+     &   WRITE(IPR,'(/A,///(3A))')                                      &
+     &  ' CALCULATION OF THE REFRACTED PATH THROUGH THE ATMOSPHERE',    &
+     &  '  I     START       END     START     DELTA     TOTAL',        &
+     &  '     DELTA     EARTH    END TO     DELTA      PATH',           &
+     &  '      LAYER   LAYER     LAYER',                                &
+     &  '     ALTITUDE  ALTITUDE    TO END     RANGE     RANGE',        &
+     &  '     EARTH    CENTER     START   BENDING   BENDING',           &
+     &  '    AVERAGE     AVG   AVERAGE',                                &
+     &  '                           ZENITH                    ',        &
+     &  '     ANGLE     ANGLE    ZENITH                    ',           &
+     &  '   PRESSURE    TEMP   DENSITY',                                &
+     &  '         (KM)      (KM)     (DEG)     (KM)       (KM)',        &
+     &  '     (DEG)     (DEG)     (DEG)     (DEG)    (DEG) ',           &
+     &  '       (MB)     (K)  (GM/CM3)'
+      IF(LENN.EQ.1) THEN
+
+!         LONG PATH:  FILL IN THE SYMMETRIC PART FROM
+!                     THE TANGENT HEIGHT TO HA.
+          CALL DPFILL(HMIN,HA,JNEXT)
+          JHA=JNEXT
+      ENDIF
+
+!     FILL IN PATH FROM HA TO HB.
+      IF(HA.NE.HB)CALL DPFILL(HA,HB,JNEXT)
+      JMAX=JNEXT
+      IPATH=JMAX
+
+!     INTEGRATE EACH SEGMENT OF THE PATH
+!     CALCULATE CPATH SEPERATELY FOR LENN=0,1
+      IF(LENN.EQ.0)THEN
+          CALL DPFISH(HA,SH,GAMMA)
+          CPATH=DPANDX(DPRE+HA,HA,SH,GAMMA)*SIN(ANGLEA/DPDEG)
+      ELSEIF(LENN.EQ.1)THEN
+          CALL DPSCHT(ZP(1),ZP(2),RFNDXP(1),RFNDXP(2),SH,GAMMA)
+          CPATH=DPANDX(DPRE+ZP(1),ZP(1),SH,GAMMA)
+      ENDIF
+      BETA=DBLE(0.)
+      S=DBLE(0.)
+      BEND=DBLE(0.)
+      IF(LENN.EQ.0) THEN
+
+!         SHORT PATH
+!           ANGLEA   ZENITH ANGLE AT HA [DEG].
+!           SINAI    SINE OF THE INCIDENT ANGLE.
+!           COSAI    COSINE OF THE INCIDENT ANGLE.
+          JNEXT=1
+          THETA=ANGLEA
+          SINAI=COS((DBLE(90.)-ANGLEA)/DPDEG)
+          COSAI=-SIN((DBLE(90.)-ANGLEA)/DPDEG)
+          IF(SINAI.GT. DBLE(1.))SINAI= DBLE(1.)
+          IF(SINAI.LT.-DBLE(1.))SINAI=-DBLE(1.)
+      ELSE
+
+!         DO SYMMETRIC PART:  FROM TANGENT HEIGHT ZP(1) TO HA.
+          IHLOW=1
+          IF(IORDER.EQ.-1)IHLOW=2
+          IF(.NOT.LJMASS .AND. IAMT.EQ.1 .AND. NPR.LT.1 .AND. LPRINT)   &
+     &       WRITE(IPR,'(T7,A,T17,A2,/T7,A,/)')                         &
+     &         'TANGENT',HLOW(IHLOW),'HEIGHT'
+          SINAI=DBLE(1.)
+          COSAI=DBLE(0.)
+          THETA=DBLE(90.)
+          J2=JHA-1
+          RNG=DHALFR/J2
+          DO 20 J=1,J2
+              CALL DPSCHT(ZP(J),ZP(J+1),RFNDXP(J),RFNDXP(J+1),SH,GAMMA)
+              CALL DPLAYR(J,SINAI,COSAI,CPATH,                          &
+     &          SH,GAMMA,IAMT,DS,DBEND,RNG)
+              IF(LSMALL)THEN
+                  SINAI=SAVSIN
+                  COSAI=SAVCOS
+              ENDIF
+              IF(SINAI.GT. DBLE(1.))SINAI= DBLE(1.)
+              IF(SINAI.LT.-DBLE(1.))SINAI=-DBLE(1.)
+              DBEND=DBEND*DPDEG
+              PHI=ASIN(SINAI)*DPDEG
+              DBETA=THETA-PHI+DBEND
+              IF(LSMALL)DBETA=(2*DPDEG*SAVSIN*DS)/(ZP(J)+ZP(J+1)+2*DPRE)
+              PHI=DBLE(180.)-PHI
+              S=S+DS
+
+!             SAVE REFRACTED RAY PATH LENGTH FOR MULTIPLE SCATTERING.
+              BEND=BEND+DBEND
+              BETA=BETA+DBETA
+              IF(IAMT.EQ.1)THEN
+                  IF(.NOT.LJMASS .AND. NPR.LT.1 .AND. LPRINT)           &
+     &              WRITE(IPR,'(I3,10F10.5,F11.5,F8.2,1PE10.3)')J,      &
+     &              ZP(J),ZP(J+1),THETA,DS,S,DBETA,BETA,PHI,DBEND,BEND, &
+     &              PPSUM(J)/RHOPSM(J),TPSUM(J)/RHOPSM(J),RHOPSM(J)/DS
+                  J2A=J2-J+1
+                  J2B=J2+J
+                  QTHETA(J2A)=COS(REAL(PHI)/DEG)
+                  QTHETA(J2B)=COS(REAL(THETA)/DEG)
+                  MAX=J2B
+              ENDIF
+              IF(ISSGEO.NE.1)THEN
+                  ATHETA(J)=REAL(THETA)
+                  ADBETA(J)=REAL(DBETA)
+              ENDIF
+              THETA=DBLE(180.)-PHI
+   20     CONTINUE
+
+!         DOUBLE PATH QUANTITIES FOR OTHER PART OF THE SYMMETRIC PATH.
+          BEND=2*BEND
+          BETA=2*BETA
+          S=2*S
+          IF(.NOT.LJMASS .AND. IAMT.EQ.1 .AND. NPR.LT.1 .AND. LPRINT)   &
+     &      WRITE(IPR,'(2(/T10,A),T40,F9.3,T58,F9.3,T85,F9.3,/)')       &
+     &      'DOUBLE RANGE, BETA, BENDING',                              &
+     &      'FOR SYMMETRIC PART OF PATH',S,BETA,BEND
+          JNEXT=JHA
+      ENDIF
+
+!     DO PATH FROM HA TO HB
+      IF(HA.NE.HB)THEN
+          JO=MAX-JNEXT+1
+          J1=JNEXT
+          J2=JMAX-1
+          IF(H1.GT.H2)THEN
+              JD=J2-J1+1
+              DO 30 KA=MAX,1,-1
+                  QTHETA(KA+JD)=QTHETA(KA)
+   30         CONTINUE
+              MAX=MAX+JD
+              JO=0
+          ENDIF
+          IHLOW=1
+          IF(IORDER.EQ.-1)IHLOW=2
+          IHIGH=MOD(IHLOW,2)+1
+          IF(.NOT.LJMASS .AND. IAMT.EQ.1 .AND. NPR.LT.1 .AND. LPRINT)   &
+     &      WRITE(IPR,'(T11,A2,A,A2,/)') HLOW(IHLOW),' TO ',HLOW(IHIGH)
+          DO 40 J=J1,J2
+              CALL DPSCHT(ZP(J),ZP(J+1),RFNDXP(J),RFNDXP(J+1),SH,GAMMA)
+              RNG=DPRNG2*((ZP(J+1)-ZP(J))/(ZP(J2+1)-ZP(J1)))
+              CALL DPLAYR(J,SINAI,COSAI,CPATH,                          &
+     &          SH,GAMMA,IAMT,DS,DBEND,RNG)
+              IF(LSMALL)THEN
+                  SINAI=SAVSIN
+                  COSAI=SAVCOS
+              ENDIF
+              IF(SINAI.GT. DBLE(1.))SINAI= DBLE(1.)
+              IF(SINAI.LT.-DBLE(1.))SINAI=-DBLE(1.)
+              DBEND=DBEND*DPDEG
+              PHI=ASIN(SINAI)*DPDEG
+              DBETA=THETA-PHI+DBEND
+              IF(LSMALL)DBETA=(DPDEG*2*SAVSIN*DS)/(ZP(J)+ZP(J+1)+2*DPRE)
+              PHI=DBLE(180.)-PHI
+              S=S+DS
+              BEND=BEND+DBEND
+              BETA=BETA+DBETA
+              IF(IAMT.EQ.1)THEN
+                  IF(.NOT.LJMASS .AND. IAMT.EQ.1 .AND. NPR.LT.1 .AND.   &
+     &              LPRINT)WRITE(IPR,'(I3,10F10.5,F11.5,F8.2,1PE10.3)') &
+     &              J,ZP(J),ZP(J+1),THETA,DS,S,DBETA,BETA,PHI,DBEND,BEND&
+     &              ,PPSUM(J)/RHOPSM(J),TPSUM(J)/RHOPSM(J),RHOPSM(J)/DS
+              ENDIF
+
+!             SAVE LAYER REFRACTED PATH ANGLE FOR MULTIPLE SCATTERING.
+              IF(H2.GT.H1)THEN
+                  QTHETA(J+JO)=COS(REAL(THETA)/DEG)
+                  MAX=J+JO
+              ELSE
+                  J2B=J2-J+1
+                  QTHETA(J2B)=COS(REAL(PHI)/DEG)
+              ENDIF
+              IF(ISSGEO.NE.1)THEN
+                  ATHETA(J)=REAL(THETA)
+                  ADBETA(J)=REAL(DBETA)
+              ENDIF
+              THETA=DBLE(180.)-PHI
+   40     CONTINUE
+      ENDIF
+      IF(ISSGEO.EQ.0)ATHETA(JMAX)=REAL(THETA)
+      IF(IORDER.EQ.-1)PHI=ANGLEA
+      RANGE=S
+      DO 50 I=1,LAYDIM+1
+          SPZP(I)=REAL(ZP(I))
+          SPPPSM(I)=REAL(PPSUM(I))
+          SPTPSM(I)=REAL(TPSUM(I))
+          SPRHOP(I)=REAL(RHOPSM(I))
+   50 CONTINUE
+      RETURN
+      END

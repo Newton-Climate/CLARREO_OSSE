@@ -1,0 +1,43 @@
+      SUBROUTINE OPNFL(IUNIT,FNAME,STAT)
+
+!     PARAMETERS:
+      INCLUDE 'ERROR.h'
+
+!     COMMONS:
+      INCLUDE 'IFIL.h'
+
+!     DECLARE BLOCK DATA ROUTINES EXTERNAL:
+      EXTERNAL DEVCBD
+
+!     THIS ROUTINE OPENS THE FILE WITH FILENAME FNAME AND UNIT=IUNIT.
+!     THE FILE MUST BE A FORMATTED FILE WHOSE
+!     STATUS (CHARACTER VARIABLE STAT) IS EITHER 'OLD', 'NEW'
+!     OR 'UNKNOWN'.
+
+      CHARACTER FNAME*(*),STAT*(*)
+      LOGICAL LEXIST,LOPEN
+      INTEGER IUNIT,L,LENSTR
+      L=LENSTR(FNAME)
+      IF (STAT.EQ.'OLD') THEN
+         INQUIRE(FILE=FNAME(1:L),EXIST=LEXIST)
+         IF (.NOT.LEXIST) THEN
+            INQUIRE(UNIT=IPR,OPENED=LOPEN)
+            IF(LOPEN)WRITE(IPR,'(3A)')                                  &
+     &        'File "',FNAME(1:L),'" does not exist.'
+            IF(LJMASS) THEN
+               CALL WRTBUF(FATAL)
+            ELSE
+               WRITE(*,'(3A)')'File "',FNAME(1:L),'" does not exist.'
+            ENDIF
+            STOP
+         ENDIF
+      ENDIF
+      OPEN(UNIT=IUNIT,FILE=FNAME(1:L),STATUS=STAT)
+      IF (STAT.EQ.'UNKNOWN') THEN
+         CLOSE(IUNIT,STATUS='DELETE')
+         OPEN(UNIT=IUNIT,FILE=FNAME(1:L),STATUS='NEW')
+      ELSEIF (STAT.EQ.'OLD') THEN
+         REWIND(IUNIT)
+      ENDIF
+      RETURN
+      END
